@@ -1,4 +1,4 @@
-// src/components/Chatbot.jsx
+// E:\Project20250615\portfolio-website\michael-homepage\src\components\Chatbot.jsx
 import React, { useState, useRef, useEffect } from 'react';
 import { grokApi } from '../services/grokApi.js';
 import { getFallbackResponse, getApiErrorResponse } from '../utils/fallbackResponses.js';
@@ -9,16 +9,21 @@ const Chatbot = ({ t, currentLang }) => {
     const [isLoading, setIsLoading] = useState(false);
     const chatLogRef = useRef(null);
 
-    useEffect(() => {
-        // Initialize with welcome message
-        const welcomeMessage = {
-            id: 1,
-            type: 'bot',
-            content: t('chatbot-welcome'),
-            timestamp: Date.now()
-        };
-        setMessages([welcomeMessage]);
-    }, [t]);
+useEffect(() => {
+    // Initialize with welcome message
+    const welcomeMessage = {
+        id: 1,
+        type: 'bot',
+        content: t('chatbot-welcome'),
+        timestamp: Date.now()
+    };
+    setMessages([welcomeMessage]);
+
+    // Test API connection
+    grokApi.testConnection().then(result => {
+        console.log('API-Verbindungstest:', result ? 'Erfolgreich' : 'Fehlgeschlagen');
+    });
+}, [t]);
 
     useEffect(() => {
         // Scroll to bottom when new messages arrive
@@ -47,31 +52,19 @@ const Chatbot = ({ t, currentLang }) => {
             // Try Grok API first
             const apiResponse = await grokApi.sendMessage(message, currentLang);
             
-            let botResponse;
-            if (apiResponse.success) {
-                botResponse = {
-                    id: Date.now() + 1,
-                    type: 'bot',
-                    content: apiResponse.message,
-                    timestamp: Date.now(),
-                    source: 'grok-api'
-                };
-            } else {
-                // Use fallback response
-                botResponse = {
-                    id: Date.now() + 1,
-                    type: 'bot',
-                    content: apiResponse.fallback ? getFallbackResponse(message, currentLang) : getApiErrorResponse(currentLang),
-                    timestamp: Date.now(),
-                    source: 'fallback'
-                };
-            }
+            const botResponse = {
+                id: Date.now() + 1,
+                type: 'bot',
+                content: apiResponse.success ? apiResponse.message : getFallbackResponse(message, currentLang),
+                timestamp: Date.now(),
+                source: apiResponse.success ? 'grok-api' : 'fallback'
+            };
 
             setMessages(prev => [...prev, botResponse]);
         } catch (error) {
             console.error('Chat error:', error);
             
-            // Use fallback response for any error
+            // Use error response
             const errorResponse = {
                 id: Date.now() + 1,
                 type: 'bot',

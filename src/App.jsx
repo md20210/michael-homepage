@@ -1,4 +1,4 @@
-// src/App.jsx
+// E:\Project20250615\portfolio-website\michael-homepage\src\App.jsx
 import React, { useState, useEffect } from 'react';
 import { translations } from './data/translations.js';
 import Background from './components/Background.jsx';
@@ -77,8 +77,6 @@ const App = () => {
     return (
         <div className="App">
             <Background />
-
-            {/* Header */}
             <header className="header">
                 <div>
                     <div className="logo">{t('logo-text')}</div>
@@ -96,8 +94,6 @@ const App = () => {
                     />
                 </div>
             </header>
-
-            {/* Main Content */}
             <main>
                 <Hero t={t} currentLang={currentLang} />
                 <Skills t={t} />

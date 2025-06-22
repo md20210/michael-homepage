@@ -1,3 +1,4 @@
+// E:\Project20250615\portfolio-website\michael-homepage\backend\server.js
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
@@ -5,13 +6,11 @@ const dotenv = require('dotenv');
 const { createDecipheriv } = require('crypto');
 const fs = require('fs');
 
-// Lade Umgebungsvariablen
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Lade verschlüsselten Schlüssel und entschlüssle ihn
 const algorithm = 'aes-256-cbc';
 let API_KEY;
 try {
@@ -41,14 +40,13 @@ app.post('/api/grok', async (req, res) => {
             throw new Error('API key not configured');
         }
 
-        // Konvertiere Frontend-Format in xAI-Format
         const { message, lang } = req.body;
         const xaiBody = {
             messages: [
                 { role: 'system', content: 'You are Grok, a helpful AI assistant.' },
                 { role: 'user', content: message }
             ],
-            model: 'grok-beta',
+            model: 'grok-3', // Geändert von 'grok-beta' zu 'grok-3'
             language: lang
         };
 
@@ -56,7 +54,8 @@ app.post('/api/grok', async (req, res) => {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${API_KEY}`,
-                'User-Agent': 'Michael-Homepage-Backend/1.0'
+                'User-Agent': 'Michael-Homepage-Backend/1.0',
+                'Accept': 'application/json'
             }
         });
 
