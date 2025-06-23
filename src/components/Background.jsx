@@ -1,59 +1,52 @@
 // src/components/Background.jsx
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 const Background = () => {
-    const [particles, setParticles] = useState([]);
-
     useEffect(() => {
-        // Create initial particles
-        const initialParticles = Array.from({ length: 9 }, (_, i) => ({
-            id: i,
-            left: (i + 1) * 10,
-            delay: i * 0.5,
-            duration: Math.random() * 3 + 4
-        }));
-        setParticles(initialParticles);
+        // Create particles periodically
+        const particleInterval = setInterval(() => {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 6 + 's';
+            particle.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            document.body.appendChild(particle);
 
-        // Add new particles periodically
-        const interval = setInterval(() => {
-            const newParticle = {
-                id: Date.now(),
-                left: Math.random() * 100,
-                delay: 0,
-                duration: Math.random() * 3 + 4
-            };
-            
-            setParticles(prev => [...prev, newParticle]);
-            
-            // Remove old particles
             setTimeout(() => {
-                setParticles(prev => prev.filter(p => p.id !== newParticle.id));
+                if (document.body.contains(particle)) {
+                    particle.remove();
+                }
             }, 7000);
         }, 2000);
 
-        return () => clearInterval(interval);
+        // Mouse movement parallax effect
+        const handleMouseMove = (e) => {
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
+
+            document.querySelectorAll('.skill-node').forEach((node, index) => {
+                const speed = (index % 3 + 1) * 0.5;
+                node.style.transform = `translate(${mouseX * speed}px, ${mouseY * speed}px)`;
+            });
+
+            const profileFrame = document.querySelector('.profile-frame');
+            if (profileFrame) {
+                profileFrame.style.transform = `translate(${mouseX * 2}px, ${mouseY * 2}px)`;
+            }
+        };
+
+        document.addEventListener('mousemove', handleMouseMove);
+
+        return () => {
+            clearInterval(particleInterval);
+            document.removeEventListener('mousemove', handleMouseMove);
+        };
     }, []);
 
     return (
         <>
-            {/* Animated background gradients */}
-            <div className="bg-animation" />
-            
-            {/* Wireframe grid overlay */}
-            <div className="wireframe-overlay" />
-            
-            {/* Floating particles */}
-            {particles.map(particle => (
-                <div
-                    key={particle.id}
-                    className="particle"
-                    style={{
-                        left: `${particle.left}%`,
-                        animationDelay: `${particle.delay}s`,
-                        animationDuration: `${particle.duration}s`
-                    }}
-                />
-            ))}
+            <div className="bg-animation"></div>
+            <div className="wireframe-overlay"></div>
         </>
     );
 };

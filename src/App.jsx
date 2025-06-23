@@ -1,4 +1,4 @@
-// E:\Project20250615\portfolio-website\michael-homepage\src\App.jsx
+// src/App.jsx
 import React, { useState, useEffect } from 'react';
 import { translations } from './data/translations.js';
 import Background from './components/Background.jsx';
@@ -7,6 +7,7 @@ import Hero from './components/Hero.jsx';
 import Skills from './components/Skills.jsx';
 import Experience from './components/Experience.jsx';
 import Chatbot from './components/Chatbot.jsx';
+import './styles/main.css';
 
 const App = () => {
     const [currentLang, setCurrentLang] = useState('en');

@@ -15,7 +15,6 @@ const LanguageSelector = ({ currentLang, onLanguageChange }) => {
                     key={lang.code}
                     className={currentLang === lang.code ? 'active' : ''}
                     onClick={() => onLanguageChange(lang.code)}
-                    data-lang={lang.code}
                 >
                     {lang.label}
                 </button>
