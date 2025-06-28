@@ -63,8 +63,27 @@ try {
 
 const GROK_API_URL = 'https://api.x.ai/v1/chat/completions';
 
-app.use(cors());
-app.use(express.json());
+// server.cjs - Zeile 33 ersetzen:
+// ALT: app.use(cors());
+// NEU:
+
+const corsOptions = {
+    origin: [
+        'http://localhost:3000',                           // Lokale Entwicklung
+        'http://localhost:4173',                           // Vite Preview  
+        'https://md20210.github.io',                       // GitHub Pages Root
+        'https://md20210.github.io/michael-homepage',      // Ihre exakte GitHub Pages URL
+        'https://md20210.github.io/michael-homepage/'      // Mit trailing slash
+    ],
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: false
+};
+
+app.use(cors(corsOptions));
+
+// Zusätzlich: Explizite OPTIONS-Behandlung
+app.options('*', cors(corsOptions));
 
 function detectLanguage(message) {
     const germanKeywords = ["wie", "wieviel", "was", "welche", "wer", "wo", "wann", "alt", "alter", "studiert", "studium", "uni", "universität"];
