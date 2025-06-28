@@ -256,4 +256,5 @@ const Chatbot = ({ t, currentLang }) => {
     );
 };
 
-export default Chatbot;
+export default Chatbot;/ /   U p d a t e d   0 6 / 2 8 / 2 0 2 5   2 2 : 4 1 : 5 9  
+ 
