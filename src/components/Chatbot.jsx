@@ -444,4 +444,5 @@ Responde preguntas sobre Michael, sus habilidades, experiencia o proporciona inf
     );
 };
 
-export default Chatbot;
+export default Chatbot;/ /   F o r c e   r e b u i l d   0 6 / 2 8 / 2 0 2 5   2 2 : 5 5 : 5 7  
+ 
