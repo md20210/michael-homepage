@@ -1,4 +1,4 @@
-// src/components/Chatbot.jsx - Mit Spracherkennung korrigiert
+// src/components/Chatbot.jsx - Mit Vercel Backend korrigiert
 import React, { useState, useEffect, useRef } from 'react';
 import { getFallbackResponse, getApiErrorResponse } from '../utils/fallbackResponses.js';
 
@@ -47,19 +47,28 @@ const Chatbot = ({ t, currentLang }) => {
         return "en";
     };
 
-    // Test if proxy server is running
+    // Test if Vercel backend is available
     useEffect(() => {
         const testConnection = async () => {
             try {
-                const response = await fetch('http://localhost:3001/health');
+                // API_URL für Health Check
+                const API_URL = window.location.hostname === 'localhost' 
+                    ? 'http://localhost:3001/health' 
+                    : 'https://michael-homepage.vercel.app/api/grok';
+
+                console.log('🔍 Testing connection to:', API_URL);
+                const response = await fetch(API_URL);
+                
                 if (response.ok) {
+                    const data = await response.json();
+                    console.log('✅ Backend response:', data);
                     setApiAvailable(true);
-                    console.log('✅ Grok Proxy Server available');
+                    console.log('✅ Vercel Backend available');
                 } else {
-                    throw new Error('Server not responding');
+                    throw new Error(`Server responded with ${response.status}`);
                 }
             } catch (error) {
-                console.log('⚠️ Grok Proxy Server not available, using intelligent fallback');
+                console.log('⚠️ Backend not available, using intelligent fallback:', error.message);
                 setApiAvailable(false);
             }
         };
@@ -87,23 +96,24 @@ const Chatbot = ({ t, currentLang }) => {
         }
     }, [messages]);
 
-    const callGrokAPI = async (message, detectedLanguage) => {
+    const callVercelAPI = async (message, detectedLanguage) => {
         try {
-            console.log('🚀 Calling Grok API via proxy...');
+            console.log('🚀 Calling Vercel API...');
             console.log('📤 Sending:', { message, lang: detectedLanguage });
             
-		const API_URL = window.location.hostname === 'localhost' 
- 		 ? 'http://localhost:3001' 
- 		 : 'https://michael-homepage.vercel.app';
+            // API URL für Frontend/Backend
+            const API_URL = window.location.hostname === 'localhost' 
+                ? 'http://localhost:3001' 
+                : 'https://michael-homepage.vercel.app';
 
-		const response = await fetch(`${API_URL}/api/grok`, {
+            const response = await fetch(`${API_URL}/api/grok`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
                     message: message,
-                    lang: detectedLanguage  // ← Jetzt mit erkannter Sprache!
+                    lang: detectedLanguage
                 })
             });
 
@@ -112,16 +122,16 @@ const Chatbot = ({ t, currentLang }) => {
             }
 
             const data = await response.json();
-            console.log('✅ Grok API response:', data);
+            console.log('✅ Vercel API response:', data);
 
             return {
                 success: true,
-                message: data.message,
-                source: data.source || 'grok-api'
+                message: data.message || data.hello || 'Response received',
+                source: data.source || 'vercel-api'
             };
 
         } catch (error) {
-            console.error('❌ Grok API Error:', error);
+            console.error('❌ Vercel API Error:', error);
             return {
                 success: false,
                 error: error.message
@@ -156,13 +166,13 @@ const Chatbot = ({ t, currentLang }) => {
             let source = 'fallback';
 
             if (apiAvailable) {
-                // Try Grok API first - mit erkannter Sprache!
-                const apiResult = await callGrokAPI(message, detectedLang);
+                // Try Vercel API first - mit erkannter Sprache!
+                const apiResult = await callVercelAPI(message, detectedLang);
                 
                 if (apiResult.success) {
                     botResponse = apiResult.message;
                     source = apiResult.source;
-                    console.log('✅ Using Grok API response');
+                    console.log('✅ Using Vercel API response');
                 } else {
                     // Fallback to existing fallback system
                     botResponse = getFallbackResponse(message, detectedLang);
@@ -192,7 +202,7 @@ const Chatbot = ({ t, currentLang }) => {
             const errorMsg = {
                 id: Date.now() + 1,
                 type: 'bot',
-                content: getApiErrorResponse(detectedLang), // Auch hier erkannte Sprache!
+                content: getApiErrorResponse(detectedLang),
                 timestamp: Date.now(),
                 source: 'error'
             };
@@ -215,6 +225,7 @@ const Chatbot = ({ t, currentLang }) => {
 
     const getSourceIndicator = (source) => {
         switch (source) {
+            case 'vercel-api': return '🚀 Vercel API';
             case 'grok-api': return '🤖 Grok API';
             case 'smart-local-ai': return '🧠 Smart AI';
             case 'intelligent-fallback': return '🧠 Smart AI';
@@ -247,7 +258,7 @@ const Chatbot = ({ t, currentLang }) => {
                             <p dangerouslySetInnerHTML={{ __html: t('chatbot-info') }} />
                             <p>
                                 {apiAvailable ? 
-                                    "✅ Connected to Smart AI! Automatic language detection enabled." :
+                                    "✅ Connected to Vercel Backend! Full AI responses available." :
                                     "💾 Using intelligent AI responses with automatic language detection."
                                 }
                             </p>
@@ -280,7 +291,8 @@ const Chatbot = ({ t, currentLang }) => {
                                                     fontSize: '10px', 
                                                     opacity: 0.7, 
                                                     marginTop: '5px',
-                                                    color: msg.source.includes('grok') || msg.source.includes('smart') ? '#00ffff' : '#ffd700'
+                                                    color: msg.source.includes('vercel') ? '#00ff00' :
+                                                           msg.source.includes('grok') || msg.source.includes('smart') ? '#00ffff' : '#ffd700'
                                                 }}>
                                                     {getSourceIndicator(msg.source)}
                                                 </div>
