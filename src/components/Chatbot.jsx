@@ -54,8 +54,7 @@ const Chatbot = ({ t, currentLang }) => {
                 // API_URL für Health Check
                 const API_URL = window.location.hostname === 'localhost' 
                     ? 'http://localhost:3001/health' 
-                    : 'https://michael-homepage.vercel.app/api/grok';
-
+                    : 'https://DEINE-RAILWAY-URL.railway.app/health';  
                 console.log('🔍 Testing connection to:', API_URL);
                 const response = await fetch(API_URL);
                 
@@ -104,7 +103,7 @@ const Chatbot = ({ t, currentLang }) => {
             // API URL für Frontend/Backend
             const API_URL = window.location.hostname === 'localhost' 
                 ? 'http://localhost:3001' 
-                : 'https://michael-homepage.vercel.app';
+                : 'https://DEINE-RAILWAY-URL.railway.app';
 
             const response = await fetch(`${API_URL}/api/grok`, {
                 method: 'POST',
