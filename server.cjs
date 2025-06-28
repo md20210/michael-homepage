@@ -1,4 +1,6 @@
-// server.cjs - HYBRID SYSTEM: Michael Knowledge + Real Grok API mit Verschlüsselung
+// server.cjs - EXPRESS ROUTE FIX
+// Das Problem liegt in den Express-Routes
+
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
@@ -10,6 +12,26 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+
+// CORS KONFIGURATION (korrekt)
+const corsOptions = {
+    origin: [
+        'http://localhost:3000',
+        'http://localhost:4173',
+        'https://md20210.github.io',
+        'https://md20210.github.io/michael-homepage',
+        'https://md20210.github.io/michael-homepage/'
+    ],
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: false
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
+
+// WICHTIG: Body parser MUSS vor den Routen stehen
+app.use(express.json());
 
 // MICHAEL KNOWLEDGE BASE
 const MICHAEL_KNOWLEDGE_BASE = {
@@ -52,7 +74,6 @@ try {
     console.log('✅ API-Schlüssel erfolgreich entschlüsselt:', API_KEY ? `${API_KEY.substring(0, 15)}...` : 'null');
 } catch (error) {
     console.error('❌ Entschlüsselungsfehler:', error);
-    // Fallback auf .env falls Entschlüsselung fehlschlägt
     API_KEY = process.env.VITE_XAI_API_KEY;
     if (API_KEY) {
         console.log('⚠️ Fallback auf .env API-Key verwendet');
@@ -62,28 +83,6 @@ try {
 }
 
 const GROK_API_URL = 'https://api.x.ai/v1/chat/completions';
-
-// server.cjs - Zeile 33 ersetzen:
-// ALT: app.use(cors());
-// NEU:
-
-const corsOptions = {
-    origin: [
-        'http://localhost:3000',                           // Lokale Entwicklung
-        'http://localhost:4173',                           // Vite Preview  
-        'https://md20210.github.io',                       // GitHub Pages Root
-        'https://md20210.github.io/michael-homepage',      // Ihre exakte GitHub Pages URL
-        'https://md20210.github.io/michael-homepage/'      // Mit trailing slash
-    ],
-    methods: ['GET', 'POST', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: false
-};
-
-app.use(cors(corsOptions));
-
-// Zusätzlich: Explizite OPTIONS-Behandlung
-app.options('*', cors(corsOptions));
 
 function detectLanguage(message) {
     const germanKeywords = ["wie", "wieviel", "was", "welche", "wer", "wo", "wann", "alt", "alter", "studiert", "studium", "uni", "universität"];
@@ -95,7 +94,6 @@ function detectLanguage(message) {
     return "en";
 }
 
-// Prüfe, ob die Frage über Michael ist
 function isAboutMichael(message) {
     const msgLower = message.toLowerCase();
     const michaelKeywords = ["michael", "dabrock"];
@@ -105,7 +103,6 @@ function isAboutMichael(message) {
     return explicitMichael;
 }
 
-// ECHTE GROK API für Nicht-Michael-Fragen
 async function callRealGrokAPI(message, language) {
     if (!API_KEY) {
         console.log('❌ No API key available for Grok');
@@ -114,8 +111,6 @@ async function callRealGrokAPI(message, language) {
 
     try {
         console.log('🚀 Calling REAL Grok API...');
-        console.log('🔑 API Key length:', API_KEY.length);
-        console.log('🌐 URL:', GROK_API_URL);
         
         const systemPrompt = language === 'de' ? 
             'Du bist Grok, ein hilfreicher KI-Assistent. Antworte auf Deutsch.' :
@@ -123,17 +118,15 @@ async function callRealGrokAPI(message, language) {
             'Eres Grok, un asistente de IA útil. Responde en español.' :
             'You are Grok, a helpful AI assistant. Respond in English.';
 
-const requestData = {
-    messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: message }
-    ],
-    model: 'grok-2-1212',  // ← HIER ändern!
-    temperature: 0.1,
-    max_tokens: 300
-};
-
-        console.log('📝 Request data:', JSON.stringify(requestData, null, 2));
+        const requestData = {
+            messages: [
+                { role: 'system', content: systemPrompt },
+                { role: 'user', content: message }
+            ],
+            model: 'grok-2-1212',
+            temperature: 0.1,
+            max_tokens: 300
+        };
 
         const response = await axios.post(GROK_API_URL, requestData, {
             headers: {
@@ -153,12 +146,10 @@ const requestData = {
         
     } catch (error) {
         console.log('❌ Real Grok API failed:', error.response?.status, error.response?.statusText);
-        console.log('❌ Error details:', error.response?.data);
         return { success: false, error: error.message };
     }
 }
 
-// MICHAEL KNOWLEDGE für Michael-Fragen
 function getMichaelResponse(message, language) {
     const msgLower = message.toLowerCase();
     const kb = MICHAEL_KNOWLEDGE_BASE[language] || MICHAEL_KNOWLEDGE_BASE.en;
@@ -203,7 +194,7 @@ function getMichaelResponse(message, language) {
     return kb.default;
 }
 
-// MAIN API ENDPOINT
+// KORREKTE ROUTEN-DEFINITIONEN
 app.post('/api/grok', async (req, res) => {
     try {
         console.log('📨 Received request:', req.body);
@@ -211,9 +202,7 @@ app.post('/api/grok', async (req, res) => {
         const { message, lang } = req.body;
         const detectedLang = lang || detectLanguage(message);
 
-        // ENTSCHEIDUNG: Michael oder Grok?
         if (isAboutMichael(message)) {
-            // MICHAEL-FRAGE → Lokale Knowledge Base
             console.log('👨‍💼 Michael question - using local knowledge');
             const michaelResponse = getMichaelResponse(message, detectedLang);
             
@@ -226,7 +215,6 @@ app.post('/api/grok', async (req, res) => {
             });
             
         } else {
-            // NICHT-MICHAEL-FRAGE → Echte Grok API
             console.log('🌍 Non-Michael question - trying real Grok API');
             
             const grokResult = await callRealGrokAPI(message, detectedLang);
@@ -240,7 +228,6 @@ app.post('/api/grok', async (req, res) => {
                     note: 'Real Grok API response'
                 });
             } else {
-                // Grok fehlgeschlagen - Fallback
                 const fallbackMsg = detectedLang === 'de' ? 
                     "Entschuldigung, ich kann derzeit nur Fragen über Michael Dabrock beantworten. Für andere Themen ist meine Grok-Verbindung nicht verfügbar." :
                     detectedLang === 'es' ?
