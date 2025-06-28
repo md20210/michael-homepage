@@ -51,19 +51,14 @@ const Chatbot = ({ t, currentLang }) => {
     useEffect(() => {
         const testConnection = async () => {
             try {
-                // KORRIGIERTE URL-Erkennung:
-                const isLocalhost = window.location.hostname === 'localhost' || 
-                                   window.location.hostname === '127.0.0.1';
+                // Environment Variable verwenden mit Fallback
+                const API_URL = import.meta.env.VITE_API_URL || 'https://michael-homepage-production.up.railway.app';
                 
-                const API_URL = isLocalhost
-                    ? 'http://localhost:3001/health' 
-                    : 'https://michael-homepage-production.up.railway.app/health';
-                
-                console.log('🔍 Testing connection to:', API_URL);
+                console.log('🔍 Testing connection to:', `${API_URL}/health`);
                 console.log('🌐 Current hostname:', window.location.hostname);
-                console.log('🔧 Is localhost:', isLocalhost);
+                console.log('🔧 API URL from env:', API_URL);
                 
-                const response = await fetch(API_URL);
+                const response = await fetch(`${API_URL}/health`);
                 
                 if (response.ok) {
                     const data = await response.json();
@@ -107,13 +102,8 @@ const Chatbot = ({ t, currentLang }) => {
             console.log('🚀 Calling Railway API...');
             console.log('📤 Sending:', { message, lang: detectedLanguage });
             
-            // KORRIGIERTE URL-Erkennung:
-            const isLocalhost = window.location.hostname === 'localhost' || 
-                               window.location.hostname === '127.0.0.1';
-            
-            const API_URL = isLocalhost
-                ? 'http://localhost:3001' 
-                : 'https://michael-homepage-production.up.railway.app';
+            // Environment Variable verwenden mit Fallback
+            const API_URL = import.meta.env.VITE_API_URL || 'https://michael-homepage-production.up.railway.app';
 
             console.log('🌐 API URL:', API_URL);
 

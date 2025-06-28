@@ -7,7 +7,8 @@
   "homepage": "https://md20210.github.io/michael-homepage",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "cross-env NODE_ENV=production vite build",
+    "build:github": "cross-env NODE_ENV=production VITE_DEPLOY=github vite build",
     "preview": "vite preview",
     "start": "vite",
     "server:cjs": "node server.cjs",
@@ -15,9 +16,9 @@
     "test": "echo \"No tests yet\"",
     "encrypt": "node encrypt.js",
     "decrypt": "node decrypt.js",
-    "predeploy": "npm run build",
+    "predeploy": "npm run build:github",
     "deploy": "gh-pages -d dist",
-    "deploy:github": "npm run build && gh-pages -d dist"
+    "deploy:github": "npm run build:github && gh-pages -d dist"
   },
   "dependencies": {
     "axios": "^1.6.0",
@@ -32,6 +33,7 @@
     "@types/react-dom": "^18.2.0",
     "@vitejs/plugin-react": "^4.0.0",
     "concurrently": "^8.2.0",
+    "cross-env": "^7.0.3",
     "gh-pages": "^6.3.0",
     "terser": "^5.43.1",
     "vite": "^6.3.5"
