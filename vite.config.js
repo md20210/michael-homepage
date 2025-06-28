@@ -29,7 +29,7 @@ export default defineConfig({
     plugins: [react()],
     
     // WICHTIG: Base path für GitHub Pages
-    base: '/michael-homepage/',
+    base: './',
     
     // Environment Variables definieren
     define: {
