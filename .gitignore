@@ -1,7 +1,4 @@
 .env
-encrypted_api_key.txt
-encryption_key.bin
-encryption_iv.bin
 node_modules/
 dist/
 .vite/
