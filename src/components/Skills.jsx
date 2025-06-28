@@ -1,4 +1,4 @@
-// src/components/Skills.jsx
+// src/components/Skills.jsx - VOLLSTÄNDIG KORRIGIERT
 import React from 'react';
 
 const Skills = ({ t }) => {
@@ -18,25 +18,25 @@ const Skills = ({ t }) => {
                 <div className="skills-section">
                     <div className="skills-grid">
                         <div className="skills-column">
-                            <h3>{t('skills-technical-title')}</h3>
+                            <h3>{t('skills-core')}</h3>
                             <ul className="skills-list">
-                                <li>{t('skills-technical-1')}</li>
-                                <li>{t('skills-technical-2')}</li>
-                                <li>{t('skills-technical-3')}</li>
-                                <li>{t('skills-technical-4')}</li>
-                                <li>{t('skills-technical-5')}</li>
-                                <li>{t('skills-technical-6')}</li>
+                                <li>{t('skills-program-leadership')}</li>
+                                <li>{t('skills-it-consulting')}</li>
+                                <li>{t('skills-enterprise-arch')}</li>
+                                <li>{t('skills-cloud-tech')}</li>
+                                <li>{t('skills-ai-dev')}</li>
+                                <li>{t('skills-governance')}</li>
                             </ul>
                         </div>
                         <div className="skills-column">
-                            <h3>{t('skills-management-title')}</h3>
+                            <h3>{t('skills-certifications')}</h3>
                             <ul className="skills-list">
-                                <li>{t('skills-management-1')}</li>
-                                <li>{t('skills-management-2')}</li>
-                                <li>{t('skills-management-3')}</li>
-                                <li>{t('skills-management-4')}</li>
-                                <li>{t('skills-management-5')}</li>
-                                <li>{t('skills-management-6')}</li>
+                                <li>{t('skills-chatgpt')}</li>
+                                <li>{t('skills-gemini')}</li>
+                                <li>{t('skills-grok')}</li>
+                                <li>{t('skills-claude')}</li>
+                                <li>{t('skills-chatbots')}</li>
+                                <li>{t('skills-voice')}</li>
                             </ul>
                         </div>
                     </div>

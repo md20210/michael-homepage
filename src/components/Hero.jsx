@@ -1,4 +1,4 @@
-// src/components/Hero.jsx
+// src/components/Hero.jsx - VOLLSTÄNDIG KORRIGIERT
 import React from 'react';
 
 const Hero = ({ t, currentLang }) => {
@@ -64,7 +64,7 @@ const Hero = ({ t, currentLang }) => {
                     <div className="step-line"></div>
                     <div className="step-number" style={{ color: '#ffd700' }}>01</div>
                 </div>
-                <h1 className="main-title">{t('hero-title')}</h1>
+                <h1 className="main-title">{t('logo-text')}</h1>
                 <h2 className="subtitle">{t('hero-subtitle')}</h2>
                 <p className="description">{t('hero-description')}</p>
                 <div className="cta-buttons">

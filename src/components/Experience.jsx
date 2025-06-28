@@ -1,31 +1,37 @@
-// src/components/Experience.jsx
+// src/components/Experience.jsx - VOLLSTÄNDIG KORRIGIERT
 import React from 'react';
 
 const Experience = ({ t }) => {
     const experiences = [
         {
-            key: 'cognizant',
-            titleKey: 'exp-cognizant-title',
-            subtitleKey: 'exp-cognizant-subtitle',
-            descriptionKey: 'exp-cognizant-description'
+            key: 'ai-specialist',
+            titleKey: 'work-ai-specialist-title',
+            descriptionKey: 'work-ai-specialist-desc'
         },
         {
-            key: 'ai-consulting',
-            titleKey: 'exp-ai-title',
-            subtitleKey: 'exp-ai-subtitle',
-            descriptionKey: 'exp-ai-description'
+            key: 'cognizant',
+            titleKey: 'work-cognizant-title',
+            descriptionKey: 'work-cognizant-desc'
         },
         {
             key: 'wipro',
-            titleKey: 'exp-wipro-title',
-            subtitleKey: 'exp-wipro-subtitle',
-            descriptionKey: 'exp-wipro-description'
+            titleKey: 'work-wipro-title', 
+            descriptionKey: 'work-wipro-desc'
         },
         {
             key: 'ibm',
-            titleKey: 'exp-ibm-title',
-            subtitleKey: 'exp-ibm-subtitle',
-            descriptionKey: 'exp-ibm-description'
+            titleKey: 'work-ibm-title',
+            descriptionKey: 'work-ibm-desc'
+        },
+        {
+            key: 'pwc',
+            titleKey: 'work-pwc-title',
+            descriptionKey: 'work-pwc-desc'
+        },
+        {
+            key: 'early-career',
+            titleKey: 'work-early-career-title',
+            descriptionKey: 'work-early-career-desc'
         }
     ];
 
@@ -46,8 +52,7 @@ const Experience = ({ t }) => {
                     {experiences.map((exp) => (
                         <div key={exp.key} className="experience-card">
                             <div className="card-title">{t(exp.titleKey)}</div>
-                            <div className="card-subtitle">{t(exp.subtitleKey)}</div>
-                            <div className="card-description">{t(exp.descriptionKey)}</div>
+                            <div className="card-description" dangerouslySetInnerHTML={{ __html: t(exp.descriptionKey) }} />
                         </div>
                     ))}
                 </div>

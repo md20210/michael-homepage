@@ -1,5 +1,5 @@
-// src/App.jsx
-import React, { useState, useEffect } from 'react';
+// src/App.jsx - Optimiert ohne ständige Re-Renders
+import React, { useState, useEffect, useCallback } from 'react';
 import { translations } from './data/translations.js';
 import Background from './components/Background.jsx';
 import LanguageSelector from './components/LanguageSelector.jsx';
@@ -7,47 +7,57 @@ import Hero from './components/Hero.jsx';
 import Skills from './components/Skills.jsx';
 import Experience from './components/Experience.jsx';
 import Chatbot from './components/Chatbot.jsx';
-import './styles/main.css';
 
 const App = () => {
     const [currentLang, setCurrentLang] = useState('en');
     const [lastScrollTop, setLastScrollTop] = useState(0);
 
-    // Translation function
-    const t = (key) => {
+    // Memoized translation function
+    const t = useCallback((key) => {
         return translations[currentLang]?.[key] || translations.en[key] || key;
-    };
+    }, [currentLang]);
+
+    // Language change handler mit useCallback
+    const handleLanguageChange = useCallback((newLang) => {
+        setCurrentLang(newLang);
+    }, []);
 
     useEffect(() => {
-        // Set document language
+        // Set document language and title
         document.documentElement.lang = currentLang;
-        
-        // Update page title
         document.title = `${t('logo-text')} - ${t('tagline')}`;
     }, [currentLang, t]);
 
     useEffect(() => {
-        // Header scroll effect
+        // Optimierter Scroll Handler mit Throttling
+        let ticking = false;
+        
         const handleScroll = () => {
-            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            const header = document.querySelector('.header');
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                    const header = document.querySelector('.header');
 
-            if (header) {
-                if (scrollTop > lastScrollTop && scrollTop > 100) {
-                    header.style.transform = 'translateY(-100%)';
-                } else {
-                    header.style.transform = 'translateY(0)';
-                }
+                    if (header) {
+                        if (scrollTop > lastScrollTop && scrollTop > 100) {
+                            header.style.transform = 'translateY(-100%)';
+                        } else {
+                            header.style.transform = 'translateY(0)';
+                        }
+                    }
+                    setLastScrollTop(scrollTop);
+                    ticking = false;
+                });
+                ticking = true;
             }
-            setLastScrollTop(scrollTop);
         };
 
-        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('scroll', handleScroll, { passive: true });
         return () => window.removeEventListener('scroll', handleScroll);
     }, [lastScrollTop]);
 
     useEffect(() => {
-        // Smooth scrolling for navigation links
+        // Navigation Click Handler - nur einmal registrieren
         const handleNavClick = (e) => {
             const href = e.target.getAttribute('href');
             if (href && href.startsWith('#')) {
@@ -59,25 +69,23 @@ const App = () => {
             }
         };
 
-        const navLinks = document.querySelectorAll('.nav-link');
-        navLinks.forEach(link => {
-            link.addEventListener('click', handleNavClick);
+        // Event Delegation statt einzelne Listener
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('nav-link')) {
+                handleNavClick(e);
+            }
         });
 
         return () => {
-            navLinks.forEach(link => {
-                link.removeEventListener('click', handleNavClick);
-            });
+            document.removeEventListener('click', handleNavClick);
         };
-    }, []);
-
-    const handleLanguageChange = (newLang) => {
-        setCurrentLang(newLang);
-    };
+    }, []); // Leere Dependency Array
 
     return (
         <div className="App">
+            {/* Background wird nur einmal gemounted */}
             <Background />
+            
             <header className="header">
                 <div>
                     <div className="logo">{t('logo-text')}</div>
@@ -95,6 +103,7 @@ const App = () => {
                     />
                 </div>
             </header>
+            
             <main>
                 <Hero t={t} currentLang={currentLang} />
                 <Skills t={t} />
@@ -105,4 +114,4 @@ const App = () => {
     );
 };
 
-export default App;
+export default React.memo(App);
