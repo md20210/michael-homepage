@@ -35,12 +35,8 @@ export default defineConfig({
     define: {
         // Lokaler API-Schlüssel oder Environment Variable
         'import.meta.env.VITE_XAI_API_KEY': JSON.stringify(apiKey || process.env.VITE_XAI_API_KEY || null),
-        // NEU: API URL zur Build-Zeit festlegen
-        'import.meta.env.VITE_API_URL': JSON.stringify(
-            process.env.NODE_ENV === 'production' || process.env.VITE_DEPLOY === 'github'
-                ? 'https://michael-homepage-production.up.railway.app'
-                : 'http://localhost:3001'
-        ),
+        // HARDCODE FIX: Immer Railway URL verwenden
+        'import.meta.env.VITE_API_URL': JSON.stringify('https://michael-homepage-production.up.railway.app'),
     },
     
     // Build-Konfiguration für GitHub Pages

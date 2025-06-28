@@ -1,6 +1,8 @@
-// src/components/Chatbot.jsx - Mit Railway Backend korrigiert
+// src/components/Chatbot.jsx - NUCLEAR HARDCODE VERSION
 import React, { useState, useEffect, useRef } from 'react';
 import { getFallbackResponse, getApiErrorResponse } from '../utils/fallbackResponses.js';
+
+console.log('🔥🔥🔥 NUCLEAR HARDCODE - NO LOCALHOST - BUILD:', Date.now());
 
 const Chatbot = ({ t, currentLang }) => {
     const [messages, setMessages] = useState([]);
@@ -51,12 +53,12 @@ const Chatbot = ({ t, currentLang }) => {
     useEffect(() => {
         const testConnection = async () => {
             try {
-                // Environment Variable verwenden mit Fallback
-                const API_URL = import.meta.env.VITE_API_URL || 'https://michael-homepage-production.up.railway.app';
+                // ABSOLUTE HARDCODE - NO ENVIRONMENT VARIABLES
+                const API_URL = 'https://michael-homepage-production.up.railway.app';
                 
                 console.log('🔍 Testing connection to:', `${API_URL}/health`);
                 console.log('🌐 Current hostname:', window.location.hostname);
-                console.log('🔧 API URL from env:', API_URL);
+                console.log('🔥 ABSOLUTE HARDCODE - NO ENV VARS');
                 
                 const response = await fetch(`${API_URL}/health`);
                 
@@ -102,10 +104,10 @@ const Chatbot = ({ t, currentLang }) => {
             console.log('🚀 Calling Railway API...');
             console.log('📤 Sending:', { message, lang: detectedLanguage });
             
-            // Environment Variable verwenden mit Fallback
-            const API_URL = import.meta.env.VITE_API_URL || 'https://michael-homepage-production.up.railway.app';
+            // ABSOLUTE HARDCODE - NO ENVIRONMENT VARIABLES
+            const API_URL = 'https://michael-homepage-production.up.railway.app';
 
-            console.log('🌐 API URL:', API_URL);
+            console.log('🌐 API URL (absolute hardcode):', API_URL);
 
             const response = await fetch(`${API_URL}/api/grok`, {
                 method: 'POST',
