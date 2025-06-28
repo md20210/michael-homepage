@@ -1,14 +1,14 @@
-// src/components/Chatbot.jsx - NUCLEAR HARDCODE VERSION
+// src/components/Chatbot.jsx - STANDALONE VERSION - NO BACKEND CONNECTIONS
 import React, { useState, useEffect, useRef } from 'react';
 import { getFallbackResponse, getApiErrorResponse } from '../utils/fallbackResponses.js';
 
-console.log('🔥🔥🔥 NUCLEAR HARDCODE - NO LOCALHOST - BUILD:', Date.now());
+console.log('🔥🔥🔥 STANDALONE MODE - NO BACKEND CONNECTIONS - BUILD:', Date.now());
 
 const Chatbot = ({ t, currentLang }) => {
     const [messages, setMessages] = useState([]);
     const [inputValue, setInputValue] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const [apiAvailable, setApiAvailable] = useState(false);
+    const [apiAvailable] = useState(false); // PERMANENT FALSE - NO BACKEND
     const chatLogRef = useRef(null);
 
     // NEUE Spracherkennungs-Funktion
@@ -49,48 +49,26 @@ const Chatbot = ({ t, currentLang }) => {
         return "en";
     };
 
-    // Test if Railway backend is available
+    // NO BACKEND CONNECTION - REMOVED ALL API CALLS
     useEffect(() => {
-        const testConnection = async () => {
-            try {
-                // ABSOLUTE HARDCODE - NO ENVIRONMENT VARIABLES
-                const API_URL = 'https://michael-homepage-production.up.railway.app';
-                
-                console.log('🔍 Testing connection to:', `${API_URL}/health`);
-                console.log('🌐 Current hostname:', window.location.hostname);
-                console.log('🔥 ABSOLUTE HARDCODE - NO ENV VARS');
-                
-                const response = await fetch(`${API_URL}/health`);
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    console.log('✅ Backend response:', data);
-                    setApiAvailable(true);
-                    console.log('✅ Railway Backend available');
-                } else {
-                    throw new Error(`Server responded with ${response.status}`);
-                }
-            } catch (error) {
-                console.log('⚠️ Backend not available, using intelligent fallback:', error.message);
-                setApiAvailable(false);
-            }
-        };
-        testConnection();
+        console.log('💾 Standalone mode - No backend connections');
+        console.log('🔥 ALL BACKEND CONNECTIONS REMOVED');
+        // setApiAvailable remains false permanently
     }, []);
 
     // Initialize with welcome message using existing translations
     useEffect(() => {
-        console.log('🤖 Chatbot initializing...');
+        console.log('🤖 Chatbot initializing in standalone mode...');
         const welcomeMsg = {
             id: 1,
             type: 'bot',
             content: t('chatbot-welcome'),
             timestamp: Date.now(),
-            source: apiAvailable ? 'system' : 'fallback'
+            source: 'standalone'
         };
         setMessages([welcomeMsg]);
-        console.log('✅ Welcome message set from translations');
-    }, [t, apiAvailable]);
+        console.log('✅ Welcome message set from translations (standalone)');
+    }, [t]);
 
     // Auto-scroll
     useEffect(() => {
@@ -99,52 +77,11 @@ const Chatbot = ({ t, currentLang }) => {
         }
     }, [messages]);
 
-    const callRailwayAPI = async (message, detectedLanguage) => {
-        try {
-            console.log('🚀 Calling Railway API...');
-            console.log('📤 Sending:', { message, lang: detectedLanguage });
-            
-            // ABSOLUTE HARDCODE - NO ENVIRONMENT VARIABLES
-            const API_URL = 'https://michael-homepage-production.up.railway.app';
-
-            console.log('🌐 API URL (absolute hardcode):', API_URL);
-
-            const response = await fetch(`${API_URL}/api/grok`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    message: message,
-                    lang: detectedLanguage
-                })
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const data = await response.json();
-            console.log('✅ Railway API response:', data);
-
-            return {
-                success: true,
-                message: data.message || data.hello || 'Response received',
-                source: data.source || 'railway-api'
-            };
-
-        } catch (error) {
-            console.error('❌ Railway API Error:', error);
-            return {
-                success: false,
-                error: error.message
-            };
-        }
-    };
+    // REMOVED: callRailwayAPI function - NO MORE BACKEND CALLS
 
     const handleSendMessage = async () => {
         const message = inputValue.trim();
-        console.log('📤 Sending message:', message);
+        console.log('📤 Sending message (standalone):', message);
         
         if (!message || isLoading) return;
 
@@ -166,28 +103,11 @@ const Chatbot = ({ t, currentLang }) => {
 
         try {
             let botResponse;
-            let source = 'fallback';
+            let source = 'intelligent-fallback';
 
-            if (apiAvailable) {
-                // Try Railway API first - mit erkannter Sprache!
-                const apiResult = await callRailwayAPI(message, detectedLang);
-                
-                if (apiResult.success) {
-                    botResponse = apiResult.message;
-                    source = apiResult.source;
-                    console.log('✅ Using Railway API response');
-                } else {
-                    // Fallback to existing fallback system
-                    botResponse = getFallbackResponse(message, detectedLang);
-                    source = 'intelligent-fallback';
-                    console.log('⚠️ API failed, using intelligent fallback');
-                }
-            } else {
-                // Use existing fallback response system
-                botResponse = getFallbackResponse(message, detectedLang);
-                source = 'intelligent-fallback';
-                console.log('💾 Using intelligent fallback (no server)');
-            }
+            // ONLY USE FALLBACK RESPONSES - NO API CALLS
+            botResponse = getFallbackResponse(message, detectedLang);
+            console.log('💾 Using intelligent fallback (standalone mode)');
             
             const botMsg = {
                 id: Date.now() + 1,
@@ -198,7 +118,7 @@ const Chatbot = ({ t, currentLang }) => {
             };
 
             setMessages(prev => [...prev, botMsg]);
-            console.log('✅ Bot response added:', botMsg);
+            console.log('✅ Bot response added (standalone):', botMsg);
             
         } catch (error) {
             console.error('❌ Chat error:', error);
@@ -228,18 +148,16 @@ const Chatbot = ({ t, currentLang }) => {
 
     const getSourceIndicator = (source) => {
         switch (source) {
-            case 'railway-api': return '🚀 Railway API';
-            case 'grok-api': return '🤖 Grok API';
-            case 'smart-local-ai': return '🧠 Smart AI';
             case 'intelligent-fallback': return '🧠 Smart AI';
-            case 'fallback': return '💾 Fallback';
+            case 'standalone': return '🤖 Standalone';
+            case 'fallback': return '💾 Local AI';
             case 'error': return '⚠️ Error';
             case 'system': return '🤖 System';
-            default: return '🤖 AI';
+            default: return '🤖 Local AI';
         }
     };
 
-    console.log('🎨 Rendering Chatbot with', messages.length, 'messages. API Available:', apiAvailable);
+    console.log('🎨 Rendering Chatbot (standalone) with', messages.length, 'messages. Backend: DISABLED');
 
     return (
         <section id="chatbot" className="section">
@@ -260,10 +178,7 @@ const Chatbot = ({ t, currentLang }) => {
                             <h3 dangerouslySetInnerHTML={{ __html: t('chatbot-header') }} />
                             <p dangerouslySetInnerHTML={{ __html: t('chatbot-info') }} />
                             <p>
-                                {apiAvailable ? 
-                                    "✅ Connected to Railway Backend! Full AI responses available." :
-                                    "💾 Using intelligent AI responses with automatic language detection."
-                                }
+                                💾 Standalone mode: Using intelligent local AI responses with automatic language detection.
                             </p>
                             <p dangerouslySetInnerHTML={{ __html: t('chatbot-opportunity') }} />
                             <p dangerouslySetInnerHTML={{ __html: t('chatbot-phone') }} />
@@ -294,8 +209,7 @@ const Chatbot = ({ t, currentLang }) => {
                                                     fontSize: '10px', 
                                                     opacity: 0.7, 
                                                     marginTop: '5px',
-                                                    color: msg.source.includes('railway') ? '#00ff00' :
-                                                           msg.source.includes('grok') || msg.source.includes('smart') ? '#00ffff' : '#ffd700'
+                                                    color: '#00ffff'
                                                 }}>
                                                     {getSourceIndicator(msg.source)}
                                                 </div>
