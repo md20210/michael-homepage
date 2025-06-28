@@ -1,12 +1,7 @@
-# Du bist hier: E:\Project20250615\portfolio-website\michael-homepage\
-# Die vercel.json kommt ins Root-Verzeichnis (gleiche Ebene wie package.json)
-
-@"
-{
+﻿{
   "functions": {
-    "api/grok.js": {
+    "api/grok.mjs": {
       "runtime": "@vercel/node@18.x"
     }
   }
 }
-"@ | Out-File -FilePath "vercel.json" -Encoding UTF8
