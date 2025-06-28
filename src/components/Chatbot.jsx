@@ -92,7 +92,11 @@ const Chatbot = ({ t, currentLang }) => {
             console.log('🚀 Calling Grok API via proxy...');
             console.log('📤 Sending:', { message, lang: detectedLanguage });
             
-            const response = await fetch('http://localhost:3001/api/grok', {
+		const API_URL = window.location.hostname === 'localhost' 
+ 		 ? 'http://localhost:3001' 
+ 		 : 'https://michael-homepage.vercel.app';
+
+		const response = await fetch(`${API_URL}/api/grok`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
