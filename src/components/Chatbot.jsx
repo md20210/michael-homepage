@@ -1,4 +1,4 @@
-// src/components/Chatbot.jsx - Mit Vercel Backend korrigiert
+// src/components/Chatbot.jsx - Mit Railway Backend korrigiert
 import React, { useState, useEffect, useRef } from 'react';
 import { getFallbackResponse, getApiErrorResponse } from '../utils/fallbackResponses.js';
 
@@ -47,22 +47,29 @@ const Chatbot = ({ t, currentLang }) => {
         return "en";
     };
 
-    // Test if Vercel backend is available
+    // Test if Railway backend is available
     useEffect(() => {
         const testConnection = async () => {
             try {
-                // API_URL für Health Check
-                const API_URL = window.location.hostname === 'localhost' 
+                // KORRIGIERTE URL-Erkennung:
+                const isLocalhost = window.location.hostname === 'localhost' || 
+                                   window.location.hostname === '127.0.0.1';
+                
+                const API_URL = isLocalhost
                     ? 'http://localhost:3001/health' 
-                    : 'https://michael-homepage-production.up.railway.app/health'; 
+                    : 'https://michael-homepage-production.up.railway.app/health';
+                
                 console.log('🔍 Testing connection to:', API_URL);
+                console.log('🌐 Current hostname:', window.location.hostname);
+                console.log('🔧 Is localhost:', isLocalhost);
+                
                 const response = await fetch(API_URL);
                 
                 if (response.ok) {
                     const data = await response.json();
                     console.log('✅ Backend response:', data);
                     setApiAvailable(true);
-                    console.log('✅ Vercel Backend available');
+                    console.log('✅ Railway Backend available');
                 } else {
                     throw new Error(`Server responded with ${response.status}`);
                 }
@@ -95,15 +102,20 @@ const Chatbot = ({ t, currentLang }) => {
         }
     }, [messages]);
 
-    const callVercelAPI = async (message, detectedLanguage) => {
+    const callRailwayAPI = async (message, detectedLanguage) => {
         try {
-            console.log('🚀 Calling Vercel API...');
+            console.log('🚀 Calling Railway API...');
             console.log('📤 Sending:', { message, lang: detectedLanguage });
             
-            // API URL für Frontend/Backend
-            const API_URL = window.location.hostname === 'localhost' 
+            // KORRIGIERTE URL-Erkennung:
+            const isLocalhost = window.location.hostname === 'localhost' || 
+                               window.location.hostname === '127.0.0.1';
+            
+            const API_URL = isLocalhost
                 ? 'http://localhost:3001' 
                 : 'https://michael-homepage-production.up.railway.app';
+
+            console.log('🌐 API URL:', API_URL);
 
             const response = await fetch(`${API_URL}/api/grok`, {
                 method: 'POST',
@@ -121,16 +133,16 @@ const Chatbot = ({ t, currentLang }) => {
             }
 
             const data = await response.json();
-            console.log('✅ Vercel API response:', data);
+            console.log('✅ Railway API response:', data);
 
             return {
                 success: true,
                 message: data.message || data.hello || 'Response received',
-                source: data.source || 'vercel-api'
+                source: data.source || 'railway-api'
             };
 
         } catch (error) {
-            console.error('❌ Vercel API Error:', error);
+            console.error('❌ Railway API Error:', error);
             return {
                 success: false,
                 error: error.message
@@ -165,13 +177,13 @@ const Chatbot = ({ t, currentLang }) => {
             let source = 'fallback';
 
             if (apiAvailable) {
-                // Try Vercel API first - mit erkannter Sprache!
-                const apiResult = await callVercelAPI(message, detectedLang);
+                // Try Railway API first - mit erkannter Sprache!
+                const apiResult = await callRailwayAPI(message, detectedLang);
                 
                 if (apiResult.success) {
                     botResponse = apiResult.message;
                     source = apiResult.source;
-                    console.log('✅ Using Vercel API response');
+                    console.log('✅ Using Railway API response');
                 } else {
                     // Fallback to existing fallback system
                     botResponse = getFallbackResponse(message, detectedLang);
@@ -224,7 +236,7 @@ const Chatbot = ({ t, currentLang }) => {
 
     const getSourceIndicator = (source) => {
         switch (source) {
-            case 'vercel-api': return '🚀 Vercel API';
+            case 'railway-api': return '🚀 Railway API';
             case 'grok-api': return '🤖 Grok API';
             case 'smart-local-ai': return '🧠 Smart AI';
             case 'intelligent-fallback': return '🧠 Smart AI';
@@ -257,7 +269,7 @@ const Chatbot = ({ t, currentLang }) => {
                             <p dangerouslySetInnerHTML={{ __html: t('chatbot-info') }} />
                             <p>
                                 {apiAvailable ? 
-                                    "✅ Connected to Vercel Backend! Full AI responses available." :
+                                    "✅ Connected to Railway Backend! Full AI responses available." :
                                     "💾 Using intelligent AI responses with automatic language detection."
                                 }
                             </p>
@@ -290,7 +302,7 @@ const Chatbot = ({ t, currentLang }) => {
                                                     fontSize: '10px', 
                                                     opacity: 0.7, 
                                                     marginTop: '5px',
-                                                    color: msg.source.includes('vercel') ? '#00ff00' :
+                                                    color: msg.source.includes('railway') ? '#00ff00' :
                                                            msg.source.includes('grok') || msg.source.includes('smart') ? '#00ffff' : '#ffd700'
                                                 }}>
                                                     {getSourceIndicator(msg.source)}
