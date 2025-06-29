@@ -7,7 +7,7 @@
     "node": ">=18.0.0"
   },
   "type": "module",
-  "homepage": "https://michael-homepage-dev-production.up.railway.app",
+  "homepage": "https://michael-homepage-production.up.railway.app",
   "scripts": {
     "dev": "vite",
     "build": "cross-env NODE_ENV=production vite build",

@@ -1,7 +1,0 @@
-﻿{
-  "functions": {
-    "api/grok.mjs": {
-      "runtime": "@vercel/node@18.x"
-    }
-  }
-}
