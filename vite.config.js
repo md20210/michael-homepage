@@ -1,29 +1,8 @@
-// vite.config.js - ANGEPASST FÜR GITHUB PAGES
+// vite.config.js - SECURE VERSION - NO API KEYS IN BUILD
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { createDecipheriv } from 'crypto';
-import fs from 'fs';
 
-// API-Schlüssel Entschlüsselung (nur für lokale Entwicklung)
-let apiKey;
-try {
-    // Prüfen ob Verschlüsselungsdateien existieren (nur lokal)
-    if (fs.existsSync('encryption_key.bin') && fs.existsSync('encryption_iv.bin') && fs.existsSync('encrypted_api_key.txt')) {
-        const algorithm = 'aes-256-cbc';
-        const key = fs.readFileSync('encryption_key.bin');
-        const iv = fs.readFileSync('encryption_iv.bin');
-        const encryptedKey = fs.readFileSync('encrypted_api_key.txt', 'utf8');
-        const decipher = createDecipheriv(algorithm, key, iv);
-        apiKey = decipher.update(encryptedKey, 'hex', 'utf8') + decipher.final('utf8');
-        console.log('✅ API-Schlüssel erfolgreich entschlüsselt (lokale Entwicklung)');
-    } else {
-        console.log('🌐 Verschlüsselungsdateien nicht gefunden - verwende Environment Variables');
-        apiKey = null;
-    }
-} catch (error) {
-    console.log('ℹ️ Fallback zu Environment Variables:', error.message);
-    apiKey = null;
-}
+console.log('🔒 Secure build mode - API keys will NOT be embedded in build files');
 
 export default defineConfig({
     plugins: [react()],
@@ -31,12 +10,13 @@ export default defineConfig({
     // WICHTIG: Base path für GitHub Pages
     base: './',
     
-    // Environment Variables definieren
+    // Environment Variables - SECURE VERSION
     define: {
-        // Lokaler API-Schlüssel oder Environment Variable
-        'import.meta.env.VITE_XAI_API_KEY': JSON.stringify(apiKey || process.env.VITE_XAI_API_KEY || null),
-        // HARDCODE FIX: Immer Railway URL verwenden
-        'import.meta.env.VITE_API_URL': JSON.stringify('https://michael-homepage-production.up.railway.app'),
+        // NEVER embed API keys in build files!
+        // API keys should only be available at runtime via environment variables
+        'import.meta.env.VITE_XAI_API_KEY': JSON.stringify(null),
+        // Only embed non-sensitive config
+        'import.meta.env.VITE_API_URL': JSON.stringify(null),
     },
     
     // Build-Konfiguration für GitHub Pages
@@ -58,6 +38,7 @@ export default defineConfig({
     server: {
         port: 3000,
         open: true,
+        // Lade API Key zur Laufzeit für lokale Entwicklung
         proxy: {
             '/api': {
                 target: 'http://localhost:3001',
