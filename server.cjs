@@ -25,7 +25,7 @@ const corsOptions = {
     origin: [
         'http://localhost:3000',
         'http://localhost:4173',
-        'https://michael-homepage-dev-production.up.railway.app'
+        'https://michael-homepage-production.up.railway.app'
     ],
     methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
