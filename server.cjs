@@ -97,6 +97,8 @@ function isAboutMichael(message) {
     console.log(`🔍 Michael check: "${message}" - Contains Michael: ${explicitMichael}`);
     return explicitMichael;
 }
+
+function getMichaelResponse(message, language) {
     const msgLower = message.toLowerCase();
     const kb = MICHAEL_KNOWLEDGE_BASE[language] || MICHAEL_KNOWLEDGE_BASE.en;
     
@@ -149,14 +151,20 @@ async function callGrokAPI(message, language) {
     try {
         console.log('🚀 Calling Grok API...');
         
+        const systemPrompt = language === 'de' ? 
+            'Du bist Grok, ein hilfreicher KI-Assistent. Antworte auf Deutsch.' :
+            language === 'es' ?
+            'Eres Grok, un asistente de IA útil. Responde en español.' :
+            'You are Grok, a helpful AI assistant. Respond in English.';
+        
         const response = await axios.post(GROK_API_URL, {
             messages: [
-                { role: 'system', content: 'You are a helpful assistant.' },
+                { role: 'system', content: systemPrompt },
                 { role: 'user', content: message }
             ],
             model: 'grok-2-1212',
             temperature: 0.7,
-            max_tokens: 300
+            max_tokens: 400
         }, {
             headers: {
                 'Authorization': `Bearer ${API_KEY}`,
@@ -172,7 +180,10 @@ async function callGrokAPI(message, language) {
         };
         
     } catch (error) {
-        console.log('❌ Grok API failed:', error.response?.status);
+        console.log('❌ Grok API failed:', error.response?.status, error.response?.statusText);
+        if (error.response?.data) {
+            console.log('📄 Error details:', error.response.data);
+        }
         return { success: false, error: error.message };
     }
 }
@@ -180,6 +191,8 @@ async function callGrokAPI(message, language) {
 // API Routes
 app.post('/api/grok', async (req, res) => {
     try {
+        console.log('📨 Received request:', req.body);
+        
         const { message, lang } = req.body;
         const detectedLang = lang || detectLanguage(message);
 
@@ -202,20 +215,33 @@ app.post('/api/grok', async (req, res) => {
                     success: true,
                     message: result.message,
                     source: 'grok-api',
-                    language: detectedLang
+                    language: detectedLang,
+                    note: 'Real Grok API response'
                 });
             } else {
+                const fallbackMsg = detectedLang === 'de' ? 
+                    "Entschuldigung, ich kann derzeit nur Fragen über Michael Dabrock beantworten. Für andere Themen ist meine Grok-Verbindung nicht verfügbar." :
+                    detectedLang === 'es' ?
+                    "Lo siento, actualmente solo puedo responder preguntas sobre Michael Dabrock. Mi conexión Grok para otros temas no está disponible." :
+                    "Sorry, I can currently only answer questions about Michael Dabrock. My Grok connection for other topics is unavailable.";
+                
                 res.json({
                     success: true,
-                    message: 'Sorry, I can only answer questions about Michael Dabrock.',
+                    message: fallbackMsg,
                     source: 'fallback',
-                    language: detectedLang
+                    language: detectedLang,
+                    note: 'Grok API unavailable'
                 });
             }
         }
     } catch (error) {
         console.error('💥 Error:', error);
-        res.status(500).json({ success: false, message: 'Server error' });
+        res.status(500).json({ 
+            success: false, 
+            message: 'Server error occurred',
+            source: 'error',
+            language: req.body?.lang || 'en'
+        });
     }
 });
 
