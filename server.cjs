@@ -1,26 +1,31 @@
-// server.cjs - EXPRESS ROUTE FIX
-// Das Problem liegt in den Express-Routes
-
+// server.cjs - EXPRESS SERVER FOR RAILWAY DEPLOYMENT
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
 const dotenv = require('dotenv');
 const { createDecipheriv } = require('crypto');
 const fs = require('fs');
+const path = require('path');
 
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000; // Railway uses PORT env var
 
-// CORS KONFIGURATION (korrekt)
+console.log('🚀 Starting Express server for Railway...');
+console.log('📦 Port:', PORT);
+console.log('🌍 Environment:', process.env.NODE_ENV || 'development');
+
+// CORS KONFIGURATION - Updated for Railway
 const corsOptions = {
     origin: [
         'http://localhost:3000',
         'http://localhost:4173',
+        'https://michael-homepage-dev-production.up.railway.app',
+        // Optional: GitHub Pages fallback
         'https://md20210.github.io',
         'https://md20210.github.io/michael-homepage',
-        'https://md20210.github.io/michael-homepage/'
+        'https://md20210.github.io/michael-homepage-dev'
     ],
     methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
@@ -30,10 +35,19 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
 
-// WICHTIG: Body parser MUSS vor den Routen stehen
+// Body parser MUSS vor den Routen stehen
 app.use(express.json());
 
-// MICHAEL KNOWLEDGE BASE
+// Serve static files from dist directory (Vite build output)
+const distPath = path.join(__dirname, 'dist');
+if (fs.existsSync(distPath)) {
+    console.log('📁 Serving static files from:', distPath);
+    app.use(express.static(distPath));
+} else {
+    console.log('⚠️ No dist directory found - you may need to run "npm run build" first');
+}
+
+// MICHAEL KNOWLEDGE BASE (your existing knowledge base)
 const MICHAEL_KNOWLEDGE_BASE = {
     de: {
         alter: "Michaels genaues Alter ist nicht in den bereitgestellten Informationen angegeben. Basierend auf seiner über 20-jährigen Berufserfahrung und seinem Studienabschluss am KIT kann man schätzen, dass er erfahren und etabliert in seiner Karriere ist.",
@@ -59,31 +73,37 @@ const MICHAEL_KNOWLEDGE_BASE = {
     }
 };
 
-// API KEY ENTSCHLÜSSELUNG
+// API KEY ENTSCHLÜSSELUNG with Railway Environment Variable fallback
 const algorithm = 'aes-256-cbc';
 let API_KEY;
 
 try {
-    const encryptedApiKey = fs.readFileSync('encrypted_api_key.txt', 'utf8');
-    const key = fs.readFileSync('encryption_key.bin');
-    const iv = fs.readFileSync('encryption_iv.bin');
-    const decipher = createDecipheriv(algorithm, key, iv);
-    let decrypted = decipher.update(encryptedApiKey, 'hex', 'utf8');
-    decrypted += decipher.final('utf8');
-    API_KEY = decrypted;
-    console.log('✅ API-Schlüssel erfolgreich entschlüsselt:', API_KEY ? `${API_KEY.substring(0, 15)}...` : 'null');
-} catch (error) {
-    console.error('❌ Entschlüsselungsfehler:', error);
-    API_KEY = process.env.VITE_XAI_API_KEY;
-    if (API_KEY) {
-        console.log('⚠️ Fallback auf .env API-Key verwendet');
+    // Try encrypted files first (for local development)
+    if (fs.existsSync('encrypted_api_key.txt') && fs.existsSync('encryption_key.bin') && fs.existsSync('encryption_iv.bin')) {
+        const encryptedApiKey = fs.readFileSync('encrypted_api_key.txt', 'utf8');
+        const key = fs.readFileSync('encryption_key.bin');
+        const iv = fs.readFileSync('encryption_iv.bin');
+        const decipher = createDecipheriv(algorithm, key, iv);
+        let decrypted = decipher.update(encryptedApiKey, 'hex', 'utf8');
+        decrypted += decipher.final('utf8');
+        API_KEY = decrypted;
+        console.log('✅ API-Schlüssel erfolgreich entschlüsselt:', API_KEY ? `${API_KEY.substring(0, 15)}...` : 'null');
     } else {
-        console.log('❌ Kein API-Key verfügbar');
+        throw new Error('Encrypted files not found');
+    }
+} catch (error) {
+    console.log('⚠️ Encrypted API key not available, trying environment variables...');
+    API_KEY = process.env.VITE_XAI_API_KEY || process.env.XAI_API_KEY;
+    if (API_KEY) {
+        console.log('✅ Using environment variable API key:', `${API_KEY.substring(0, 15)}...`);
+    } else {
+        console.log('❌ No API key available from any source');
     }
 }
 
 const GROK_API_URL = 'https://api.x.ai/v1/chat/completions';
 
+// Helper functions (your existing functions)
 function detectLanguage(message) {
     const germanKeywords = ["wie", "wieviel", "was", "welche", "wer", "wo", "wann", "alt", "alter", "studiert", "studium", "uni", "universität"];
     const spanishKeywords = ["cuánto", "qué", "cuáles", "quién", "dónde", "cuándo", "edad", "estudió", "universidad"];
@@ -194,7 +214,7 @@ function getMichaelResponse(message, language) {
     return kb.default;
 }
 
-// KORREKTE ROUTEN-DEFINITIONEN
+// API ROUTES
 app.post('/api/grok', async (req, res) => {
     try {
         console.log('📨 Received request:', req.body);
@@ -263,16 +283,30 @@ app.get('/health', (req, res) => {
         strategy: 'Michael questions → Local KB, Other questions → Real Grok API',
         languages: Object.keys(MICHAEL_KNOWLEDGE_BASE),
         grokApiAvailable: !!API_KEY,
-        encryptionUsed: true,
-        knowledgeItems: Object.keys(MICHAEL_KNOWLEDGE_BASE.en).length
+        encryptionUsed: fs.existsSync('encrypted_api_key.txt'),
+        knowledgeItems: Object.keys(MICHAEL_KNOWLEDGE_BASE.en).length,
+        port: PORT,
+        environment: process.env.NODE_ENV || 'development',
+        distPath: fs.existsSync(distPath) ? 'Available' : 'Missing'
     });
 });
 
+// Serve React app for all other routes (SPA routing)
+app.get('*', (req, res) => {
+    const indexPath = path.join(distPath, 'index.html');
+    if (fs.existsSync(indexPath)) {
+        res.sendFile(indexPath);
+    } else {
+        res.status(404).send('App not built. Run "npm run build" first.');
+    }
+});
+
 app.listen(PORT, () => {
-    console.log(`🚀 Hybrid AI System running on http://localhost:${PORT}`);
+    console.log(`🚀 Hybrid AI System running on port ${PORT}`);
     console.log(`👨‍💼 Michael questions → Local Knowledge Base`);
     console.log(`🌍 Other questions → Real Grok API ${API_KEY ? '✅' : '❌'}`);
-    console.log(`🔐 API Key encryption: ${API_KEY ? 'Active' : 'Failed'}`);
+    console.log(`🔐 API Key: ${API_KEY ? 'Available' : 'Missing'}`);
     console.log(`📚 Michael knowledge loaded: ${Object.keys(MICHAEL_KNOWLEDGE_BASE.en).length} topics`);
-    console.log(`🎯 Result: Best of both worlds!`);
+    console.log(`📁 Static files: ${fs.existsSync(distPath) ? 'Available' : 'Missing - run npm run build'}`);
+    console.log(`🎯 Ready for Railway deployment!`);
 });
