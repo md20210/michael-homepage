@@ -1,134 +1,18 @@
-// src/components/Chatbot.jsx - RUNTIME ENVIRONMENT VARIABLE LOADING
+// src/components/Chatbot.jsx - FOR EXISTING server.cjs
 import React, { useState, useEffect, useRef } from 'react';
 import { getFallbackResponse, getApiErrorResponse } from '../utils/fallbackResponses.js';
 
-console.log('🔒 RUNTIME ENV LOADING GROK API MODE - BUILD:', Date.now());
+console.log('🔄 HYBRID SERVER API MODE - BUILD:', Date.now());
 
 const Chatbot = ({ t, currentLang }) => {
     const [messages, setMessages] = useState([]);
     const [inputValue, setInputValue] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const [grokAvailable, setGrokAvailable] = useState(false);
-    const [apiKey, setApiKey] = useState(null);
-    const [keyLoading, setKeyLoading] = useState(true);
+    const [serverAvailable, setServerAvailable] = useState(false);
     const chatLogRef = useRef(null);
 
-    const GROK_API_URL = 'https://api.x.ai/v1/chat/completions';
-
-    // Runtime Environment Variable Loading
-    useEffect(() => {
-        const loadApiKey = async () => {
-            console.log('🔍 Loading API key from multiple sources...');
-            
-            let foundKey = null;
-            
-            // Method 1: Vite environment variables (build-time)
-            const viteKey = import.meta.env.VITE_XAI_API_KEY;
-            console.log('🔍 Vite env key:', viteKey ? 'Found' : 'Not found', typeof viteKey);
-            
-            if (viteKey && viteKey !== 'undefined' && viteKey !== 'null' && viteKey !== null) {
-                foundKey = viteKey;
-                console.log('✅ Using Vite environment variable');
-            }
-            
-            // Method 2: Check if Railway injects runtime environment
-            if (!foundKey) {
-                console.log('🔍 Checking runtime environment...');
-                
-                // Try different ways Railway might inject env vars
-                const runtimeKey = window.ENV?.VITE_XAI_API_KEY || 
-                                 window.process?.env?.VITE_XAI_API_KEY ||
-                                 globalThis.process?.env?.VITE_XAI_API_KEY;
-                                 
-                if (runtimeKey) {
-                    foundKey = runtimeKey;
-                    console.log('✅ Using runtime environment variable');
-                }
-            }
-            
-            // Method 3: Check for Railway-specific injection
-            if (!foundKey) {
-                console.log('🔍 Checking Railway-specific environment...');
-                
-                // Railway sometimes injects env vars differently
-                if (typeof window !== 'undefined' && window.railway) {
-                    foundKey = window.railway.VITE_XAI_API_KEY;
-                    console.log('✅ Using Railway-specific injection');
-                }
-            }
-            
-            // Method 4: Fetch from a meta tag (if Railway injects it there)
-            if (!foundKey) {
-                console.log('🔍 Checking meta tags...');
-                const metaTag = document.querySelector('meta[name="vite-xai-api-key"]');
-                if (metaTag) {
-                    foundKey = metaTag.getAttribute('content');
-                    console.log('✅ Using meta tag');
-                }
-            }
-            
-            console.log('🔍 Final API key status:', foundKey ? 'Found' : 'Not found');
-            console.log('🔍 Final API key type:', typeof foundKey);
-            console.log('🔍 Final API key length:', foundKey ? foundKey.length : 0);
-            
-            setApiKey(foundKey);
-            setKeyLoading(false);
-            
-            // If we found a key, test the API
-            if (foundKey) {
-                await testGrokAPI(foundKey);
-            } else {
-                console.log('💾 No API key found - using fallback mode');
-                setGrokAvailable(false);
-            }
-        };
-        
-        loadApiKey();
-    }, []);
-
-    // Test Grok API with provided key
-    const testGrokAPI = async (key) => {
-        try {
-            console.log('🔍 Testing Grok API connection...');
-            
-            const response = await fetch(GROK_API_URL, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${key}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    messages: [
-                        {
-                            role: "system",
-                            content: "You are a test assistant. Respond with just 'Connection successful' to verify the API is working."
-                        },
-                        {
-                            role: "user",
-                            content: "Test connection"
-                        }
-                    ],
-                    model: "grok-beta",
-                    stream: false,
-                    temperature: 0.1,
-                    max_tokens: 10
-                })
-            });
-
-            if (response.ok) {
-                console.log('✅ Grok API available and working!');
-                setGrokAvailable(true);
-            } else {
-                const errorText = await response.text();
-                console.log('❌ Grok API test failed:', response.status);
-                console.log('❌ Error details:', errorText);
-                setGrokAvailable(false);
-            }
-        } catch (error) {
-            console.log('⚠️ Grok API connection error:', error.message);
-            setGrokAvailable(false);
-        }
-    };
+    // Use existing server.cjs endpoints
+    const API_BASE = window.location.origin;
 
     // Spracherkennungs-Funktion
     const detectLanguage = (message) => {
@@ -167,21 +51,51 @@ const Chatbot = ({ t, currentLang }) => {
         return "en";
     };
 
+    // Test existing server.cjs
+    useEffect(() => {
+        const testServer = async () => {
+            try {
+                console.log('🔍 Testing existing server.cjs...');
+                console.log('🌐 API Base URL:', API_BASE);
+                
+                const response = await fetch(`${API_BASE}/health`);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('✅ Server response:', data);
+                    
+                    if (data.status && data.grokApiAvailable !== undefined) {
+                        setServerAvailable(true);
+                        console.log('✅ Hybrid server available!');
+                        console.log('📚 Michael Knowledge Base:', data.knowledgeItems, 'topics');
+                        console.log('🤖 Grok API:', data.grokApiAvailable ? 'Available' : 'Unavailable');
+                    }
+                } else {
+                    console.log('❌ Server health check failed:', response.status);
+                    setServerAvailable(false);
+                }
+            } catch (error) {
+                console.log('⚠️ Server connection error:', error.message);
+                setServerAvailable(false);
+            }
+        };
+
+        testServer();
+    }, [API_BASE]);
+
     // Initialize with welcome message
     useEffect(() => {
-        if (!keyLoading) {
-            console.log('🤖 Chatbot initializing...');
-            const welcomeMsg = {
-                id: 1,
-                type: 'bot',
-                content: t('chatbot-welcome'),
-                timestamp: Date.now(),
-                source: grokAvailable ? 'grok-ready' : 'fallback'
-            };
-            setMessages([welcomeMsg]);
-            console.log('✅ Welcome message set - Grok API:', grokAvailable ? 'Available' : 'Fallback mode');
-        }
-    }, [t, grokAvailable, keyLoading]);
+        console.log('🤖 Chatbot initializing with hybrid server...');
+        const welcomeMsg = {
+            id: 1,
+            type: 'bot',
+            content: t('chatbot-welcome'),
+            timestamp: Date.now(),
+            source: serverAvailable ? 'hybrid-ready' : 'fallback'
+        };
+        setMessages([welcomeMsg]);
+        console.log('✅ Welcome message set - Hybrid Server:', serverAvailable ? 'Available' : 'Fallback mode');
+    }, [t, serverAvailable]);
 
     // Auto-scroll
     useEffect(() => {
@@ -190,123 +104,46 @@ const Chatbot = ({ t, currentLang }) => {
         }
     }, [messages]);
 
-    // Direct Grok API call
-    const callGrokAPI = async (message, detectedLanguage) => {
+    // Call existing server.cjs API
+    const callHybridAPI = async (message, detectedLanguage) => {
         try {
-            if (!apiKey) {
-                throw new Error('No API key available');
-            }
+            console.log('🚀 Calling hybrid server API...');
+            console.log('📤 Sending to server:', { message, lang: detectedLanguage });
 
-            console.log('🚀 Calling Grok API...');
-            console.log('📤 Sending:', { message, lang: detectedLanguage });
-
-            const systemPrompts = {
-                en: `You are Grok, an AI assistant created by xAI. You are helping visitors learn about Michael Dabrock, a software developer and AI consultant. 
-
-Michael's Background:
-- AI Consultant & IT Architect with 20+ years enterprise experience
-- Currently specializing in AI consulting (ChatGPT, Grok, Gemini, Claude integration)
-- Lives in Barcelona, Spain with EU work permit
-- Studied Industrial Engineering at Karlsruhe Institute of Technology (KIT)
-- Speaks German (native), English (fluent), Spanish (basic)
-- Phone: +34 683 1782 48, Email: michael.dabrock@gmx.es
-- AI Phone Assistant: +34 93 694 5855
-
-Career Highlights:
-- Cognizant (2011-2023): Global Program Director, led €10M+ Pharma Cloud Migration, managed 300+ SAP consultants
-- Wipro (2008-2011): Delivered €7M insurance platform projects
-- IBM Business Consulting (2002-2007): Built Enterprise Service Bus solutions
-- Currently available for new opportunities in AI consulting, enterprise architecture
-
-Answer questions about Michael, his skills, experience, or provide helpful information about general topics. Be knowledgeable, engaging, and professional.`,
-
-                de: `Du bist Grok, ein KI-Assistent von xAI. Du hilfst Besuchern dabei, mehr über Michael Dabrock zu erfahren, einen Softwareentwickler und KI-Berater.
-
-Michaels Hintergrund:
-- KI-Berater & IT-Architekt mit 20+ Jahren Unternehmenserfahrung
-- Derzeit spezialisiert auf KI-Beratung (ChatGPT, Grok, Gemini, Claude Integration)
-- Lebt in Barcelona, Spanien mit EU-Arbeitserlaubnis
-- Studierte Wirtschaftsingenieurwesen am Karlsruhe Institute of Technology (KIT)
-- Spricht Deutsch (Muttersprache), Englisch (fließend), Spanisch (Grundkenntnisse)
-- Telefon: +34 683 1782 48, Email: michael.dabrock@gmx.es
-- KI-Telefon-Assistent: +34 93 694 5855
-
-Karriere-Highlights:
-- Cognizant (2011-2023): Global Program Director, leitete €10M+ Pharma Cloud Migration, managte 300+ SAP-Berater
-- Wipro (2008-2011): Lieferte €7M Versicherungsplattform-Projekte
-- IBM Business Consulting (2002-2007): Baute Enterprise Service Bus Lösungen
-- Derzeit verfügbar für neue Möglichkeiten in KI-Beratung, Enterprise Architecture
-
-Beantworte Fragen über Michael, seine Fähigkeiten, Erfahrungen oder gib hilfreiche Informationen zu allgemeinen Themen. Sei sachkundig, engagiert und professionell.`,
-
-                es: `Eres Grok, un asistente de IA creado por xAI. Ayudas a los visitantes a conocer sobre Michael Dabrock, un desarrollador de software y consultor de IA.
-
-Trasfondo de Michael:
-- Consultor IA & Arquitecto TI con 20+ años de experiencia empresarial
-- Actualmente especializado en consultoría IA (integración ChatGPT, Grok, Gemini, Claude)
-- Vive en Barcelona, España con permiso de trabajo UE
-- Estudió Ingeniería Industrial en Karlsruhe Institute of Technology (KIT)
-- Habla alemán (nativo), inglés (fluido), español (básico)
-- Teléfono: +34 683 1782 48, Email: michael.dabrock@gmx.es
-- Asistente Telefónico IA: +34 93 694 5855
-
-Logros de Carrera:
-- Cognizant (2011-2023): Director Global de Programas, lideró Migración Cloud Farmacéutica €10M+, gestionó 300+ consultores SAP
-- Wipro (2008-2011): Entregó proyectos de plataforma de seguros €7M
-- IBM Business Consulting (2002-2007): Construyó soluciones Enterprise Service Bus
-- Actualmente disponible para nuevas oportunidades en consultoría IA, arquitectura empresarial
-
-Responde preguntas sobre Michael, sus habilidades, experiencia o proporciona información útil sobre temas generales. Sé conocedor, atractivo y profesional.`
-            };
-
-            const requestBody = {
-                messages: [
-                    {
-                        role: "system",
-                        content: systemPrompts[detectedLanguage] || systemPrompts.en
-                    },
-                    {
-                        role: "user", 
-                        content: message
-                    }
-                ],
-                model: "grok-beta",
-                stream: false,
-                temperature: 0.7,
-                max_tokens: 800
-            };
-
-            const response = await fetch(GROK_API_URL, {
+            const response = await fetch(`${API_BASE}/api/grok`, {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${apiKey}`,
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(requestBody)
+                body: JSON.stringify({
+                    message: message,
+                    lang: detectedLanguage
+                })
             });
 
             if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(`Grok API error ${response.status}: ${errorText}`);
+                throw new Error(`Server API error ${response.status}`);
             }
 
             const data = await response.json();
-            const grokMessage = data.choices?.[0]?.message?.content;
-
-            if (!grokMessage) {
-                throw new Error('No message content in Grok API response');
+            
+            if (!data.message) {
+                throw new Error('No message content in server response');
             }
 
-            console.log('✅ Grok API response received:', grokMessage.substring(0, 100) + '...');
+            console.log('✅ Hybrid server response received:', data.message.substring(0, 100) + '...');
+            console.log('📊 Response source:', data.source);
+            console.log('🔤 Response language:', data.language);
 
             return {
                 success: true,
-                message: grokMessage,
-                source: 'grok-api-runtime'
+                message: data.message,
+                source: data.source,
+                note: data.note
             };
 
         } catch (error) {
-            console.error('❌ Grok API Error:', error);
+            console.error('❌ Hybrid Server API Error:', error);
             return {
                 success: false,
                 error: error.message
@@ -318,7 +155,7 @@ Responde preguntas sobre Michael, sus habilidades, experiencia o proporciona inf
         const message = inputValue.trim();
         console.log('📤 Sending message:', message);
         
-        if (!message || isLoading || keyLoading) return;
+        if (!message || isLoading) return;
 
         const detectedLang = detectLanguage(message);
         console.log('🔍 Detected language:', detectedLang);
@@ -339,25 +176,25 @@ Responde preguntas sobre Michael, sus habilidades, experiencia o proporciona inf
             let botResponse;
             let source = 'fallback';
 
-            if (grokAvailable && apiKey) {
-                // Try Grok API call
-                const grokResult = await callGrokAPI(message, detectedLang);
+            if (serverAvailable) {
+                // Try hybrid server API call
+                const serverResult = await callHybridAPI(message, detectedLang);
                 
-                if (grokResult.success) {
-                    botResponse = grokResult.message;
-                    source = grokResult.source;
-                    console.log('✅ Using runtime Grok API response');
+                if (serverResult.success) {
+                    botResponse = serverResult.message;
+                    source = serverResult.source;
+                    console.log('✅ Using hybrid server response:', serverResult.note);
                 } else {
                     // Fallback to intelligent responses
                     botResponse = getFallbackResponse(message, detectedLang);
                     source = 'intelligent-fallback';
-                    console.log('⚠️ Grok API failed, using intelligent fallback');
+                    console.log('⚠️ Hybrid server failed, using intelligent fallback');
                 }
             } else {
                 // Use fallback response system
                 botResponse = getFallbackResponse(message, detectedLang);
                 source = 'intelligent-fallback';
-                console.log('💾 Using intelligent fallback (no runtime API key)');
+                console.log('💾 Using intelligent fallback (no hybrid server)');
             }
             
             const botMsg = {
@@ -399,29 +236,18 @@ Responde preguntas sobre Michael, sus habilidades, experiencia o proporciona inf
 
     const getSourceIndicator = (source) => {
         switch (source) {
-            case 'grok-api-runtime': return '🔄 Runtime Grok AI';
-            case 'grok-api': return '🤖 Grok AI';
-            case 'grok-ready': return '🤖 Grok Ready';
-            case 'intelligent-fallback': return '🧠 Smart AI';
-            case 'fallback': return '💾 Local AI';
+            case 'smart-local-ai': return '🧠 Smart Local AI';
+            case 'grok-api': return '🤖 Real Grok AI';
+            case 'hybrid-ready': return '🔄 Hybrid Ready';
+            case 'intelligent-fallback': return '🧠 Smart Fallback';
+            case 'fallback': return '💾 Local Fallback';
             case 'error': return '⚠️ Error';
             case 'system': return '🤖 System';
             default: return '🤖 AI';
         }
     };
 
-    if (keyLoading) {
-        return (
-            <section id="chatbot" className="section">
-                <div style={{ width: '100%', textAlign: 'center' }}>
-                    <h2 className="main-title">🔍 Loading API configuration...</h2>
-                    <p>Checking multiple sources for API key...</p>
-                </div>
-            </section>
-        );
-    }
-
-    console.log('🎨 Rendering Runtime Chatbot with', messages.length, 'messages. Grok API:', grokAvailable ? 'Available' : 'Fallback');
+    console.log('🎨 Rendering Hybrid Chatbot with', messages.length, 'messages. Server:', serverAvailable ? 'Available' : 'Fallback');
 
     return (
         <section id="chatbot" className="section">
@@ -442,9 +268,9 @@ Responde preguntas sobre Michael, sus habilidades, experiencia o proporciona inf
                             <h3 dangerouslySetInnerHTML={{ __html: t('chatbot-header') }} />
                             <p dangerouslySetInnerHTML={{ __html: t('chatbot-info') }} />
                             <p>
-                                {grokAvailable ? 
-                                    "🔄 Connected to runtime Grok AI! Full intelligent responses available - ask about Goethe, philosophy, or any topic!" :
-                                    "💾 Runtime fallback mode - using intelligent responses with detailed knowledge about Michael."
+                                {serverAvailable ? 
+                                    "🔄 Connected to hybrid AI system! Michael questions → Smart Knowledge Base, General questions → Real Grok AI. Ask about Goethe, philosophy, or any topic!" :
+                                    "💾 Hybrid fallback mode - using intelligent responses with detailed knowledge about Michael."
                                 }
                             </p>
                             <p dangerouslySetInnerHTML={{ __html: t('chatbot-opportunity') }} />
@@ -476,7 +302,8 @@ Responde preguntas sobre Michael, sus habilidades, experiencia o proporciona inf
                                                     fontSize: '10px', 
                                                     opacity: 0.7, 
                                                     marginTop: '5px',
-                                                    color: msg.source.includes('runtime') || msg.source.includes('grok') ? '#00ff00' : '#00ffff'
+                                                    color: msg.source.includes('grok') ? '#00ff00' : 
+                                                           msg.source.includes('smart') ? '#00ffff' : '#ffd700'
                                                 }}>
                                                     {getSourceIndicator(msg.source)}
                                                 </div>
@@ -506,11 +333,11 @@ Responde preguntas sobre Michael, sus habilidades, experiencia o proporciona inf
                                     onChange={(e) => setInputValue(e.target.value)}
                                     onKeyPress={handleKeyPress}
                                     placeholder={t('chatbot-placeholder')}
-                                    disabled={isLoading || keyLoading}
+                                    disabled={isLoading}
                                 />
                                 <button 
                                     onClick={handleSendMessage}
-                                    disabled={isLoading || !inputValue.trim() || keyLoading}
+                                    disabled={isLoading || !inputValue.trim()}
                                 >
                                     {isLoading ? 'Sending...' : t('chatbot-send')}
                                 </button>
