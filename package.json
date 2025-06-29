@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "AI Consultant Portfolio with Grok Integration - React Version",
   "main": "server.cjs",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "type": "module",
   "homepage": "https://michael-homepage-dev-production.up.railway.app",
   "scripts": {
