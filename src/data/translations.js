@@ -24,7 +24,6 @@ export const translations = {
     "skills-title": "SKILLS & EXPERTISE",
     "skills-technical-title": "Technical Expertise",
     "skills-management-title": "Management & Leadership",
-率先
     "skills-core": "Core Competencies",
     "skills-certifications": "Certifications & AI Tools",
     "skills-program-leadership": "Program Leadership: Agile & DevOps environments, €20M+ budgets, global teams",
