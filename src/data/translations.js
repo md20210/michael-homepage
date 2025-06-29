@@ -105,6 +105,31 @@ export const translations = {
         "chatbot-welcome": "Hallo! Ich bin Grok von xAI. Ich kenne Michaels Portfolio und 20+ Jahre Erfahrung in- und auswendig. Wie kann ich Ihnen heute helfen?",
         "chatbot-placeholder": "Fragen Sie mich nach Michaels Fähigkeiten, Erfahrung oder KI-Projekten...",
         "chatbot-send": "Senden"
+"work-ai-specialist-title": "KI-Berater & Spezialist",
+"work-ai-specialist-desc": "Elternzeit & Selbststudium KI. Intensive Beschäftigung mit KI-Plattformen: ChatGPT, Gemini, Grok, Claude für Unternehmenslösungen. Entwicklung eines interaktiven mehrsprachigen Chatbots (EN, DE, ES) für Projektwissensmanagement, powered by IIElevenLabs, ChatGPT, Gemini und n8n Workflow-Automatisierung.",
+
+"work-cognizant-title": "Cognizant Technology Solutions | Global Program Director",
+"work-cognizant-desc": "Leitete Unternehmenstransformationsprogramme für internationale Kunden in Telekommunikation, Fertigung und Pharma-Industrie. Verwaltung funktionsübergreifender Teams und Implementierung KI-gestützter Lösungen. <strong>Pharma Cloud Migration:</strong> Leitete €10M+ jährliche globale Migration mit Azure/ServiceNow, reduzierte IT-Infrastrukturkosten um 30%. <strong>Telekom SAP Factory:</strong> Aufbau & Verwaltung von 300+ SAP-Beratern, steigerte Entwicklungseffizienz um 20%. <strong>Sonderprojekte:</strong> PMO-Aufbau und Automotive-Softwareentwicklung, erhöhte Kundenzufriedenheit um 25%.",
+
+"work-wipro-title": "Wipro Technologies | Enterprise Architect / Program Manager",
+"work-wipro-desc": "Verwaltung digitaler Transformationsprogramme für internationale Kunden in Spanien und Südafrika. <strong>Versicherungsplattform:</strong> Lieferung eines €7M Plattformprojekts für spanisches Versicherungsunternehmen mit verbesserter Leistung. <strong>Output Management:</strong> Leitete Output Management System Rollout in ganz Europa, verkürzte Verarbeitungszeit erheblich. <strong>SOA-Architektur:</strong> Architekturdesign von SOA-Lösungen für Banking-Kunden, ermöglichte zukunftsfähige IT-Integrationen.",
+
+"work-ibm-title": "IBM Business Consulting | Senior IT Architect",
+"work-ibm-desc": "Leitete Unternehmenslösungen und komplexe Integrationsprojekte für internationale Kunden. <strong>Enterprise Service Bus:</strong> Aufbau skalierbarer ESB mit Offshore-Entwicklungsteams, erreichte 20% schnellere Integrationen und reduzierte Kosten. <strong>Digitale Initiativen:</strong> Leitete Supply Chain und Media Fulfillment Projekte mit millionenschweren Effizienzsteigerungen. <strong>Deutsche Telekom:</strong> Architekturdesign ESB für große Siebel-Implementierung.",
+
+"work-pwc-title": "PwC Consulting | IT-Berater & Architekt",
+"work-pwc-desc": "Strategische IT-Beratung und Enterprise Architecture für großangelegte Transformationsprojekte. Fokus auf Prozessoptimierung, Systemintegration und Change Management für multinationale Konzerne.",
+
+"work-early-career-title": "Frühe Karriere-Highlights",
+"work-early-career-desc": "<strong>ifs/RWE:</strong> Lead Consultant für Energieversorger-Systeme, Data Warehouse Implementierung mit Cognos und Informatica. <strong>debis/Mercedes-Benz:</strong> Entwicklung von Simulationssoftware für Einkommensberechnung in Metallverhandlungen, direkte Zusammenarbeit mit Mercedes-Benz Vorstand. <strong>Opitz:</strong> Enterprise-Softwareentwicklung und Beratung für Fertigungskunden.",
+
+"work-education-title": "Ausbildung & Akademische Leistungen",
+"work-education-desc": "<strong>Diplom Wirtschaftsingenieurwesen</strong> - Karlsruhe Institute of Technology (KIT), Deutschland. <strong>Masterarbeit:</strong> Integration heterogener Datenbanken mittels Machine-Learning-Algorithmen. Note: 1,0 (Ausgezeichnet). Technologien: Eiffel, C++. <strong>Anerkennung:</strong> Promotionsplatz angeboten, Software in Informatica-Produkte integriert, Präsentation auf Messen."
+"work-ai-specialist-title": "KI-Berater & Spezialist",
+    "work-ai-specialist-desc": "Elternzeit & Selbststudium KI...",
+    
+    "work-cognizant-title": "Cognizant Technology Solutions | Global Program Director", 
+    "work-cognizant-desc": "Leitete Unternehmenstransformationsprogramme...",
     },
     
     es: {
