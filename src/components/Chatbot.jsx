@@ -1,21 +1,25 @@
-// src/components/Chatbot.jsx - SECURE VERSION WITH RUNTIME API KEY LOADING
+// src/components/Chatbot.jsx - SIMPLIFIED SECURE VERSION
 import React, { useState, useEffect, useRef } from 'react';
 import { getFallbackResponse, getApiErrorResponse } from '../utils/fallbackResponses.js';
-import { apiKeyLoader } from '../utils/apiKeyLoader.js';
 
-console.log('🔒 SECURE GROK API MODE - RUNTIME KEY LOADING - BUILD:', Date.now());
+console.log('🔒 SIMPLIFIED SECURE GROK API MODE - BUILD:', Date.now());
 
 const Chatbot = ({ t, currentLang }) => {
     const [messages, setMessages] = useState([]);
     const [inputValue, setInputValue] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [grokAvailable, setGrokAvailable] = useState(false);
-    const [apiKeyLoading, setApiKeyLoading] = useState(true);
     const chatLogRef = useRef(null);
 
+    // Direct API Key access - Railway Environment Variable
+    const GROK_API_KEY = import.meta.env.VITE_XAI_API_KEY;
     const GROK_API_URL = 'https://api.x.ai/v1/chat/completions';
 
-    // Spracherkennungs-Funktion (erweitert)
+    console.log('🔍 API Key check:', GROK_API_KEY ? 'Found' : 'Not found');
+    console.log('🔍 API Key type:', typeof GROK_API_KEY);
+    console.log('🔍 API Key length:', GROK_API_KEY ? GROK_API_KEY.length : 0);
+
+    // Spracherkennungs-Funktion
     const detectLanguage = (message) => {
         const germanKeywords = [
             "hallo", "hi", "guten", "tag", "morgen", "abend",
@@ -52,26 +56,23 @@ const Chatbot = ({ t, currentLang }) => {
         return "en";
     };
 
-    // Load API Key and test Grok API availability
+    // Test Grok API availability
     useEffect(() => {
-        const initializeGrokAPI = async () => {
-            try {
-                console.log('🔍 Loading API key at runtime...');
-                const apiKey = await apiKeyLoader.getApiKeyAsync();
-                
-                if (!apiKey) {
-                    console.log('⚠️ No API key available - using fallback mode');
-                    setGrokAvailable(false);
-                    setApiKeyLoading(false);
-                    return;
-                }
+        const testGrokAPI = async () => {
+            if (!GROK_API_KEY || GROK_API_KEY === 'null' || GROK_API_KEY === null) {
+                console.log('⚠️ No valid API key found - using fallback mode');
+                console.log('🔍 API Key value:', GROK_API_KEY);
+                setGrokAvailable(false);
+                return;
+            }
 
-                console.log('🔑 API key loaded, testing Grok API connection...');
+            try {
+                console.log('🔍 Testing Grok API connection with found key...');
                 
                 const response = await fetch(GROK_API_URL, {
                     method: 'POST',
                     headers: {
-                        'Authorization': `Bearer ${apiKey}`,
+                        'Authorization': `Bearer ${GROK_API_KEY}`,
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
@@ -93,39 +94,36 @@ const Chatbot = ({ t, currentLang }) => {
                 });
 
                 if (response.ok) {
-                    console.log('✅ Grok API available and working');
+                    console.log('✅ Grok API available and working!');
                     setGrokAvailable(true);
                 } else {
                     const errorText = await response.text();
-                    console.log('❌ Grok API test failed:', response.status, errorText);
+                    console.log('❌ Grok API test failed:', response.status);
+                    console.log('❌ Error details:', errorText);
                     setGrokAvailable(false);
                 }
             } catch (error) {
-                console.log('⚠️ Grok API initialization error:', error.message);
+                console.log('⚠️ Grok API connection error:', error.message);
                 setGrokAvailable(false);
-            } finally {
-                setApiKeyLoading(false);
             }
         };
 
-        initializeGrokAPI();
-    }, []);
+        testGrokAPI();
+    }, [GROK_API_KEY]);
 
     // Initialize with welcome message
     useEffect(() => {
-        if (!apiKeyLoading) {
-            console.log('🤖 Chatbot initializing with runtime API key loading...');
-            const welcomeMsg = {
-                id: 1,
-                type: 'bot',
-                content: t('chatbot-welcome'),
-                timestamp: Date.now(),
-                source: grokAvailable ? 'grok-ready' : 'standalone'
-            };
-            setMessages([welcomeMsg]);
-            console.log('✅ Welcome message set - Grok API:', grokAvailable ? 'Available' : 'Fallback mode');
-        }
-    }, [t, grokAvailable, apiKeyLoading]);
+        console.log('🤖 Chatbot initializing...');
+        const welcomeMsg = {
+            id: 1,
+            type: 'bot',
+            content: t('chatbot-welcome'),
+            timestamp: Date.now(),
+            source: grokAvailable ? 'grok-ready' : 'fallback'
+        };
+        setMessages([welcomeMsg]);
+        console.log('✅ Welcome message set - Grok API:', grokAvailable ? 'Available' : 'Fallback mode');
+    }, [t, grokAvailable]);
 
     // Auto-scroll
     useEffect(() => {
@@ -134,15 +132,14 @@ const Chatbot = ({ t, currentLang }) => {
         }
     }, [messages]);
 
-    // Direct Grok API call with runtime key
+    // Direct Grok API call
     const callGrokAPI = async (message, detectedLanguage) => {
         try {
-            const apiKey = apiKeyLoader.getApiKey();
-            if (!apiKey) {
+            if (!GROK_API_KEY) {
                 throw new Error('No API key available');
             }
 
-            console.log('🚀 Calling Grok API with runtime key...');
+            console.log('🚀 Calling Grok API directly...');
             console.log('📤 Sending:', { message, lang: detectedLanguage });
 
             const systemPrompts = {
@@ -224,7 +221,7 @@ Responde preguntas sobre Michael, sus habilidades, experiencia o proporciona inf
             const response = await fetch(GROK_API_URL, {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${apiKey}`,
+                    'Authorization': `Bearer ${GROK_API_KEY}`,
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(requestBody)
@@ -242,7 +239,7 @@ Responde preguntas sobre Michael, sus habilidades, experiencia o proporciona inf
                 throw new Error('No message content in Grok API response');
             }
 
-            console.log('✅ Secure Grok API response received:', grokMessage.substring(0, 100) + '...');
+            console.log('✅ Grok API response received:', grokMessage.substring(0, 100) + '...');
 
             return {
                 success: true,
@@ -251,7 +248,7 @@ Responde preguntas sobre Michael, sus habilidades, experiencia o proporciona inf
             };
 
         } catch (error) {
-            console.error('❌ Secure Grok API Error:', error);
+            console.error('❌ Grok API Error:', error);
             return {
                 success: false,
                 error: error.message
@@ -263,7 +260,7 @@ Responde preguntas sobre Michael, sus habilidades, experiencia o proporciona inf
         const message = inputValue.trim();
         console.log('📤 Sending message:', message);
         
-        if (!message || isLoading || apiKeyLoading) return;
+        if (!message || isLoading) return;
 
         const detectedLang = detectLanguage(message);
         console.log('🔍 Detected language:', detectedLang);
@@ -284,25 +281,25 @@ Responde preguntas sobre Michael, sus habilidades, experiencia o proporciona inf
             let botResponse;
             let source = 'fallback';
 
-            if (grokAvailable && apiKeyLoader.isAvailable()) {
-                // Try secure Grok API call
+            if (grokAvailable && GROK_API_KEY) {
+                // Try Grok API call
                 const grokResult = await callGrokAPI(message, detectedLang);
                 
                 if (grokResult.success) {
                     botResponse = grokResult.message;
                     source = grokResult.source;
-                    console.log('✅ Using secure Grok API response');
+                    console.log('✅ Using Grok API response');
                 } else {
                     // Fallback to intelligent responses
                     botResponse = getFallbackResponse(message, detectedLang);
                     source = 'intelligent-fallback';
-                    console.log('⚠️ Secure Grok API failed, using intelligent fallback');
+                    console.log('⚠️ Grok API failed, using intelligent fallback');
                 }
             } else {
                 // Use fallback response system
                 botResponse = getFallbackResponse(message, detectedLang);
                 source = 'intelligent-fallback';
-                console.log('💾 Using intelligent fallback (no secure API key)');
+                console.log('💾 Using intelligent fallback (no API key)');
             }
             
             const botMsg = {
@@ -348,26 +345,14 @@ Responde preguntas sobre Michael, sus habilidades, experiencia o proporciona inf
             case 'grok-api': return '🤖 Grok AI';
             case 'grok-ready': return '🤖 Grok Ready';
             case 'intelligent-fallback': return '🧠 Smart AI';
-            case 'standalone': return '🤖 Local AI';
-            case 'fallback': return '💾 Fallback';
+            case 'fallback': return '💾 Local AI';
             case 'error': return '⚠️ Error';
             case 'system': return '🤖 System';
             default: return '🤖 AI';
         }
     };
 
-    if (apiKeyLoading) {
-        return (
-            <section id="chatbot" className="section">
-                <div style={{ width: '100%', textAlign: 'center' }}>
-                    <h2 className="main-title">Loading secure AI assistant...</h2>
-                    <p>🔒 Initializing secure runtime API key loading...</p>
-                </div>
-            </section>
-        );
-    }
-
-    console.log('🎨 Rendering Secure Chatbot with', messages.length, 'messages. Grok API:', grokAvailable ? 'Available' : 'Fallback');
+    console.log('🎨 Rendering Chatbot with', messages.length, 'messages. Grok API:', grokAvailable ? 'Available' : 'Fallback');
 
     return (
         <section id="chatbot" className="section">
@@ -422,8 +407,7 @@ Responde preguntas sobre Michael, sus habilidades, experiencia o proporciona inf
                                                     fontSize: '10px', 
                                                     opacity: 0.7, 
                                                     marginTop: '5px',
-                                                    color: msg.source.includes('secure') ? '#00ff00' : 
-                                                           msg.source.includes('grok') ? '#00ff00' : '#00ffff'
+                                                    color: msg.source.includes('secure') || msg.source.includes('grok') ? '#00ff00' : '#00ffff'
                                                 }}>
                                                     {getSourceIndicator(msg.source)}
                                                 </div>
@@ -453,11 +437,11 @@ Responde preguntas sobre Michael, sus habilidades, experiencia o proporciona inf
                                     onChange={(e) => setInputValue(e.target.value)}
                                     onKeyPress={handleKeyPress}
                                     placeholder={t('chatbot-placeholder')}
-                                    disabled={isLoading || apiKeyLoading}
+                                    disabled={isLoading}
                                 />
                                 <button 
                                     onClick={handleSendMessage}
-                                    disabled={isLoading || !inputValue.trim() || apiKeyLoading}
+                                    disabled={isLoading || !inputValue.trim()}
                                 >
                                     {isLoading ? 'Sending...' : t('chatbot-send')}
                                 </button>
