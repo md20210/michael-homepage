@@ -124,7 +124,7 @@ export const translations = {
 "work-early-career-desc": "<strong>ifs/RWE:</strong> Lead Consultant für Energieversorger-Systeme, Data Warehouse Implementierung mit Cognos und Informatica. <strong>debis/Mercedes-Benz:</strong> Entwicklung von Simulationssoftware für Einkommensberechnung in Metallverhandlungen, direkte Zusammenarbeit mit Mercedes-Benz Vorstand. <strong>Opitz:</strong> Enterprise-Softwareentwicklung und Beratung für Fertigungskunden.",
 
 "work-education-title": "Ausbildung & Akademische Leistungen",
-"work-education-desc": "<strong>Diplom Wirtschaftsingenieurwesen</strong> - Karlsruhe Institute of Technology (KIT), Deutschland. <strong>Masterarbeit:</strong> Integration heterogener Datenbanken mittels Machine-Learning-Algorithmen. Note: 1,0 (Ausgezeichnet). Technologien: Eiffel, C++. <strong>Anerkennung:</strong> Promotionsplatz angeboten, Software in Informatica-Produkte integriert, Präsentation auf Messen."
+"work-education-desc": "<strong>Diplom Wirtschaftsingenieurwesen</strong> - Karlsruhe Institute of Technology (KIT), Deutschland. <strong>Masterarbeit:</strong> Integration heterogener Datenbanken mittels Machine-Learning-Algorithmen. Note: 1,0 (Ausgezeichnet). Technologien: Eiffel, C++. <strong>Anerkennung:</strong> Promotionsplatz angeboten, Software in Informatica-Produkte integriert, Präsentation auf Messen.",
 "work-ai-specialist-title": "KI-Berater & Spezialist",
     "work-ai-specialist-desc": "Elternzeit & Selbststudium KI...",
     
