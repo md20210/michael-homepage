@@ -5,7 +5,7 @@ nixPkgs = ['nodejs_20']
 cmds = ['npm install']
 
 [phases.build]
-cmds = ['./node_modules/.bin/vite build']
+cmds = ['npm run build']
 
 [start]
 cmd = 'node server.cjs'
