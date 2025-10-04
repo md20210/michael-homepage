@@ -25,7 +25,11 @@ const corsOptions = {
     origin: [
         'http://localhost:3000',
         'http://localhost:4173',
-        'https://michael-homepage-production.up.railway.app'
+        'https://michael-homepage-production.up.railway.app',
+        'https://www.dabrock.eu',
+        'https://dabrock.eu',      // ← NEU!
+        'http://www.dabrock.eu',
+        'http://dabrock.eu'        // ← NEU!
     ],
     methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
