@@ -1,0 +1,57 @@
+{
+  "name": "michael-dabrock-portfolio",
+  "version": "1.0.0",
+  "description": "AI Consultant Portfolio with Grok Integration - React Version",
+  "main": "server.cjs",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "type": "module",
+  "homepage": "https://michael-homepage-production.up.railway.app",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:github": "cross-env NODE_ENV=production VITE_DEPLOY=github vite build",
+    "preview": "vite preview",
+    "start": "node server.cjs",
+    "start:dev": "vite",
+    "server:cjs": "node server.cjs",
+    "dev:full": "concurrently \"npm run server:cjs\" \"npm run dev\"",
+    "test": "echo \"No tests yet\"",
+    "encrypt": "node encrypt.js",
+    "decrypt": "node decrypt.js",
+    "predeploy": "npm run build:github",
+    "deploy": "gh-pages -d dist",
+    "deploy:github": "npm run build:github && gh-pages -d dist"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "express": "^4.21.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@vitejs/plugin-react": "^4.0.0",
+    "concurrently": "^8.2.0",
+    "cross-env": "^7.0.3",
+    "gh-pages": "^6.3.0",
+    "terser": "^5.43.1",
+    "vite": "^6.3.5"
+  },
+  "keywords": [
+    "ai",
+    "consultant",
+    "portfolio",
+    "grok",
+    "chatgpt",
+    "enterprise-architecture",
+    "react",
+    "github-pages"
+  ],
+  "author": "Michael Dabrock",
+  "license": "MIT"
+}
