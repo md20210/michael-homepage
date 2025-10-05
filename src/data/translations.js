@@ -8,17 +8,29 @@ export const translations = {
     "logo-text": "MICHAEL DABROCK",
     "tagline": "AI CONSULTANT & IT ARCHITECT",
     "nav-home": "HOME",
+    "nav-profile": "PROFILE",
+    "profile-title": "PROFESSIONAL PROFILE",
     "nav-skills": "SKILLS",
     "nav-experience": "EXPERIENCE",
     "nav-chatbot": "CHATBOT",
+    "nav-ai-agent": "AI AGENT",
     "nav-contact": "CONTACT",
+
+    // Intro Section (NEW)
+    "intro-what-done-title": "What have I done?",
+    "intro-what-done-text": "In recent years, I have specialized in generative AI models, voice-driven assistants, intelligent software agents, and end-to-end software development, while also working as an Account Manager at Google with a focus on marketing and active customer acquisition. I am up to date in the AI field and have gained hands-on experience with many current AI tools, driven by my fascination with the rapid advancement of technology. Previously, I led international large-scale projects at Cognizant, PwC, and IBM in traditional roles ranging from Enterprise Architect to Program Director.",
+    "intro-what-bring-title": "What do I bring?",
+    "intro-what-bring-text": "A combination of hands-on technical expertise (AI, cloud architectures, workflow systems) and extensive experience in consulting, project management, and leading global teams. Strong ability to bridge technology and business strategy.",
+    "intro-what-looking-title": "What am I looking for?",
+    "intro-what-looking-text": "A versatile role in the AI field that allows me to tackle complex technical challenges in AI development while combining architecture, consulting, account management, or sales, thereby actively supporting an innovative company's vision through AI solutions.",
 
     // Hero-Bereich
     "hero-title": "MICHAEL DABROCK",
-    "hero-subtitle": "AI CONSULTANT & IT ARCHITECT",
+    "hero-subtitle": "AI CONSULTANT & IT ARCHITECT & PROGRAM DIRECTOR",
     "hero-description": "AI Consultant and IT Architect in Spain with deep expertise in AI technologies. I integrate ChatGPT and Grok into projects to enhance efficiency and innovation in international programs. Seasoned Enterprise Architect and Global Program Manager with 20+ years of experience leading global IT transformations.",
     "hero-view-skills": "VIEW SKILLS",
     "hero-download-resume": "DOWNLOAD RESUME",
+    "hero-tech-architecture": "TECHNICAL ARCHITECTURE",
 
     // Fähigkeiten
     "skills-title": "SKILLS & EXPERTISE",
@@ -37,12 +49,12 @@ export const translations = {
     "skills-grok": "Grok (xAI): Code generation, troubleshooting, API integration",
     "skills-claude": "Claude (Anthropic): Prompt coding, JSON workflow automation",
     "skills-chatbots": "Developed chatbots and AI agents integrated with multiple platforms",
-    "skills-voice": "Voice and Workflow Integration for AI Agents via IIElevenLabs",
+    "skills-voice": "Voice and Workflow Integration for AI Agents via ElevenLabs",
 
     // Berufserfahrung
     "experience-title": "PROFESSIONAL EXPERIENCE",
     "work-ai-specialist-title": "AI Consultant & Specialist",
-    "work-ai-specialist-desc": "Parental Leave & Self-Directed AI Learning. Intensive study of AI platforms: ChatGPT, Gemini, Grok, Claude for enterprise solutions. Built interactive multilingual chatbot (EN, DE, ES) for project knowledge management, powered by IIElevenLabs, ChatGPT, Gemini, and n8n workflow automation.",
+    "work-ai-specialist-desc": "Parental Leave & Self-Directed AI Learning. Intensive study of AI platforms: ChatGPT, Gemini, Grok, Claude for enterprise solutions. Built interactive multilingual chatbot (EN, DE, ES) for project knowledge management, powered by ElevenLabs, ChatGPT, Gemini, and n8n workflow automation.",
     "work-cognizant-title": "Cognizant Technology Solutions | Global Program Director",
     "work-cognizant-desc": "Led enterprise transformation programs for international clients in telecommunications, manufacturing, and pharma industries. Managed cross-functional teams and implemented AI-driven solutions. <strong>Pharma Cloud Migration:</strong> Led €10M+ annual global migration using Azure/ServiceNow, reducing IT infrastructure costs by 30%. <strong>Telecom SAP Factory:</strong> Built & managed 300+ SAP consultants, increased development efficiency by 20%. <strong>Special Projects:</strong> PMO setup and automotive software development, raising client satisfaction by 25%.",
     "work-wipro-title": "Wipro Technologies | Enterprise Architect / Program Manager",
@@ -58,14 +70,18 @@ export const translations = {
 
     // Chatbot
     "chatbot-title": "AI CHATBOT ASSISTANT",
-    "chatbot-header": "🤖 Grok AI Assistant",
+    "chatbot-header": "🤖 Grok ChatBot",
     "chatbot-info": "I've integrated Grok from xAI with direct API connection. The AI assistant knows my detailed CV, 20+ years experience, 50+ projects, and AI expertise. Ask about specific projects, technologies, or achievements!",
-    "chatbot-opportunity": "N/A",
-    "chatbot-phone": "Try my AI Phone Assistant: +34 93 694 5855 (Multilingual EN/DE/ES voice chatbot powered by IIElevenLabs, ChatGPT, Gemini & n8n)",
-    "chatbot-resume": "Download Resume",
     "chatbot-welcome": "Hello! I'm Grok, created by xAI. I know Michael's portfolio and 20+ years of experience inside out. How can I help you today?",
     "chatbot-placeholder": "Ask me about Michael's skills, experience, or AI projects...",
-    "chatbot-send": "Send"
+    "chatbot-send": "Send",
+
+    // AI Agent Section (NEW - Section 05)
+    "ai-agent-title": "AI AGENT WITH APPOINTMENTS",
+    "ai-agent-header": "🤖 ChatGPT VoiceBot",
+    "ai-agent-description": "Schedule a call with my AI-powered assistant. Available 24/7 for consultations about AI projects, enterprise architecture, or program management.",
+    "ai-agent-phone": "Call now: <a href=\"tel:+34936945855\" style=\"color: #00d4ff; text-decoration: underline;\">+34 93 694 5855</a>",
+    "ai-agent-features": "Features: Voice recognition in <span class=\"fi fi-gb\"></span> <span class=\"fi fi-de\"></span> <span class=\"fi fi-es\"></span> • Natural conversation • Project knowledge base • Appointment scheduling"
   },
 
   de: {
@@ -73,17 +89,29 @@ export const translations = {
     "logo-text": "MICHAEL DABROCK",
     "tagline": "KI BERATER & IT ARCHITEKT",
     "nav-home": "START",
+    "nav-profile": "PROFIL",
+    "profile-title": "BERUFSPROFIL",
     "nav-skills": "FÄHIGKEITEN",
     "nav-experience": "ERFAHRUNG",
     "nav-chatbot": "CHATBOT",
+    "nav-ai-agent": "KI AGENT",
     "nav-contact": "KONTAKT",
+
+    // Intro Section (NEU)
+    "intro-what-done-title": "Was habe ich getan?",
+    "intro-what-done-text": "In den letzten Jahren habe ich mich auf generative KI-Modelle, sprachgesteuerte Assistenten, intelligente Software-Agenten und End-to-End-Softwareentwicklung spezialisiert und gleichzeitig als Account Manager bei Google mit Fokus auf Marketing und aktive Kundengewinnung gearbeitet. Ich bin auf dem neuesten Stand im KI-Bereich und habe praktische Erfahrungen mit vielen aktuellen KI-Tools gesammelt, angetrieben von meiner Faszination für den rasanten technologischen Fortschritt. Zuvor leitete ich internationale Großprojekte bei Cognizant, PwC und IBM in traditionellen Rollen vom Enterprise Architect bis zum Programmdirektor.",
+    "intro-what-bring-title": "Was bringe ich mit?",
+    "intro-what-bring-text": "Eine Kombination aus praktischer technischer Expertise (KI, Cloud-Architekturen, Workflow-Systeme) und umfangreicher Erfahrung in Beratung, Projektmanagement und der Leitung globaler Teams. Starke Fähigkeit, Technologie und Geschäftsstrategie zu verbinden.",
+    "intro-what-looking-title": "Was suche ich?",
+    "intro-what-looking-text": "Eine vielseitige Rolle im KI-Bereich, die es mir ermöglicht, komplexe technische Herausforderungen in der KI-Entwicklung anzugehen und dabei Architektur, Beratung, Account Management oder Vertrieb zu kombinieren, um so aktiv die Vision eines innovativen Unternehmens durch KI-Lösungen zu unterstützen.",
 
     // Hero-Bereich
     "hero-title": "MICHAEL DABROCK",
-    "hero-subtitle": "KI BERATER & IT ARCHITEKT",
+    "hero-subtitle": "KI BERATER & IT ARCHITEKT & PROGRAMMDIREKTOR",
     "hero-description": "KI-Berater und IT-Architekt in Spanien mit tiefgreifender Expertise in KI-Technologien. Ich integriere ChatGPT und Grok in Projekte, um Effizienz und Innovation in internationalen Programmen zu steigern. Erfahrener Enterprise Architect mit 20+ Jahren Erfahrung in globalen IT-Transformationen.",
     "hero-view-skills": "FÄHIGKEITEN ANSEHEN",
     "hero-download-resume": "LEBENSLAUF HERUNTERLADEN",
+    "hero-tech-architecture": "TECHNISCHE ARCHITEKTUR",
 
     // Fähigkeiten
     "skills-title": "FÄHIGKEITEN & EXPERTISE",
@@ -102,12 +130,12 @@ export const translations = {
     "skills-grok": "Grok (xAI): Code-Generierung, Fehlerbehebung, API-Integration",
     "skills-claude": "Claude (Anthropic): Prompt-Codierung, JSON-Workflow-Automatisierung",
     "skills-chatbots": "Entwickelte Chatbots und KI-Agenten integriert mit mehreren Plattformen",
-    "skills-voice": "Sprach- und Workflow-Integration für KI-Agenten via IIElevenLabs",
+    "skills-voice": "Sprach- und Workflow-Integration für KI-Agenten via ElevenLabs",
 
     // Berufserfahrung
     "experience-title": "BERUFSERFAHRUNG",
     "work-ai-specialist-title": "KI-Berater & Spezialist",
-    "work-ai-specialist-desc": "Elternzeit & Selbststudium KI. Intensive Beschäftigung mit KI-Plattformen: ChatGPT, Gemini, Grok, Claude für Unternehmenslösungen. Entwicklung eines interaktiven mehrsprachigen Chatbots (EN, DE, ES) für Projektwissensmanagement, powered by IIElevenLabs, ChatGPT, Gemini und n8n Workflow-Automatisierung.",
+    "work-ai-specialist-desc": "Elternzeit & Selbststudium KI. Intensive Beschäftigung mit KI-Plattformen: ChatGPT, Gemini, Grok, Claude für Unternehmenslösungen. Entwicklung eines interaktiven mehrsprachigen Chatbots (EN, DE, ES) für Projektwissensmanagement, powered by ElevenLabs, ChatGPT, Gemini und n8n Workflow-Automatisierung.",
     "work-cognizant-title": "Cognizant Technology Solutions | Globaler Programmdirektor",
     "work-cognizant-desc": "Leitete Unternehmenstransformationsprogramme für internationale Kunden in Telekommunikation, Fertigung und Pharma-Industrie. Verwaltung funktionsübergreifender Teams und Implementierung KI-gestützter Lösungen. <strong>Pharma Cloud Migration:</strong> Leitete €10M+ jährliche globale Migration mit Azure/ServiceNow, reduzierte IT-Infrastrukturkosten um 30%. <strong>Telekom SAP Factory:</strong> Aufbau & Verwaltung von 300+ SAP-Beratern, steigerte Entwicklungseffizienz um 20%. <strong>Sonderprojekte:</strong> PMO-Aufbau und Automotive-Softwareentwicklung, erhöhte Kundenzufriedenheit um 25%.",
     "work-wipro-title": "Wipro Technologies | Enterprise Architect / Programm-Manager",
@@ -123,14 +151,18 @@ export const translations = {
 
     // Chatbot
     "chatbot-title": "KI CHATBOT ASSISTENT",
-    "chatbot-header": "🤖 Grok KI Assistent",
+    "chatbot-header": "🤖 Grok ChatBot",
     "chatbot-info": "Ich habe Grok von xAI mit direkter API-Verbindung integriert. Der KI-Assistent kennt meinen detaillierten Lebenslauf, 20+ Jahre Erfahrung, 50+ Projekte und KI-Expertise. Fragen Sie nach spezifischen Projekten, Technologien oder Erfolgen!",
-    "chatbot-opportunity": "N/A",
-    "chatbot-phone": "Probieren Sie meinen KI-Telefon-Assistenten: +34 93 694 5855 (Mehrsprachiger EN/DE/ES Sprach-Chatbot powered by IIElevenLabs, ChatGPT, Gemini & n8n)",
-    "chatbot-resume": "Lebenslauf herunterladen",
     "chatbot-welcome": "Hallo! Ich bin Grok von xAI. Ich kenne Michaels Portfolio und 20+ Jahre Erfahrung in- und auswendig. Wie kann ich Ihnen heute helfen?",
     "chatbot-placeholder": "Fragen Sie mich nach Michaels Fähigkeiten, Erfahrung oder KI-Projekten...",
-    "chatbot-send": "Senden"
+    "chatbot-send": "Senden",
+
+    // AI Agent Section (NEU - Sektion 05)
+    "ai-agent-title": "KI AGENT MIT TERMINEN",
+    "ai-agent-header": "🤖 ChatGPT VoiceBot",
+    "ai-agent-description": "Vereinbaren Sie einen Anruf mit meinem KI-gestützten Assistenten. Verfügbar 24/7 für Beratungen zu KI-Projekten, Enterprise Architecture oder Programmmanagement.",
+    "ai-agent-phone": "Jetzt anrufen: <a href=\"tel:+34936945855\" style=\"color: #00d4ff; text-decoration: underline;\">+34 93 694 5855</a>",
+    "ai-agent-features": "Funktionen: Spracherkennung in <span class=\"fi fi-gb\"></span> <span class=\"fi fi-de\"></span> <span class=\"fi fi-es\"></span> • Natürliche Konversation • Projektwissensdatenbank • Terminvereinbarung"
   },
 
   es: {
@@ -138,17 +170,29 @@ export const translations = {
     "logo-text": "MICHAEL DABROCK",
     "tagline": "CONSULTOR IA & ARQUITECTO TI",
     "nav-home": "INICIO",
+    "nav-profile": "PERFIL",
+    "profile-title": "PERFIL PROFESIONAL",
     "nav-skills": "HABILIDADES",
     "nav-experience": "EXPERIENCIA",
     "nav-chatbot": "CHATBOT",
+    "nav-ai-agent": "AGENTE IA",
     "nav-contact": "CONTACTO",
+
+    // Intro Section (NUEVO)
+    "intro-what-done-title": "¿Qué he hecho?",
+    "intro-what-done-text": "En los últimos años, me he especializado en modelos de IA generativa, asistentes controlados por voz, agentes de software inteligentes y desarrollo de software de extremo a extremo, mientras también trabajaba como Account Manager en Google con enfoque en marketing y adquisición activa de clientes. Estoy al día en el campo de la IA y he adquirido experiencia práctica con muchas herramientas de IA actuales, impulsado por mi fascinación por el rápido avance de la tecnología. Anteriormente, lideré proyectos internacionales a gran escala en Cognizant, PwC e IBM en roles tradicionales desde Enterprise Architect hasta Director de Programa.",
+    "intro-what-bring-title": "¿Qué aporto?",
+    "intro-what-bring-text": "Una combinación de experiencia técnica práctica (IA, arquitecturas en la nube, sistemas de flujo de trabajo) y amplia experiencia en consultoría, gestión de proyectos y liderazgo de equipos globales. Fuerte capacidad para vincular tecnología y estrategia empresarial.",
+    "intro-what-looking-title": "¿Qué estoy buscando?",
+    "intro-what-looking-text": "Un rol versátil en el campo de la IA que me permita abordar desafíos técnicos complejos en el desarrollo de IA mientras combino arquitectura, consultoría, gestión de cuentas o ventas, apoyando así activamente la visión de una empresa innovadora a través de soluciones de IA.",
 
     // Hero-Bereich
     "hero-title": "MICHAEL DABROCK",
-    "hero-subtitle": "CONSULTOR IA & ARQUITECTO TI",
+    "hero-subtitle": "CONSULTOR IA & ARQUITECTO TI & DIRECTOR DE PROGRAMA",
     "hero-description": "Consultor de IA y Arquitecto de TI en España con profunda experiencia en tecnologías de IA. Integro ChatGPT y Grok en proyectos para mejorar la eficiencia e innovación en programas internacionales. Arquitecto Empresarial y Gerente de Programas Globales con más de 20 años de experiencia liderando transformaciones de TI globales.",
     "hero-view-skills": "VER HABILIDADES",
     "hero-download-resume": "DESCARGAR CURRÍCULUM",
+    "hero-tech-architecture": "ARQUITECTURA TÉCNICA",
 
     // Fähigkeiten
     "skills-title": "HABILIDADES Y EXPERIENCIA",
@@ -167,12 +211,12 @@ export const translations = {
     "skills-grok": "Grok (xAI): Generación de código, resolución de problemas, integración API",
     "skills-claude": "Claude (Anthropic): Codificación de prompts, automatización de flujos de trabajo JSON",
     "skills-chatbots": "Desarrollé chatbots y agentes IA integrados con múltiples plataformas",
-    "skills-voice": "Integración de Voz y Flujo de Trabajo para Agentes IA vía IIElevenLabs",
+    "skills-voice": "Integración de Voz y Flujo de Trabajo para Agentes IA vía ElevenLabs",
 
     // Berufserfahrung
     "experience-title": "EXPERIENCIA PROFESIONAL",
     "work-ai-specialist-title": "Consultor y Especialista en IA",
-    "work-ai-specialist-desc": "Permiso parental y autoaprendizaje en IA. Estudio intensivo de plataformas de IA: ChatGPT, Gemini, Grok, Claude para soluciones empresariales. Desarrollo de un chatbot multilingüe interactivo (EN, DE, ES) para la gestión del conocimiento de proyectos, impulsado por IIElevenLabs, ChatGPT, Gemini y automatización de flujos de trabajo n8n.",
+    "work-ai-specialist-desc": "Permiso parental y autoaprendizaje en IA. Estudio intensivo de plataformas de IA: ChatGPT, Gemini, Grok, Claude para soluciones empresariales. Desarrollo de un chatbot multilingüe interactivo (EN, DE, ES) para la gestión del conocimiento de proyectos, impulsado por ElevenLabs, ChatGPT, Gemini y automatización de flujos de trabajo n8n.",
     "work-cognizant-title": "Cognizant Technology Solutions | Director de Programa Global",
     "work-cognizant-desc": "Dirigí programas de transformación empresarial para clientes internacionales en telecomunicaciones, manufactura y farmacéutica. Gestión de equipos multifuncionales e implementación de soluciones impulsadas por IA. <strong>Migración a la nube farmacéutica:</strong> Lideré una migración global anual de más de €10M usando Azure/ServiceNow, reduciendo los costos de infraestructura de TI en un 30%. <strong>Fábrica SAP de Telecom:</strong> Construí y gestioné un equipo de más de 300 consultores SAP, aumentando la eficiencia de desarrollo en un 20%. <strong>Proyectos especiales:</strong> Configuración de PMO y desarrollo de software automotriz, aumentando la satisfacción del cliente en un 25%.",
     "work-wipro-title": "Wipro Technologies | Arquitecto Empresarial / Gerente de Programa",
@@ -188,13 +232,17 @@ export const translations = {
 
     // Chatbot
     "chatbot-title": "ASISTENTE CHATBOT IA",
-    "chatbot-header": "🤖 Asistente IA Grok",
+    "chatbot-header": "🤖 Grok ChatBot",
     "chatbot-info": "He integrado Grok de xAI con conexión API directa. El asistente IA conoce mi CV detallado, más de 20 años de experiencia, más de 50 proyectos y experiencia en IA. ¡Pregunta sobre proyectos específicos, tecnologías o logros!",
-    "chatbot-opportunity": "N/A",
-    "chatbot-phone": "Prueba mi Asistente Telefónico IA: +34 93 694 5855 (Chatbot de voz multilingüe EN/DE/ES impulsado por IIElevenLabs, ChatGPT, Gemini y n8n)",
-    "chatbot-resume": "Descargar Currículum",
     "chatbot-welcome": "¡Hola! Soy Grok, creado por xAI. Conozco el portafolio de Michael y más de 20 años de experiencia al dedillo. ¿Cómo puedo ayudarte hoy?",
     "chatbot-placeholder": "Pregúntame sobre las habilidades, experiencia o proyectos IA de Michael...",
-    "chatbot-send": "Enviar"
+    "chatbot-send": "Enviar",
+
+    // AI Agent Section (NUEVO - Sección 05)
+    "ai-agent-title": "AGENTE IA CON CITAS",
+    "ai-agent-header": "🤖 ChatGPT VoiceBot",
+    "ai-agent-description": "Programa una llamada con mi asistente impulsado por IA. Disponible 24/7 para consultas sobre proyectos de IA, arquitectura empresarial o gestión de programas.",
+    "ai-agent-phone": "Llama ahora: <a href=\"tel:+34936945855\" style=\"color: #00d4ff; text-decoration: underline;\">+34 93 694 5855</a>",
+    "ai-agent-features": "Características: Reconocimiento de voz en <span class=\"fi fi-gb\"></span> <span class=\"fi fi-de\"></span> <span class=\"fi fi-es\"></span> • Conversación natural • Base de conocimientos de proyectos • Programación de citas"
   }
 };

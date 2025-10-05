@@ -1,5 +1,8 @@
 /* src/styles/main.css - Alle Portfolio Styles */
 
+@import './responsive.css';
+@import 'flag-icons/css/flag-icons.min.css';
+
 * {
     margin: 0;
     padding: 0;
@@ -152,11 +155,15 @@ body {
     background: rgba(255, 215, 0, 0.1);
     border: 1px solid rgba(255, 215, 0, 0.3);
     color: #ffd700;
-    padding: 5px 10px;
+    padding: 8px 12px;
     border-radius: 5px;
     cursor: pointer;
     font-size: 12px;
     transition: all 0.3s;
+    min-width: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .language-switcher button:hover,

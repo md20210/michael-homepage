@@ -230,10 +230,6 @@ const Chatbot = ({ t, currentLang }) => {
         }
     };
 
-    const getResumeLink = () => {
-        return currentLang === "de" ? "./Resume Deu.pdf" : "./Resume Eng.pdf";
-    };
-
     const getSourceIndicator = (source) => {
         switch (source) {
             case 'smart-local-ai': return '🧠 Smart Local AI';
@@ -253,9 +249,9 @@ const Chatbot = ({ t, currentLang }) => {
         <section id="chatbot" className="section">
             <div style={{ width: '100%' }}>
                 <div className="step-indicator">
-                    <div className="step-number">04</div>
+                    <div className="step-number">05</div>
                     <div className="step-line"></div>
-                    <div className="step-number" style={{ color: '#ffd700' }}>04</div>
+                    <div className="step-number" style={{ color: '#ffd700' }}>05</div>
                 </div>
 
                 <h2 className="main-title" style={{ fontSize: '48px', marginBottom: '30px', textAlign: 'center' }}>
@@ -273,16 +269,6 @@ const Chatbot = ({ t, currentLang }) => {
                                     "💾 Hybrid fallback mode - using intelligent responses with detailed knowledge about Michael."
                                 }
                             </p>
-                            <p dangerouslySetInnerHTML={{ __html: t('chatbot-opportunity') }} />
-                            <p dangerouslySetInnerHTML={{ __html: t('chatbot-phone') }} />
-                            <a 
-                                href={getResumeLink()} 
-                                className="cta-button" 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                            >
-                                {t('chatbot-resume')}
-                            </a>
                         </div>
 
                         <div className="chat-box">

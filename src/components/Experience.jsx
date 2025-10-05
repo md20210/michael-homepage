@@ -39,9 +39,9 @@ const Experience = ({ t }) => {
         <section id="experience" className="section">
             <div style={{ width: '100%' }}>
                 <div className="step-indicator">
-                    <div className="step-number">03</div>
+                    <div className="step-number">04</div>
                     <div className="step-line"></div>
-                    <div className="step-number" style={{ color: '#ffd700' }}>03</div>
+                    <div className="step-number" style={{ color: '#ffd700' }}>04</div>
                 </div>
 
                 <h2 className="main-title" style={{ fontSize: '48px', marginBottom: '30px', textAlign: 'center' }}>

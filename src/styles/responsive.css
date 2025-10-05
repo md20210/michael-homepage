@@ -1,0 +1,82 @@
+/* src/styles/responsive.css - Mobile Optimierung und neue Sections */
+
+/* Intro Section Styling */
+.intro-section {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 60px 20px;
+    min-height: auto;
+}
+
+.intro-content {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.intro-block {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 30px;
+    border-radius: 10px;
+    border-left: 4px solid #00d4ff;
+}
+
+.intro-title {
+    font-size: 28px;
+    color: #00d4ff;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.intro-text {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #ddd;
+}
+
+/* Mobile Optimierung */
+@media (max-width: 768px) {
+    .chatbot-section {
+        padding: 20px 10px;
+    }
+    
+    .chatbot-content {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .chat-box {
+        width: 100%;
+        max-width: 100%;
+        margin: 20px 0 0 0;
+    }
+    
+    .chat-info {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .intro-section {
+        padding: 40px 15px;
+    }
+
+    .intro-block {
+        padding: 20px;
+    }
+
+    .intro-title {
+        font-size: 22px;
+    }
+
+    .intro-text {
+        font-size: 14px;
+    }
+    /* Überschriften fett formatieren */
+    .intro-title {
+        font-weight: 700;
+    }
+
+    .chatbot-content h3,
+    .ai-agent-content h3 {
+        font-weight: 700;
+    }
+}

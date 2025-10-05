@@ -6,9 +6,9 @@ const Skills = ({ t }) => {
         <section id="skills" className="section">
             <div style={{ width: '100%' }}>
                 <div className="step-indicator">
-                    <div className="step-number">02</div>
+                    <div className="step-number">03</div>
                     <div className="step-line"></div>
-                    <div className="step-number" style={{ color: '#ffd700' }}>02</div>
+                    <div className="step-number" style={{ color: '#ffd700' }}>03</div>
                 </div>
 
                 <h2 className="main-title" style={{ fontSize: '48px', marginBottom: '30px', textAlign: 'center' }}>
