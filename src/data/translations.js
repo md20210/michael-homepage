@@ -6,7 +6,7 @@ export const translations = {
   en: {
     // Header und Navigation
     "logo-text": "MICHAEL DABROCK",
-    "tagline": "AI CONSULTANT & IT ARCHITECT",
+    "tagline": "AI CONSULTANT & IT ARCHITECT & PROGRAM DIRECTOR",
     "nav-home": "HOME",
     "nav-skills": "SKILLS",
     "nav-experience": "EXPERIENCE",
@@ -15,10 +15,11 @@ export const translations = {
 
     // Hero-Bereich
     "hero-title": "MICHAEL DABROCK",
-    "hero-subtitle": "AI CONSULTANT & IT ARCHITECT",
-    "hero-description": "AI Consultant and IT Architect in Spain with deep expertise in AI technologies. I integrate ChatGPT and Grok into projects to enhance efficiency and innovation in international programs. Seasoned Enterprise Architect and Global Program Manager with 20+ years of experience leading global IT transformations.",
+    "hero-subtitle": "AI CONSULTANT & IT ARCHITECT & PROGRAM DIRECTOR",
+    "hero-description": "AI Consultant, IT Architect and Program Director in Spain with deep expertise in AI technologies. I integrate ChatGPT and Grok into projects to enhance efficiency and innovation in international programs. Seasoned Enterprise Architect and Global Program Manager with 20+ years of experience leading global IT transformations.",
     "hero-view-skills": "VIEW SKILLS",
     "hero-download-resume": "DOWNLOAD RESUME",
+    "hero-my-audiobook": "MY AUDIOBOOK",
 
     // Fähigkeiten
     "skills-title": "SKILLS & EXPERTISE",
@@ -71,7 +72,7 @@ export const translations = {
   de: {
     // Header und Navigation
     "logo-text": "MICHAEL DABROCK",
-    "tagline": "KI BERATER & IT ARCHITEKT",
+    "tagline": "KI BERATER & IT ARCHITEKT & PROGRAMMDIREKTOR",
     "nav-home": "START",
     "nav-skills": "FÄHIGKEITEN",
     "nav-experience": "ERFAHRUNG",
@@ -80,10 +81,11 @@ export const translations = {
 
     // Hero-Bereich
     "hero-title": "MICHAEL DABROCK",
-    "hero-subtitle": "KI BERATER & IT ARCHITEKT",
-    "hero-description": "KI-Berater und IT-Architekt in Spanien mit tiefgreifender Expertise in KI-Technologien. Ich integriere ChatGPT und Grok in Projekte, um Effizienz und Innovation in internationalen Programmen zu steigern. Erfahrener Enterprise Architect mit 20+ Jahren Erfahrung in globalen IT-Transformationen.",
+    "hero-subtitle": "KI BERATER & IT ARCHITEKT & PROGRAMMDIREKTOR",
+    "hero-description": "KI-Berater, IT-Architekt und Programmdirektor in Spanien mit tiefgreifender Expertise in KI-Technologien. Ich integriere ChatGPT und Grok in Projekte, um Effizienz und Innovation in internationalen Programmen zu steigern. Erfahrener Enterprise Architect mit 20+ Jahren Erfahrung in globalen IT-Transformationen.",
     "hero-view-skills": "FÄHIGKEITEN ANSEHEN",
     "hero-download-resume": "LEBENSLAUF HERUNTERLADEN",
+    "hero-my-audiobook": "MEIN HÖRBUCH",
 
     // Fähigkeiten
     "skills-title": "FÄHIGKEITEN & EXPERTISE",
@@ -136,7 +138,7 @@ export const translations = {
   es: {
     // Header und Navigation
     "logo-text": "MICHAEL DABROCK",
-    "tagline": "CONSULTOR IA & ARQUITECTO TI",
+    "tagline": "CONSULTOR IA & ARQUITECTO TI & DIRECTOR DE PROGRAMAS",
     "nav-home": "INICIO",
     "nav-skills": "HABILIDADES",
     "nav-experience": "EXPERIENCIA",
@@ -145,10 +147,11 @@ export const translations = {
 
     // Hero-Bereich
     "hero-title": "MICHAEL DABROCK",
-    "hero-subtitle": "CONSULTOR IA & ARQUITECTO TI",
-    "hero-description": "Consultor de IA y Arquitecto de TI en España con profunda experiencia en tecnologías de IA. Integro ChatGPT y Grok en proyectos para mejorar la eficiencia e innovación en programas internacionales. Arquitecto Empresarial y Gerente de Programas Globales con más de 20 años de experiencia liderando transformaciones de TI globales.",
+    "hero-subtitle": "CONSULTOR IA & ARQUITECTO TI & DIRECTOR DE PROGRAMAS",
+    "hero-description": "Consultor de IA, Arquitecto de TI y Director de Programas en España con profunda experiencia en tecnologías de IA. Integro ChatGPT y Grok en proyectos para mejorar la eficiencia e innovación en programas internacionales. Arquitecto Empresarial y Gerente de Programas Globales con más de 20 años de experiencia liderando transformaciones de TI globales.",
     "hero-view-skills": "VER HABILIDADES",
     "hero-download-resume": "DESCARGAR CURRÍCULUM",
+    "hero-my-audiobook": "MI AUDIOLIBRO",
 
     // Fähigkeiten
     "skills-title": "HABILIDADES Y EXPERIENCIA",

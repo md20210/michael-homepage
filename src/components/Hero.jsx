@@ -3,7 +3,9 @@ import React from 'react';
 
 const Hero = ({ t, currentLang }) => {
     const getResumeLink = () => {
-        return currentLang === "de" ? "./Resume Deu.pdf" : "./Resume Eng.pdf";
+        if (currentLang === "de") return "./Resume_DE.pdf";
+        if (currentLang === "es") return "./Resume_ES.pdf";
+        return "./Resume_EN.pdf";
     };
 
     const skillNodes = [
@@ -62,22 +64,27 @@ const Hero = ({ t, currentLang }) => {
                 <div className="step-indicator">
                     <div className="step-number">01</div>
                     <div className="step-line"></div>
-                    <div className="step-number" style={{ color: '#ffd700' }}>01</div>
+                    <div className="step-number" style={{ color: '#ffd700' }}>06</div>
                 </div>
                 <h1 className="main-title">{t('logo-text')}</h1>
                 <h2 className="subtitle">{t('hero-subtitle')}</h2>
                 <p className="description">{t('hero-description')}</p>
                 <div className="cta-buttons">
-                    <a href="#skills" className="cta-button">
-                        {t('hero-view-skills')}
-                    </a>
-                    <a 
-                        href={getResumeLink()} 
-                        className="cta-button secondary"
+                    <a
+                        href={getResumeLink()}
+                        className="cta-button"
                         target="_blank"
                         rel="noopener noreferrer"
                     >
                         {t('hero-download-resume')}
+                    </a>
+                    <a
+                        href="https://www.dabrock.eu/Michael_Dabrock_Audiobook.mp3"
+                        className="cta-button secondary"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        {t('hero-my-audiobook')}
                     </a>
                 </div>
             </div>
