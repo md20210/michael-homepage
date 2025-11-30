@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+*/node_modules/
+package-lock.json
+
+# Environment Variables
+.env
+.env.local
+.env.production
+.env.development
+*.env
+
+# Build outputs
+dist/
+build/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Encrypted keys (keep encryption files but ignore if needed)
+# backend/encrypted_api_key.txt
+# backend/encryption_*.bin
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Testing
+coverage/
+.nyc_output/
+
+# Deployment
+*.tgz
