@@ -93,7 +93,6 @@ const App = () => {
                 </div>
                 <div className="nav-right">
                     <a href="#intro" className="nav-link">{t('nav-home')}</a>
-                    <a href="#skills" className="nav-link">{t('nav-skills')}</a>
                     <a href="#experience" className="nav-link">{t('nav-experience')}</a>
                     <a href="#chatbot" className="nav-link">{t('nav-chatbot')}</a>
                     <a href="mailto:michael.dabrock@gmx.es" className="nav-link">{t('nav-contact')}</a>
