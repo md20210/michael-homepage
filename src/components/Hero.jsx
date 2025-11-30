@@ -3,7 +3,9 @@ import React from 'react';
 
 const Hero = ({ t, currentLang }) => {
     const getResumeLink = () => {
-        return currentLang === "de" ? "./Resume Deu.pdf" : "./Resume Eng.pdf";
+        if (currentLang === "de") return "./Resume_DE.pdf";
+        if (currentLang === "es") return "./Resume_ES.pdf";
+        return "./Resume_EN.pdf";
     };
 
     const skillNodes = [
@@ -77,7 +79,7 @@ const Hero = ({ t, currentLang }) => {
                         {t('hero-download-resume')}
                     </a>
                     <a
-                        href="https://www.audible.de/your-audiobook-link"
+                        href="https://www.dabrock.eu/Michael_Dabrock_Audiobook.mp3"
                         className="cta-button secondary"
                         target="_blank"
                         rel="noopener noreferrer"
