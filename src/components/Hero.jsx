@@ -70,9 +70,12 @@ const Hero = ({ t, currentLang }) => {
                 <h2 className="subtitle">{t('hero-subtitle')}</h2>
                 <p className="description">{t('hero-description')}</p>
                 <div className="cta-buttons">
+                    <a href="#skills" className="cta-button">
+                        {t('hero-view-skills')}
+                    </a>
                     <a
                         href={getResumeLink()}
-                        className="cta-button"
+                        className="cta-button secondary"
                         target="_blank"
                         rel="noopener noreferrer"
                     >

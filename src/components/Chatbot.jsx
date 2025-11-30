@@ -11,8 +11,8 @@ const Chatbot = ({ t, currentLang }) => {
     const [serverAvailable, setServerAvailable] = useState(false);
     const chatLogRef = useRef(null);
 
-    // Use existing server.cjs endpoints
-    const API_BASE = window.location.origin;
+    // Use Railway backend (not Strato - Strato only hosts static files!)
+    const API_BASE = 'https://michael-homepage-production.up.railway.app';
 
     // Spracherkennungs-Funktion
     const detectLanguage = (message) => {
