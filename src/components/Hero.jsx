@@ -2,10 +2,37 @@
 import React from 'react';
 
 const Hero = ({ t, currentLang }) => {
+    const API_BASE = 'https://michael-homepage-production.up.railway.app';
+
     const getResumeLink = () => {
         if (currentLang === "de") return "./Resume_DE.pdf";
         if (currentLang === "es") return "./Resume_ES.pdf";
         return "./Resume_EN.pdf";
+    };
+
+    const handleAudiobookClick = async (e) => {
+        e.preventDefault();
+
+        // Track the click
+        try {
+            await fetch(`${API_BASE}/api/track-audiobook-click`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    language: currentLang,
+                    userAgent: navigator.userAgent,
+                    timestamp: new Date().toISOString()
+                })
+            });
+            console.log('📖 Audiobook click tracked');
+        } catch (error) {
+            console.error('❌ Failed to track audiobook click:', error);
+        }
+
+        // Open audiobook link
+        window.open('https://www.dabrock.eu/Michael_Dabrock_Audiobook.mp3', '_blank');
     };
 
     const skillNodes = [
@@ -84,7 +111,7 @@ const Hero = ({ t, currentLang }) => {
                     <a
                         href="https://www.dabrock.eu/Michael_Dabrock_Audiobook.mp3"
                         className="cta-button secondary"
-                        target="_blank"
+                        onClick={handleAudiobookClick}
                         rel="noopener noreferrer"
                     >
                         {t('hero-my-audiobook')}
