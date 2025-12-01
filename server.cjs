@@ -11,6 +11,9 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Audiobook Click Tracking
+const audiobookClicks = [];
+
 console.log('🚀 Starting Express server for Railway...');
 console.log('📦 Port:', PORT);
 console.log('🌍 Environment:', process.env.NODE_ENV || 'development');
@@ -25,7 +28,9 @@ const corsOptions = {
     origin: [
         'http://localhost:3000',
         'http://localhost:4173',
-        'https://michael-homepage-production.up.railway.app'
+        'https://michael-homepage-production.up.railway.app',
+        'https://www.dabrock.eu',
+        'http://www.dabrock.eu'
     ],
     methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
@@ -245,6 +250,67 @@ app.post('/api/grok', async (req, res) => {
     }
 });
 
+// Audiobook Click Tracking Endpoints
+app.post('/api/track-audiobook-click', (req, res) => {
+    try {
+        const { language, userAgent, timestamp } = req.body;
+        const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+
+        const clickData = {
+            timestamp: timestamp || new Date().toISOString(),
+            language: language || 'unknown',
+            userAgent: userAgent || req.headers['user-agent'] || 'unknown',
+            ip: ip || 'unknown',
+            id: audiobookClicks.length + 1
+        };
+
+        audiobookClicks.push(clickData);
+
+        console.log('📖 Audiobook Download Click:', clickData);
+
+        res.json({
+            success: true,
+            message: 'Click tracked successfully',
+            totalClicks: audiobookClicks.length
+        });
+    } catch (error) {
+        console.error('❌ Error tracking audiobook click:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to track click'
+        });
+    }
+});
+
+app.get('/api/audiobook-stats', (req, res) => {
+    try {
+        const stats = {
+            totalClicks: audiobookClicks.length,
+            clicks: audiobookClicks.map(click => ({
+                id: click.id,
+                timestamp: click.timestamp,
+                language: click.language,
+                userAgent: click.userAgent.substring(0, 100) // Truncate for privacy
+            })),
+            byLanguage: {
+                de: audiobookClicks.filter(c => c.language === 'de').length,
+                en: audiobookClicks.filter(c => c.language === 'en').length,
+                es: audiobookClicks.filter(c => c.language === 'es').length,
+                unknown: audiobookClicks.filter(c => c.language === 'unknown').length
+            },
+            lastClick: audiobookClicks.length > 0 ? audiobookClicks[audiobookClicks.length - 1].timestamp : null
+        };
+
+        res.json(stats);
+    } catch (error) {
+        console.error('❌ Error getting audiobook stats:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to get statistics'
+        });
+    }
+});
+
 app.get('/health', (req, res) => {
     res.json({
         status: 'Hybrid AI System - Michael Knowledge + Real Grok',
@@ -254,6 +320,7 @@ app.get('/health', (req, res) => {
         grokApiAvailable: !!API_KEY,
         apiKeySource: API_KEY ? 'Environment Variable' : 'Missing',
         knowledgeItems: Object.keys(MICHAEL_KNOWLEDGE_BASE.en).length,
+        audiobookClicks: audiobookClicks.length,
         port: PORT,
         environment: process.env.NODE_ENV || 'development'
     });
