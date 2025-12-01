@@ -97,20 +97,9 @@ const Hero = ({ t, currentLang }) => {
                 <h2 className="subtitle">{t('hero-subtitle')}</h2>
                 <p className="description">{t('hero-description')}</p>
                 <div className="cta-buttons">
-                    <a href="#skills" className="cta-button">
-                        {t('hero-view-skills')}
-                    </a>
-                    <a
-                        href={getResumeLink()}
-                        className="cta-button secondary"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        {t('hero-download-resume')}
-                    </a>
                     <a
                         href="https://www.dabrock.eu/Michael_Dabrock_Audiobook.mp3"
-                        className="cta-button secondary"
+                        className="cta-button"
                         onClick={handleAudiobookClick}
                         rel="noopener noreferrer"
                     >

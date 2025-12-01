@@ -10,6 +10,7 @@ export const translations = {
     "nav-home": "HOME",
     "nav-skills": "SKILLS",
     "nav-experience": "EXPERIENCE",
+    "nav-voicebot": "VOICE BOT",
     "nav-chatbot": "CHATBOT",
     "nav-contact": "CONTACT",
 
@@ -58,6 +59,13 @@ export const translations = {
     "work-education-desc": "<strong>Diploma in Industrial Engineering</strong> - Karlsruhe Institute of Technology (KIT), Germany. <strong>Master's Thesis:</strong> Integration of heterogeneous databases using machine learning algorithms. Grade: 1.0 (Excellent). Technologies: Eiffel, C++. <strong>Recognition:</strong> Offered PhD position, software incorporated into Informatica products, presented at trade fairs.",
 
     // Chatbot
+    // Voice Bot
+    "voicebot-title": "AI VOICE BOT ASSISTANT",
+    "voicebot-header": "Call My AI Voice Assistant",
+    "voicebot-description": "Multilingual voice chatbot powered by <strong>IIElevenLabs</strong>, <strong>ChatGPT</strong>, <strong>Gemini</strong> & <strong>n8n</strong> workflow automation. Available in English, German, and Spanish.",
+    "voicebot-tech": "Powered by IIElevenLabs, ChatGPT, Gemini & n8n",
+
+    // Chatbot
     "chatbot-title": "AI CHATBOT ASSISTANT",
     "chatbot-header": "🤖 Grok AI Assistant",
     "chatbot-info": "I've integrated Grok from xAI with direct API connection. The AI assistant knows my detailed CV, 20+ years experience, 50+ projects, and AI expertise. Ask about specific projects, technologies, or achievements!",
@@ -76,6 +84,7 @@ export const translations = {
     "nav-home": "START",
     "nav-skills": "FÄHIGKEITEN",
     "nav-experience": "ERFAHRUNG",
+    "nav-voicebot": "VOICE BOT",
     "nav-chatbot": "CHATBOT",
     "nav-contact": "KONTAKT",
 
@@ -123,6 +132,12 @@ export const translations = {
     "work-education-title": "Ausbildung & Akademische Leistungen",
     "work-education-desc": "<strong>Diplom Wirtschaftsingenieurwesen</strong> - Karlsruhe Institute of Technology (KIT), Deutschland. <strong>Masterarbeit:</strong> Integration heterogener Datenbanken mittels Machine-Learning-Algorithmen. Note: 1,0 (Ausgezeichnet). Technologien: Eiffel, C++. <strong>Anerkennung:</strong> Promotionsplatz angeboten, Software in Informatica-Produkte integriert, Präsentation auf Messen.",
 
+    // Voice Bot
+    "voicebot-title": "KI VOICE BOT ASSISTENT",
+    "voicebot-header": "Rufen Sie meinen KI Sprachassistenten an",
+    "voicebot-description": "Mehrsprachiger Sprach-Chatbot powered by <strong>IIElevenLabs</strong>, <strong>ChatGPT</strong>, <strong>Gemini</strong> & <strong>n8n</strong> Workflow-Automatisierung. Verfügbar auf Englisch, Deutsch und Spanisch.",
+    "voicebot-tech": "Powered by IIElevenLabs, ChatGPT, Gemini & n8n",
+
     // Chatbot
     "chatbot-title": "KI CHATBOT ASSISTENT",
     "chatbot-header": "🤖 Grok KI Assistent",
@@ -142,6 +157,7 @@ export const translations = {
     "nav-home": "INICIO",
     "nav-skills": "HABILIDADES",
     "nav-experience": "EXPERIENCIA",
+    "nav-voicebot": "VOICE BOT",
     "nav-chatbot": "CHATBOT",
     "nav-contact": "CONTACTO",
 
@@ -188,6 +204,12 @@ export const translations = {
     "work-early-career-desc": "<strong>ifs/RWE:</strong> Consultor principal para sistemas de proveedores de energía, implementación de Data Warehouse con Cognos e Informatica. <strong>debis/Mercedes-Benz:</strong> Desarrollé software de simulación para cálculos de ingresos en negociaciones de la industria metalúrgica, trabajando directamente con la junta de Mercedes-Benz. <strong>Opitz:</strong> Desarrollo de software empresarial y consultoría para clientes de manufactura.",
     "work-education-title": "Educación y Logros Académicos",
     "work-education-desc": "<strong>Diploma en Ingeniería Industrial</strong> - Instituto de Tecnología de Karlsruhe (KIT), Alemania. <strong>Tesis de Maestría:</strong> Integración de bases de datos heterogéneas mediante algoritmos de aprendizaje automático. Calificación: 1.0 (Excelente). Tecnologías: Eiffel, C++. <strong>Reconocimiento:</strong> Oferta de posición de doctorado, software incorporado en productos de Informatica, presentado en ferias comerciales.",
+
+    // Voice Bot
+    "voicebot-title": "ASISTENTE VOICE BOT IA",
+    "voicebot-header": "Llama a mi Asistente de Voz IA",
+    "voicebot-description": "Chatbot de voz multilingüe impulsado por <strong>IIElevenLabs</strong>, <strong>ChatGPT</strong>, <strong>Gemini</strong> y <strong>n8n</strong> automatización de flujos de trabajo. Disponible en inglés, alemán y español.",
+    "voicebot-tech": "Impulsado por IIElevenLabs, ChatGPT, Gemini & n8n",
 
     // Chatbot
     "chatbot-title": "ASISTENTE CHATBOT IA",
