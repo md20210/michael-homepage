@@ -213,6 +213,7 @@ function Dashboard() {
                       {new Date(msg.created_at).toLocaleTimeString('de-DE', {
                         hour: '2-digit',
                         minute: '2-digit',
+                        timeZone: 'Europe/Berlin'
                       })}
                     </div>
                   </div>

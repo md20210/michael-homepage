@@ -171,9 +171,9 @@ FRAGE: {question}
 
 ANTWORT:"""
 
-        # Call Ollama
+        # Call Ollama (longer timeout for CPU-only inference)
         try:
-            async with httpx.AsyncClient(timeout=120.0) as client:
+            async with httpx.AsyncClient(timeout=600.0) as client:  # 10 minutes for CPU
                 response = await client.post(
                     f"{settings.ollama_base_url}/api/generate",
                     json={
@@ -186,6 +186,10 @@ ANTWORT:"""
                 result = response.json()
                 return result.get("response", "Keine Antwort erhalten")
 
+        except httpx.TimeoutException:
+            return f"⏱️ Timeout: Das Modell antwortet nicht. CPU-Inferenz kann sehr langsam sein.\n\nTipp: Nutze ein kleineres Modell oder GPU-Beschleunigung."
+        except httpx.HTTPStatusError as e:
+            return f"❌ Ollama Fehler ({e.response.status_code}): {e.response.text}"
         except Exception as e:
             print(f"Error calling Ollama: {e}")
             return f"Fehler bei der LLM-Anfrage: {str(e)}\n\nIst Ollama gestartet? (ollama serve)"
@@ -194,7 +198,7 @@ ANTWORT:"""
         """Generate response using Ollama LLM without document context"""
 
         try:
-            async with httpx.AsyncClient(timeout=120.0) as client:
+            async with httpx.AsyncClient(timeout=600.0) as client:  # 10 minutes for CPU
                 response = await client.post(
                     f"{settings.ollama_base_url}/api/generate",
                     json={
@@ -206,6 +210,10 @@ ANTWORT:"""
                 response.raise_for_status()
                 result = response.json()
                 return result.get("response", "Keine Antwort erhalten")
+        except httpx.TimeoutException:
+            return f"⏱️ Timeout: Das Modell antwortet nicht. CPU-Inferenz kann sehr langsam sein.\n\nTipp: Nutze ein kleineres Modell oder GPU-Beschleunigung."
+        except httpx.HTTPStatusError as e:
+            return f"❌ Ollama Fehler ({e.response.status_code}): {e.response.text}"
 
         except Exception as e:
             print(f"Error calling Ollama: {e}")
