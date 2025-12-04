@@ -255,7 +255,7 @@ const Chatbot = ({ t, currentLang }) => {
                 <div className="step-indicator">
                     <div className="step-number">04</div>
                     <div className="step-line"></div>
-                    <div className="step-number" style={{ color: '#ffd700' }}>06</div>
+                    <div className="step-number" style={{ color: '#ffd700' }}>07</div>
                 </div>
 
                 <h2 className="main-title" style={{ fontSize: '48px', marginBottom: '30px', textAlign: 'center' }}>
@@ -268,12 +268,11 @@ const Chatbot = ({ t, currentLang }) => {
                             <h3 dangerouslySetInnerHTML={{ __html: t('grok-header') }} />
                             <p dangerouslySetInnerHTML={{ __html: t('grok-info') }} />
                             <p>
-                                {serverAvailable ? 
+                                {serverAvailable ?
                                     "🔄 Connected to hybrid AI system! Michael questions → Smart Knowledge Base, General questions → Real Grok AI. Ask about Goethe, philosophy, or any topic!" :
                                     "💾 Hybrid fallback mode - using intelligent responses with detailed knowledge about Michael."
                                 }
                             </p>
-                            <p dangerouslySetInnerHTML={{ __html: t('grok-phone') }} />
                             <a
                                 href={getResumeLink()}
                                 className="cta-button"

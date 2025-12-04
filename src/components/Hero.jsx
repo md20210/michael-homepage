@@ -2,37 +2,10 @@
 import React from 'react';
 
 const Hero = ({ t, currentLang }) => {
-    const API_BASE = 'https://michael-homepage-production.up.railway.app';
-
     const getResumeLink = () => {
         if (currentLang === "de") return "./Resume_DE.pdf";
         if (currentLang === "es") return "./Resume_ES.pdf";
         return "./Resume_EN.pdf";
-    };
-
-    const handleAudiobookClick = async (e) => {
-        e.preventDefault();
-
-        // Track the click
-        try {
-            await fetch(`${API_BASE}/api/track-audiobook-click`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    language: currentLang,
-                    userAgent: navigator.userAgent,
-                    timestamp: new Date().toISOString()
-                })
-            });
-            console.log('📖 Audiobook click tracked');
-        } catch (error) {
-            console.error('❌ Failed to track audiobook click:', error);
-        }
-
-        // Open audiobook link
-        window.open('https://www.dabrock.eu/Michael_Dabrock_Audiobook.mp3', '_blank');
     };
 
     const skillNodes = [
@@ -91,19 +64,19 @@ const Hero = ({ t, currentLang }) => {
                 <div className="step-indicator">
                     <div className="step-number">01</div>
                     <div className="step-line"></div>
-                    <div className="step-number" style={{ color: '#ffd700' }}>06</div>
+                    <div className="step-number" style={{ color: '#ffd700' }}>07</div>
                 </div>
                 <h1 className="main-title">{t('logo-text')}</h1>
                 <h2 className="subtitle">{t('hero-subtitle')}</h2>
                 <p className="description">{t('hero-description')}</p>
                 <div className="cta-buttons">
                     <a
-                        href="https://www.dabrock.eu/Michael_Dabrock_Audiobook.mp3"
+                        href={getResumeLink()}
                         className="cta-button"
-                        onClick={handleAudiobookClick}
+                        target="_blank"
                         rel="noopener noreferrer"
                     >
-                        {t('hero-my-audiobook')}
+                        {t('hero-download-resume')}
                     </a>
                 </div>
             </div>

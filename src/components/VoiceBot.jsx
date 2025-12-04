@@ -8,7 +8,7 @@ const VoiceBot = ({ t }) => {
                 <div className="step-indicator">
                     <div className="step-number">05</div>
                     <div className="step-line"></div>
-                    <div className="step-number" style={{ color: '#ffd700' }}>06</div>
+                    <div className="step-number" style={{ color: '#ffd700' }}>07</div>
                 </div>
 
                 <h2 className="main-title" style={{ fontSize: '48px', marginBottom: '30px', textAlign: 'center' }}>

@@ -9,6 +9,7 @@ import Experience from './components/Experience.jsx';
 import Chatbot from './components/Chatbot.jsx';
 import VoiceBot from './components/VoiceBot.jsx';
 import BookExperiment from './components/BookExperiment.jsx';
+import NewAIProject from './components/NewAIProject.jsx';
 
 const App = () => {
     const [currentLang, setCurrentLang] = useState('en');
@@ -98,6 +99,7 @@ const App = () => {
                     <a href="#grok" className="nav-link">{t('nav-grok')}</a>
                     <a href="#voicebot" className="nav-link">{t('nav-voicebot')}</a>
                     <a href="#book" className="nav-link">{t('nav-book')}</a>
+                    <a href="#newproject" className="nav-link">{t('nav-newproject')}</a>
                     <a href="mailto:michael.dabrock@gmx.es" className="nav-link">{t('nav-contact')}</a>
                     <LanguageSelector
                         currentLang={currentLang}
@@ -113,6 +115,7 @@ const App = () => {
                 <Chatbot t={t} currentLang={currentLang} />
                 <VoiceBot t={t} />
                 <BookExperiment t={t} currentLang={currentLang} />
+                <NewAIProject t={t} />
             </main>
         </div>
     );
