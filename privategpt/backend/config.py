@@ -26,8 +26,8 @@ class Settings(BaseSettings):
     session_expiry_days: int = 30
 
     # LLM Config (Ollama)
-    llm_model: str = "deepseek-r1:1.5b"  # Using 1.5B for faster CPU inference (prototype)
-    # Alternative: "deepseek-r1:7b" (better quality, slower) or "deepseek-r1:14b" (best quality, very slow)
+    llm_model: str = "qwen2.5:0.5b"  # Ultra-fast 0.5B model for CPU inference (prototype)
+    # Alternative: "deepseek-r1:1.5b" (reasoning model, slower) or "qwen2.5:3b" (better quality)
 
     # Limits
     max_file_size_mb: int = 10
