@@ -6,8 +6,9 @@ import LanguageSelector from './components/LanguageSelector.jsx';
 import Hero from './components/Hero.jsx';
 import Skills from './components/Skills.jsx';
 import Experience from './components/Experience.jsx';
-import VoiceBot from './components/VoiceBot.jsx';
 import Chatbot from './components/Chatbot.jsx';
+import VoiceBot from './components/VoiceBot.jsx';
+import BookExperiment from './components/BookExperiment.jsx';
 
 const App = () => {
     const [currentLang, setCurrentLang] = useState('en');
@@ -94,8 +95,9 @@ const App = () => {
                     <a href="#intro" className="nav-link">{t('nav-home')}</a>
                     <a href="#skills" className="nav-link">{t('nav-skills')}</a>
                     <a href="#experience" className="nav-link">{t('nav-experience')}</a>
+                    <a href="#grok" className="nav-link">{t('nav-grok')}</a>
                     <a href="#voicebot" className="nav-link">{t('nav-voicebot')}</a>
-                    <a href="#chatbot" className="nav-link">{t('nav-chatbot')}</a>
+                    <a href="#book" className="nav-link">{t('nav-book')}</a>
                     <a href="mailto:michael.dabrock@gmx.es" className="nav-link">{t('nav-contact')}</a>
                     <LanguageSelector
                         currentLang={currentLang}
@@ -108,8 +110,9 @@ const App = () => {
                 <Hero t={t} currentLang={currentLang} />
                 <Skills t={t} />
                 <Experience t={t} />
-                <VoiceBot t={t} />
                 <Chatbot t={t} currentLang={currentLang} />
+                <VoiceBot t={t} />
+                <BookExperiment t={t} currentLang={currentLang} />
             </main>
         </div>
     );

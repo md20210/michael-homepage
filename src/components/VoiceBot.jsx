@@ -1,4 +1,4 @@
-// src/components/VoiceBot.jsx - Section 06-06
+// src/components/VoiceBot.jsx - Section 05-06
 import React from 'react';
 
 const VoiceBot = ({ t }) => {
@@ -6,7 +6,7 @@ const VoiceBot = ({ t }) => {
         <section id="voicebot" className="section">
             <div style={{ width: '100%' }}>
                 <div className="step-indicator">
-                    <div className="step-number">06</div>
+                    <div className="step-number">05</div>
                     <div className="step-line"></div>
                     <div className="step-number" style={{ color: '#ffd700' }}>06</div>
                 </div>

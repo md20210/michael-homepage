@@ -89,7 +89,7 @@ const Chatbot = ({ t, currentLang }) => {
         const welcomeMsg = {
             id: 1,
             type: 'bot',
-            content: t('chatbot-welcome'),
+            content: t('grok-welcome'),
             timestamp: Date.now(),
             source: serverAvailable ? 'hybrid-ready' : 'fallback'
         };
@@ -250,7 +250,7 @@ const Chatbot = ({ t, currentLang }) => {
     console.log('🎨 Rendering Hybrid Chatbot with', messages.length, 'messages. Server:', serverAvailable ? 'Available' : 'Fallback');
 
     return (
-        <section id="chatbot" className="section">
+        <section id="grok" className="section">
             <div style={{ width: '100%' }}>
                 <div className="step-indicator">
                     <div className="step-number">04</div>
@@ -259,29 +259,28 @@ const Chatbot = ({ t, currentLang }) => {
                 </div>
 
                 <h2 className="main-title" style={{ fontSize: '48px', marginBottom: '30px', textAlign: 'center' }}>
-                    {t('chatbot-title')}
+                    {t('grok-title')}
                 </h2>
 
                 <div className="chatbot-section">
                     <div className="chatbot-content">
                         <div className="chat-info">
-                            <h3 dangerouslySetInnerHTML={{ __html: t('chatbot-header') }} />
-                            <p dangerouslySetInnerHTML={{ __html: t('chatbot-info') }} />
+                            <h3 dangerouslySetInnerHTML={{ __html: t('grok-header') }} />
+                            <p dangerouslySetInnerHTML={{ __html: t('grok-info') }} />
                             <p>
                                 {serverAvailable ? 
                                     "🔄 Connected to hybrid AI system! Michael questions → Smart Knowledge Base, General questions → Real Grok AI. Ask about Goethe, philosophy, or any topic!" :
                                     "💾 Hybrid fallback mode - using intelligent responses with detailed knowledge about Michael."
                                 }
                             </p>
-                            <p dangerouslySetInnerHTML={{ __html: t('chatbot-opportunity') }} />
-                            <p dangerouslySetInnerHTML={{ __html: t('chatbot-phone') }} />
-                            <a 
-                                href={getResumeLink()} 
-                                className="cta-button" 
-                                target="_blank" 
+                            <p dangerouslySetInnerHTML={{ __html: t('grok-phone') }} />
+                            <a
+                                href={getResumeLink()}
+                                className="cta-button"
+                                target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                {t('chatbot-resume')}
+                                {t('grok-resume')}
                             </a>
                         </div>
 
@@ -332,14 +331,14 @@ const Chatbot = ({ t, currentLang }) => {
                                     value={inputValue}
                                     onChange={(e) => setInputValue(e.target.value)}
                                     onKeyPress={handleKeyPress}
-                                    placeholder={t('chatbot-placeholder')}
+                                    placeholder={t('grok-placeholder')}
                                     disabled={isLoading}
                                 />
-                                <button 
+                                <button
                                     onClick={handleSendMessage}
                                     disabled={isLoading || !inputValue.trim()}
                                 >
-                                    {isLoading ? 'Sending...' : t('chatbot-send')}
+                                    {isLoading ? 'Sending...' : t('grok-send')}
                                 </button>
                             </div>
                         </div>

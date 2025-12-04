@@ -45,3 +45,4 @@ coverage/
 # Large media files (hosted on Strato)
 public/Michael_Dabrock_Audiobook.mp3
 public/*.mp3
+.env.sftp

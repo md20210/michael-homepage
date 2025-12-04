@@ -10,8 +10,9 @@ export const translations = {
     "nav-home": "HOME",
     "nav-skills": "SKILLS",
     "nav-experience": "EXPERIENCE",
+    "nav-grok": "GROK AI",
     "nav-voicebot": "VOICE BOT",
-    "nav-chatbot": "CHATBOT",
+    "nav-book": "BOOK PROJECT",
     "nav-contact": "CONTACT",
 
     // Hero-Bereich
@@ -43,8 +44,10 @@ export const translations = {
 
     // Berufserfahrung
     "experience-title": "PROFESSIONAL EXPERIENCE",
-    "work-ai-specialist-title": "AI Consultant & Specialist",
-    "work-ai-specialist-desc": "Parental Leave & Self-Directed AI Learning. Intensive study of AI platforms: ChatGPT, Gemini, Grok, Claude for enterprise solutions. Built interactive multilingual chatbot (EN, DE, ES) for project knowledge management, powered by IIElevenLabs, ChatGPT, Gemini, and n8n workflow automation.",
+    "work-google-title": "Teleperformance | Google Account Manager",
+    "work-google-desc": "Managed German Google Ads clients, using AI to optimize campaigns and boost efficiency. Achieved <strong>top performer status</strong> in the German team for Medium Business in Q3 2025, while ensuring compliance with Google policies. Leveraged AI-driven insights to enhance campaign performance and client satisfaction.",
+    "work-ai-specialist-title": "Self-Directed AI Development | AI Developer & Consultant",
+    "work-ai-specialist-desc": "Balanced caring for my daughter with self-directed AI development, creating chatbots, voice bots, and custom LLM for clients using ChatGPT, Gemini, Grok, and Claude Code. Integrated tools like <strong>IIElevenLabs</strong> and <strong>n8n</strong> to deliver innovative automation solutions.",
     "work-cognizant-title": "Cognizant Technology Solutions | Global Program Director",
     "work-cognizant-desc": "Led enterprise transformation programs for international clients in telecommunications, manufacturing, and pharma industries. Managed cross-functional teams and implemented AI-driven solutions. <strong>Pharma Cloud Migration:</strong> Led €10M+ annual global migration using Azure/ServiceNow, reducing IT infrastructure costs by 30%. <strong>Telecom SAP Factory:</strong> Built & managed 300+ SAP consultants, increased development efficiency by 20%. <strong>Special Projects:</strong> PMO setup and automotive software development, raising client satisfaction by 25%.",
     "work-wipro-title": "Wipro Technologies | Enterprise Architect / Program Manager",
@@ -58,23 +61,36 @@ export const translations = {
     "work-education-title": "Education & Academic Achievement",
     "work-education-desc": "<strong>Diploma in Industrial Engineering</strong> - Karlsruhe Institute of Technology (KIT), Germany. <strong>Master's Thesis:</strong> Integration of heterogeneous databases using machine learning algorithms. Grade: 1.0 (Excellent). Technologies: Eiffel, C++. <strong>Recognition:</strong> Offered PhD position, software incorporated into Informatica products, presented at trade fairs.",
 
-    // Chatbot
+    // Grok AI Assistant (formerly Chatbot)
+    "grok-title": "GROK AI ASSISTANT",
+    "grok-header": "🤖 Grok AI Assistant",
+    "grok-info": "I've integrated Grok from xAI with direct API connection. The AI assistant knows my detailed CV, 20+ years experience, 50+ projects, and AI expertise. Ask about specific projects, technologies, or achievements!",
+    "grok-phone": "Try my AI Phone Assistant: +34 93 694 5855 (Multilingual EN/DE/ES voice chatbot powered by IIElevenLabs, ChatGPT, Gemini & n8n)",
+    "grok-resume": "View Resume",
+    "grok-welcome": "Hello! I'm Grok, created by xAI. I know Michael's portfolio and 20+ years of experience inside out. How can I help you today?",
+    "grok-placeholder": "Ask me about Michael's skills, experience, or AI projects...",
+    "grok-send": "Send",
+
     // Voice Bot
     "voicebot-title": "AI VOICE BOT ASSISTANT",
     "voicebot-header": "Call My AI Voice Assistant",
     "voicebot-description": "Multilingual voice chatbot powered by <strong>IIElevenLabs</strong>, <strong>ChatGPT</strong>, <strong>Gemini</strong> & <strong>n8n</strong> workflow automation. Available in English, German, and Spanish.",
     "voicebot-tech": "Powered by IIElevenLabs, ChatGPT, Gemini & n8n",
 
-    // Chatbot
-    "chatbot-title": "AI CHATBOT ASSISTANT",
-    "chatbot-header": "🤖 Grok AI Assistant",
-    "chatbot-info": "I've integrated Grok from xAI with direct API connection. The AI assistant knows my detailed CV, 20+ years experience, 50+ projects, and AI expertise. Ask about specific projects, technologies, or achievements!",
-    "chatbot-opportunity": "N/A",
-    "chatbot-phone": "Try my AI Phone Assistant: +34 93 694 5855 (Multilingual EN/DE/ES voice chatbot powered by IIElevenLabs, ChatGPT, Gemini & n8n)",
-    "chatbot-resume": "Download Resume",
-    "chatbot-welcome": "Hello! I'm Grok, created by xAI. I know Michael's portfolio and 20+ years of experience inside out. How can I help you today?",
-    "chatbot-placeholder": "Ask me about Michael's skills, experience, or AI projects...",
-    "chatbot-send": "Send"
+    // Book Experiment
+    "book-title": "AI AUDIOBOOK PROJECT",
+    "book-header": "📖 Creating an Audiobook in One Day",
+    "book-description": "An experimental project demonstrating the power of AI collaboration: I created a complete audiobook within a single day using multiple AI platforms working together.",
+    "book-process-title": "The Creative Process",
+    "book-process-desc": "This audiobook was created entirely with AI assistance, showcasing how different AI platforms can complement each other:",
+    "book-grok": "<strong>Grok (xAI)</strong>: Story concept, creative direction, and narrative structure",
+    "book-claude": "<strong>Claude (Anthropic)</strong>: Content refinement, editing, and coherence optimization",
+    "book-chatgpt": "<strong>ChatGPT (OpenAI)</strong>: Dialogue enhancement and style consistency",
+    "book-elevenlabs": "<strong>ElevenLabs</strong>: Professional text-to-speech voice synthesis for the audiobook narration",
+    "book-insight-title": "Key Insights",
+    "book-insight-desc": "This project demonstrates how AI can accelerate creative workflows while maintaining quality. By orchestrating multiple AI systems, I completed in one day what traditionally would take weeks. The audiobook showcases practical AI integration in content creation.",
+    "book-listen": "Listen to My Audiobook",
+    "book-download": "Download Audiobook (MP3, 364 MB)"
   },
 
   de: {
@@ -84,8 +100,9 @@ export const translations = {
     "nav-home": "START",
     "nav-skills": "FÄHIGKEITEN",
     "nav-experience": "ERFAHRUNG",
+    "nav-grok": "GROK AI",
     "nav-voicebot": "VOICE BOT",
-    "nav-chatbot": "CHATBOT",
+    "nav-book": "BUCHPROJEKT",
     "nav-contact": "KONTAKT",
 
     // Hero-Bereich
@@ -117,8 +134,10 @@ export const translations = {
 
     // Berufserfahrung
     "experience-title": "BERUFSERFAHRUNG",
-    "work-ai-specialist-title": "KI-Berater & Spezialist",
-    "work-ai-specialist-desc": "Elternzeit & Selbststudium KI. Intensive Beschäftigung mit KI-Plattformen: ChatGPT, Gemini, Grok, Claude für Unternehmenslösungen. Entwicklung eines interaktiven mehrsprachigen Chatbots (EN, DE, ES) für Projektwissensmanagement, powered by IIElevenLabs, ChatGPT, Gemini und n8n Workflow-Automatisierung.",
+    "work-google-title": "Teleperformance | Google Account Manager",
+    "work-google-desc": "Verwaltung deutscher Google Ads-Kunden, Nutzung von KI zur Optimierung von Kampagnen und Steigerung der Effizienz. Erreichung des <strong>Top-Performer-Status</strong> im deutschen Team für Medium Business im dritten Quartal 2025 bei gleichzeitiger Einhaltung der Google-Richtlinien. Nutzung KI-gestützter Erkenntnisse zur Verbesserung der Kampagnenleistung und Kundenzufriedenheit.",
+    "work-ai-specialist-title": "Selbstgesteuertes KI-Studium | KI-Entwickler & Berater",
+    "work-ai-specialist-desc": "Balance zwischen der Betreuung meiner Tochter und selbstgesteuerter KI-Entwicklung, Erstellung von Chatbots, Voice Bots und kundenspezifischen LLM mit ChatGPT, Gemini, Grok und Claude Code. Integration von Tools wie <strong>IIElevenLabs</strong> und <strong>n8n</strong> zur Bereitstellung innovativer Automatisierungslösungen.",
     "work-cognizant-title": "Cognizant Technology Solutions | Globaler Programmdirektor",
     "work-cognizant-desc": "Leitete Unternehmenstransformationsprogramme für internationale Kunden in Telekommunikation, Fertigung und Pharma-Industrie. Verwaltung funktionsübergreifender Teams und Implementierung KI-gestützter Lösungen. <strong>Pharma Cloud Migration:</strong> Leitete €10M+ jährliche globale Migration mit Azure/ServiceNow, reduzierte IT-Infrastrukturkosten um 30%. <strong>Telekom SAP Factory:</strong> Aufbau & Verwaltung von 300+ SAP-Beratern, steigerte Entwicklungseffizienz um 20%. <strong>Sonderprojekte:</strong> PMO-Aufbau und Automotive-Softwareentwicklung, erhöhte Kundenzufriedenheit um 25%.",
     "work-wipro-title": "Wipro Technologies | Enterprise Architect / Programm-Manager",
@@ -132,22 +151,36 @@ export const translations = {
     "work-education-title": "Ausbildung & Akademische Leistungen",
     "work-education-desc": "<strong>Diplom Wirtschaftsingenieurwesen</strong> - Karlsruhe Institute of Technology (KIT), Deutschland. <strong>Masterarbeit:</strong> Integration heterogener Datenbanken mittels Machine-Learning-Algorithmen. Note: 1,0 (Ausgezeichnet). Technologien: Eiffel, C++. <strong>Anerkennung:</strong> Promotionsplatz angeboten, Software in Informatica-Produkte integriert, Präsentation auf Messen.",
 
+    // Grok AI Assistant
+    "grok-title": "GROK KI ASSISTENT",
+    "grok-header": "🤖 Grok KI Assistent",
+    "grok-info": "Ich habe Grok von xAI mit direkter API-Verbindung integriert. Der KI-Assistent kennt meinen detaillierten Lebenslauf, 20+ Jahre Erfahrung, 50+ Projekte und KI-Expertise. Fragen Sie nach spezifischen Projekten, Technologien oder Erfolgen!",
+    "grok-phone": "Probieren Sie meinen KI-Telefon-Assistenten: +34 93 694 5855 (Mehrsprachiger EN/DE/ES Sprach-Chatbot powered by IIElevenLabs, ChatGPT, Gemini & n8n)",
+    "grok-resume": "Lebenslauf ansehen",
+    "grok-welcome": "Hallo! Ich bin Grok von xAI. Ich kenne Michaels Portfolio und 20+ Jahre Erfahrung in- und auswendig. Wie kann ich Ihnen heute helfen?",
+    "grok-placeholder": "Fragen Sie mich nach Michaels Fähigkeiten, Erfahrung oder KI-Projekten...",
+    "grok-send": "Senden",
+
     // Voice Bot
     "voicebot-title": "KI VOICE BOT ASSISTENT",
     "voicebot-header": "Rufen Sie meinen KI Sprachassistenten an",
     "voicebot-description": "Mehrsprachiger Sprach-Chatbot powered by <strong>IIElevenLabs</strong>, <strong>ChatGPT</strong>, <strong>Gemini</strong> & <strong>n8n</strong> Workflow-Automatisierung. Verfügbar auf Englisch, Deutsch und Spanisch.",
     "voicebot-tech": "Powered by IIElevenLabs, ChatGPT, Gemini & n8n",
 
-    // Chatbot
-    "chatbot-title": "KI CHATBOT ASSISTENT",
-    "chatbot-header": "🤖 Grok KI Assistent",
-    "chatbot-info": "Ich habe Grok von xAI mit direkter API-Verbindung integriert. Der KI-Assistent kennt meinen detaillierten Lebenslauf, 20+ Jahre Erfahrung, 50+ Projekte und KI-Expertise. Fragen Sie nach spezifischen Projekten, Technologien oder Erfolgen!",
-    "chatbot-opportunity": "N/A",
-    "chatbot-phone": "Probieren Sie meinen KI-Telefon-Assistenten: +34 93 694 5855 (Mehrsprachiger EN/DE/ES Sprach-Chatbot powered by IIElevenLabs, ChatGPT, Gemini & n8n)",
-    "chatbot-resume": "Lebenslauf herunterladen",
-    "chatbot-welcome": "Hallo! Ich bin Grok von xAI. Ich kenne Michaels Portfolio und 20+ Jahre Erfahrung in- und auswendig. Wie kann ich Ihnen heute helfen?",
-    "chatbot-placeholder": "Fragen Sie mich nach Michaels Fähigkeiten, Erfahrung oder KI-Projekten...",
-    "chatbot-send": "Senden"
+    // Hörbuch-Projekt
+    "book-title": "KI HÖRBUCH-PROJEKT",
+    "book-header": "📖 Ein Hörbuch an einem Tag erstellen",
+    "book-description": "Ein experimentelles Projekt, das die Macht der KI-Zusammenarbeit demonstriert: Ich habe ein komplettes Hörbuch innerhalb eines einzigen Tages mit mehreren KI-Plattformen erstellt, die zusammenarbeiten.",
+    "book-process-title": "Der kreative Prozess",
+    "book-process-desc": "Dieses Hörbuch wurde vollständig mit KI-Unterstützung erstellt und zeigt, wie verschiedene KI-Plattformen sich ergänzen können:",
+    "book-grok": "<strong>Grok (xAI)</strong>: Story-Konzept, kreative Leitung und narrative Struktur",
+    "book-claude": "<strong>Claude (Anthropic)</strong>: Inhaltliche Verfeinerung, Bearbeitung und Kohärenzoptimierung",
+    "book-chatgpt": "<strong>ChatGPT (OpenAI)</strong>: Dialogverbesserung und Stilkonsistenz",
+    "book-elevenlabs": "<strong>ElevenLabs</strong>: Professionelle Text-zu-Sprache-Synthese für die Hörbuch-Erzählung",
+    "book-insight-title": "Wichtige Erkenntnisse",
+    "book-insight-desc": "Dieses Projekt zeigt, wie KI kreative Arbeitsabläufe beschleunigen kann, während die Qualität erhalten bleibt. Durch die Orchestrierung mehrerer KI-Systeme habe ich in einem Tag abgeschlossen, was traditionell Wochen dauern würde. Das Hörbuch zeigt praktische KI-Integration in der Content-Erstellung.",
+    "book-listen": "Hören Sie mein Hörbuch",
+    "book-download": "Hörbuch herunterladen (MP3, 364 MB)"
   },
 
   es: {
@@ -157,8 +190,9 @@ export const translations = {
     "nav-home": "INICIO",
     "nav-skills": "HABILIDADES",
     "nav-experience": "EXPERIENCIA",
+    "nav-grok": "GROK AI",
     "nav-voicebot": "VOICE BOT",
-    "nav-chatbot": "CHATBOT",
+    "nav-book": "PROYECTO LIBRO",
     "nav-contact": "CONTACTO",
 
     // Hero-Bereich
@@ -190,8 +224,10 @@ export const translations = {
 
     // Berufserfahrung
     "experience-title": "EXPERIENCIA PROFESIONAL",
-    "work-ai-specialist-title": "Consultor y Especialista en IA",
-    "work-ai-specialist-desc": "Permiso parental y autoaprendizaje en IA. Estudio intensivo de plataformas de IA: ChatGPT, Gemini, Grok, Claude para soluciones empresariales. Desarrollo de un chatbot multilingüe interactivo (EN, DE, ES) para la gestión del conocimiento de proyectos, impulsado por IIElevenLabs, ChatGPT, Gemini y automatización de flujos de trabajo n8n.",
+    "work-google-title": "Teleperformance | Google Account Manager",
+    "work-google-desc": "Gestión de clientes alemanes de Google Ads, utilizando IA para optimizar campañas y aumentar la eficiencia. Logré el <strong>estatus de mejor rendimiento</strong> en el equipo alemán para Medium Business en el tercer trimestre de 2025, asegurando el cumplimiento de las políticas de Google. Aproveché insights impulsados por IA para mejorar el rendimiento de las campañas y la satisfacción del cliente.",
+    "work-ai-specialist-title": "Desarrollo IA Autodirigido | Desarrollador y Consultor IA",
+    "work-ai-specialist-desc": "Equilibrando el cuidado de mi hija con desarrollo IA autodirigido, creando chatbots, voice bots y LLM personalizados para clientes usando ChatGPT, Gemini, Grok y Claude Code. Integré herramientas como <strong>IIElevenLabs</strong> y <strong>n8n</strong> para entregar soluciones innovadoras de automatización.",
     "work-cognizant-title": "Cognizant Technology Solutions | Director de Programa Global",
     "work-cognizant-desc": "Dirigí programas de transformación empresarial para clientes internacionales en telecomunicaciones, manufactura y farmacéutica. Gestión de equipos multifuncionales e implementación de soluciones impulsadas por IA. <strong>Migración a la nube farmacéutica:</strong> Lideré una migración global anual de más de €10M usando Azure/ServiceNow, reduciendo los costos de infraestructura de TI en un 30%. <strong>Fábrica SAP de Telecom:</strong> Construí y gestioné un equipo de más de 300 consultores SAP, aumentando la eficiencia de desarrollo en un 20%. <strong>Proyectos especiales:</strong> Configuración de PMO y desarrollo de software automotriz, aumentando la satisfacción del cliente en un 25%.",
     "work-wipro-title": "Wipro Technologies | Arquitecto Empresarial / Gerente de Programa",
@@ -205,21 +241,35 @@ export const translations = {
     "work-education-title": "Educación y Logros Académicos",
     "work-education-desc": "<strong>Diploma en Ingeniería Industrial</strong> - Instituto de Tecnología de Karlsruhe (KIT), Alemania. <strong>Tesis de Maestría:</strong> Integración de bases de datos heterogéneas mediante algoritmos de aprendizaje automático. Calificación: 1.0 (Excelente). Tecnologías: Eiffel, C++. <strong>Reconocimiento:</strong> Oferta de posición de doctorado, software incorporado en productos de Informatica, presentado en ferias comerciales.",
 
+    // Grok AI Assistant
+    "grok-title": "ASISTENTE IA GROK",
+    "grok-header": "🤖 Asistente IA Grok",
+    "grok-info": "He integrado Grok de xAI con conexión API directa. El asistente IA conoce mi CV detallado, más de 20 años de experiencia, más de 50 proyectos y experiencia en IA. ¡Pregunta sobre proyectos específicos, tecnologías o logros!",
+    "grok-phone": "Prueba mi Asistente Telefónico IA: +34 93 694 5855 (Chatbot de voz multilingüe EN/DE/ES impulsado por IIElevenLabs, ChatGPT, Gemini y n8n)",
+    "grok-resume": "Ver Currículum",
+    "grok-welcome": "¡Hola! Soy Grok, creado por xAI. Conozco el portafolio de Michael y más de 20 años de experiencia al dedillo. ¿Cómo puedo ayudarte hoy?",
+    "grok-placeholder": "Pregúntame sobre las habilidades, experiencia o proyectos IA de Michael...",
+    "grok-send": "Enviar",
+
     // Voice Bot
     "voicebot-title": "ASISTENTE VOICE BOT IA",
     "voicebot-header": "Llama a mi Asistente de Voz IA",
     "voicebot-description": "Chatbot de voz multilingüe impulsado por <strong>IIElevenLabs</strong>, <strong>ChatGPT</strong>, <strong>Gemini</strong> y <strong>n8n</strong> automatización de flujos de trabajo. Disponible en inglés, alemán y español.",
     "voicebot-tech": "Impulsado por IIElevenLabs, ChatGPT, Gemini & n8n",
 
-    // Chatbot
-    "chatbot-title": "ASISTENTE CHATBOT IA",
-    "chatbot-header": "🤖 Asistente IA Grok",
-    "chatbot-info": "He integrado Grok de xAI con conexión API directa. El asistente IA conoce mi CV detallado, más de 20 años de experiencia, más de 50 proyectos y experiencia en IA. ¡Pregunta sobre proyectos específicos, tecnologías o logros!",
-    "chatbot-opportunity": "N/A",
-    "chatbot-phone": "Prueba mi Asistente Telefónico IA: +34 93 694 5855 (Chatbot de voz multilingüe EN/DE/ES impulsado por IIElevenLabs, ChatGPT, Gemini y n8n)",
-    "chatbot-resume": "Descargar Currículum",
-    "chatbot-welcome": "¡Hola! Soy Grok, creado por xAI. Conozco el portafolio de Michael y más de 20 años de experiencia al dedillo. ¿Cómo puedo ayudarte hoy?",
-    "chatbot-placeholder": "Pregúntame sobre las habilidades, experiencia o proyectos IA de Michael...",
-    "chatbot-send": "Enviar"
+    // Proyecto Audiolibro
+    "book-title": "PROYECTO AUDIOLIBRO IA",
+    "book-header": "📖 Crear un Audiolibro en Un Día",
+    "book-description": "Un proyecto experimental que demuestra el poder de la colaboración de IA: Creé un audiolibro completo en un solo día usando múltiples plataformas de IA trabajando juntas.",
+    "book-process-title": "El Proceso Creativo",
+    "book-process-desc": "Este audiolibro fue creado completamente con asistencia de IA, demostrando cómo diferentes plataformas de IA pueden complementarse entre sí:",
+    "book-grok": "<strong>Grok (xAI)</strong>: Concepto de historia, dirección creativa y estructura narrativa",
+    "book-claude": "<strong>Claude (Anthropic)</strong>: Refinamiento de contenido, edición y optimización de coherencia",
+    "book-chatgpt": "<strong>ChatGPT (OpenAI)</strong>: Mejora de diálogos y consistencia de estilo",
+    "book-elevenlabs": "<strong>ElevenLabs</strong>: Síntesis de voz texto-a-voz profesional para la narración del audiolibro",
+    "book-insight-title": "Conocimientos Clave",
+    "book-insight-desc": "Este proyecto demuestra cómo la IA puede acelerar los flujos de trabajo creativos mientras mantiene la calidad. Orquestando múltiples sistemas de IA, completé en un día lo que tradicionalmente tomaría semanas. El audiolibro muestra la integración práctica de IA en la creación de contenido.",
+    "book-listen": "Escucha Mi Audiolibro",
+    "book-download": "Descargar Audiolibro (MP3, 364 MB)"
   }
 };

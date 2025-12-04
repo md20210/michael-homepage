@@ -4,6 +4,11 @@ import React from 'react';
 const Experience = ({ t }) => {
     const experiences = [
         {
+            key: 'google',
+            titleKey: 'work-google-title',
+            descriptionKey: 'work-google-desc'
+        },
+        {
             key: 'ai-specialist',
             titleKey: 'work-ai-specialist-title',
             descriptionKey: 'work-ai-specialist-desc'

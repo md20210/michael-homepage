@@ -32,9 +32,40 @@ Das Hörbuch ist bereits vorhanden in:
 
 ---
 
-### **3️⃣ Strato FTP/SFTP Upload**
+### **3️⃣ Strato SFTP Upload**
 
-#### **Option A: FileZilla (GUI)**
+#### **Option A: Automatisches Upload-Script (Empfohlen)**
+
+Das Projekt enthält ein automatisches Upload-Script mit verschiedenen Modi:
+
+```bash
+cd /mnt/e/Project20250615/portfolio-website/michael-homepage
+
+# Vollständiger Upload (alle Dateien)
+./upload-to-strato.sh
+
+# Nur Website-Dateien (ohne Audio/MP3)
+./upload-to-strato.sh --skip-audio
+
+# Nur Audio-Dateien (wenn nur das Hörbuch aktualisiert wurde)
+./upload-to-strato.sh --only-audio
+
+# Hilfe anzeigen
+./upload-to-strato.sh --help
+```
+
+**Vorteile:**
+- ✅ Automatischer Upload aller Dateien
+- ✅ Intelligente Timeout-Behandlung für große Dateien
+- ✅ Fortschrittsanzeige mit Dateigrößen
+- ✅ Fehlerbehandlung und Zusammenfassung
+- ✅ `--skip-audio` für schnelle Updates ohne MP3-Upload
+
+**Hinweis:** Die SFTP-Zugangsdaten werden in `.env.sftp` gespeichert (nicht in Git).
+
+---
+
+#### **Option B: FileZilla (GUI)**
 
 1. **Verbindung herstellen:**
    - Host: `ftp.dabrock.eu` oder Ihre Strato FTP-Adresse
