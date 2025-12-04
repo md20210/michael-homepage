@@ -60,22 +60,20 @@ const App = () => {
     useEffect(() => {
         // Navigation Click Handler - nur einmal registrieren
         const handleNavClick = (e) => {
-            const href = e.target.getAttribute('href');
-            if (href && href.startsWith('#')) {
-                e.preventDefault();
-                const targetSection = document.querySelector(href);
-                if (targetSection) {
-                    targetSection.scrollIntoView({ behavior: 'smooth' });
+            if (e.target.classList.contains('nav-link')) {
+                const href = e.target.getAttribute('href');
+                if (href && href.startsWith('#')) {
+                    e.preventDefault();
+                    const targetSection = document.querySelector(href);
+                    if (targetSection) {
+                        targetSection.scrollIntoView({ behavior: 'smooth' });
+                    }
                 }
             }
         };
 
         // Event Delegation statt einzelne Listener
-        document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('nav-link')) {
-                handleNavClick(e);
-            }
-        });
+        document.addEventListener('click', handleNavClick);
 
         return () => {
             document.removeEventListener('click', handleNavClick);
