@@ -20,7 +20,7 @@ body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--t
 .dashboard-header { background: var(--bg-light); border-bottom: 1px solid var(--border); padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; }
 .logo-small { display: flex; align-items: center; gap: 0.75rem; }
 .dashboard-content { flex: 1; display: grid; grid-template-columns: 300px 1fr; overflow: hidden; }
-.sidebar { background: var(--bg-light); border-right: 1px solid var(--border); padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+.sidebar { background: var(--bg-light); border-right: 1px solid var(--border); padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; height: 100%; overflow: hidden; }
 .documents-list { overflow-y: auto; flex: 1; min-height: 0; }
 .upload-btn { display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem; background: var(--primary); color: white; border-radius: 8px; cursor: pointer; font-weight: 600; justify-content: center; }
 .document-item { display: flex; gap: 0.75rem; padding: 0.75rem; background: var(--bg); border-radius: 8px; margin-bottom: 0.5rem; }
