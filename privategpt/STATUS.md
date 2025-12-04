@@ -37,10 +37,10 @@
 
 ## ⚠️ Offene Probleme
 
-### 1. WSL ↔ Windows Netzwerk-Problem (KRITISCH)
+### 1. ✅ WSL ↔ Windows Netzwerk-Problem (GELÖST!)
 
 **Problem:**
-Das Backend (Windows) kann nicht auf Ollama (WSL) zugreifen.
+Das Backend (Windows) konnte nicht auf Ollama (WSL) zugreifen.
 
 **Symptom:**
 ```
@@ -49,16 +49,19 @@ Fehler bei der LLM-Anfrage: Client error '404 Not Found' for url 'http://localho
 
 **Ursache:**
 - Backend läuft in Windows (Python über cmd.exe)
-- Ollama läuft in WSL
+- Ollama lief in WSL nur auf 127.0.0.1:11434
 - `localhost` in Windows zeigt nicht auf WSL
 
-**Lösung (gewählt):**
-→ Ollama in Windows installieren (einfachste Lösung)
+**Lösung (implementiert):**
+→ WSL IP-Adresse verwenden + Ollama auf allen Interfaces lauschen lassen
 
-**Alternative Lösungen:**
-1. WSL IP-Adresse in backend/.env verwenden
-2. Backend auch in WSL laufen lassen
-3. Port-Forwarding einrichten
+**Konkrete Schritte:**
+1. Ollama mit `OLLAMA_HOST=0.0.0.0:11434` gestartet (lauscht auf allen Interfaces)
+2. WSL IP-Adresse ermittelt: `172.26.89.94`
+3. `backend/.env` aktualisiert: `OLLAMA_BASE_URL=http://172.26.89.94:11434`
+4. Backend neugestartet
+
+**Status:** ✅ Windows kann jetzt Ollama in WSL erreichen!
 
 ### 2. Kleine Bugs
 

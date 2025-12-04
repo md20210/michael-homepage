@@ -12,18 +12,18 @@ YELLOW='\033[1;33m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
-# 1. Ollama starten
+# 1. Ollama starten (auf allen Interfaces für Windows-Zugriff)
 echo -e "${YELLOW}[1/3]${NC} Starte Ollama Server..."
 if pgrep -x "ollama" > /dev/null; then
     echo -e "${GREEN}✓${NC} Ollama läuft bereits"
 else
-    ~/.local/bin/ollama serve > /dev/null 2>&1 &
+    OLLAMA_HOST=0.0.0.0:11434 ~/.local/bin/ollama serve > /dev/null 2>&1 &
     sleep 3
     if pgrep -x "ollama" > /dev/null; then
-        echo -e "${GREEN}✓${NC} Ollama gestartet auf http://localhost:11434"
+        echo -e "${GREEN}✓${NC} Ollama gestartet auf http://0.0.0.0:11434"
     else
         echo -e "${RED}✗${NC} Ollama konnte nicht gestartet werden!"
-        echo "   Versuche manuell: ~/.local/bin/ollama serve"
+        echo "   Versuche manuell: OLLAMA_HOST=0.0.0.0:11434 ~/.local/bin/ollama serve"
     fi
 fi
 

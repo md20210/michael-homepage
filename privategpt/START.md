@@ -8,9 +8,9 @@ cd /mnt/e/Project20250615/portfolio-website/michael-homepage/privategpt && ./sta
 
 ## 📋 Manuell starten (falls Skript nicht funktioniert)
 
-### 1. Ollama starten (WSL)
+### 1. Ollama starten (WSL) - mit korrektem Host für Windows-Zugriff
 ```bash
-~/.local/bin/ollama serve &
+OLLAMA_HOST=0.0.0.0:11434 ~/.local/bin/ollama serve &
 ```
 
 ### 2. Backend starten (Python/FastAPI)
