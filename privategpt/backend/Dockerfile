@@ -30,5 +30,5 @@ RUN mkdir -p /data/chroma_db /app/uploads
 # Expose port (Railway sets this via $PORT)
 EXPOSE 8000
 
-# Start command
-CMD ["sh", "-c", "python3 -c 'import asyncio; from database import init_db; asyncio.run(init_db())' && uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+# Start command (ENTRYPOINT cannot be overridden by Railway auto-detect!)
+ENTRYPOINT ["bash", "railway_startup.sh"]
