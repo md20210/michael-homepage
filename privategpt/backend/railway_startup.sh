@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "🚂 Railway Startup - PrivateGPT Backend"
+echo "🚂 Railway Startup - PrivateGPT Backend v2.0"
 
 # 1. Download Qwen2.5-0.5B Model (if not exists)
 echo "📦 Checking Qwen2.5-0.5B model..."
