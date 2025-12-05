@@ -24,8 +24,9 @@ COPY . .
 # Download Qwen2.5-0.5B model during build
 RUN python3 download_model.py
 
-# Create necessary directories
-RUN mkdir -p /data/chroma_db /app/uploads
+# Create necessary directories with proper permissions
+RUN mkdir -p /data/chroma_db /app/uploads && \
+    chmod -R 777 /data /app/uploads
 
 # Expose port (Railway sets this via $PORT)
 EXPOSE 8000
