@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+*.egg-info/
+
+# Database & Data
+*.db
+*.db-journal
+chroma_db/
+uploads/
+
+# Models (will be downloaded during build)
+models/*.gguf
+
+# IDE
+.vscode/
+.idea/
+
+# Environment
+.env
+
+# Git
+.git/
+.gitignore
+
+# Railway
+.railway/
