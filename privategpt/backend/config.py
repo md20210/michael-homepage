@@ -10,14 +10,14 @@ class Settings(BaseSettings):
     resend_api_key: str
     jwt_secret: str
 
-    # Ollama Config (local LLM)
+    # Ollama Config (DEPRECATED - nur für lokale Entwicklung mit Ollama)
     ollama_base_url: str = "http://localhost:11434"
 
     # URLs
     frontend_url: str = "http://localhost:5173"
     backend_url: str = "http://localhost:8000"
 
-    # Database
+    # Database - Unterstützt PostgreSQL + SQLite
     database_url: str = "sqlite+aiosqlite:///./privategpt.db"
 
     # Email
@@ -25,9 +25,18 @@ class Settings(BaseSettings):
     magic_link_expiry_minutes: int = 15
     session_expiry_days: int = 30
 
-    # LLM Config (Ollama)
-    llm_model: str = "qwen2.5:0.5b"  # Ultra-fast 0.5B model for CPU inference (prototype)
-    # Alternative: "deepseek-r1:1.5b" (reasoning model, slower) or "qwen2.5:3b" (better quality)
+    # LLM Config - llama-cpp-python mit Qwen2.5-0.5B
+    llm_model_path: str = "./models/qwen2.5-0.5b-instruct-q4_k_m.gguf"
+    llm_context_size: int = 4096  # Context Window (Qwen2.5 unterstützt bis 32k!)
+    llm_max_tokens: int = 512  # Max Output Tokens
+    llm_temperature: float = 0.7
+    llm_threads: int = 4  # CPU Threads (Railway: 8 vCPUs)
+
+    # Railway Environment Detection
+    railway_environment: str | None = None  # Wird automatisch gesetzt
+
+    # Legacy Ollama Model (für lokale Entwicklung mit Ollama)
+    llm_model: str = "qwen2.5:0.5b"  # Nur wenn Ollama läuft
 
     # Limits
     max_file_size_mb: int = 10

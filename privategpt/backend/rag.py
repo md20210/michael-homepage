@@ -1,21 +1,58 @@
-"""RAG (Retrieval Augmented Generation) Logic"""
+"""RAG (Retrieval Augmented Generation) Logic - Railway Version mit llama-cpp-python"""
 import os
 from typing import List, Dict
 import PyPDF2
 import chromadb
 from chromadb.config import Settings as ChromaSettings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+
+# NEU: llama-cpp-python statt httpx/Ollama
+try:
+    from llama_cpp import Llama
+    LLAMA_CPP_AVAILABLE = True
+except ImportError:
+    LLAMA_CPP_AVAILABLE = False
+    print("⚠️ llama-cpp-python not installed. Falling back to Ollama.")
+
+# Fallback: httpx für Ollama
 import httpx
 
 from config import get_settings
 
 settings = get_settings()
 
-# Initialize ChromaDB
+# Initialize ChromaDB - NEU: Persistent Path für Railway Volume
+chroma_db_path = os.getenv("CHROMA_DB_PATH", "./chroma_db")
 chroma_client = chromadb.PersistentClient(
-    path="./chroma_db",
+    path=chroma_db_path,
     settings=ChromaSettings(anonymized_telemetry=False)
 )
+
+# NEU: Global LLM Instance (lazy loading)
+_llm_instance = None
+
+
+def get_llm() -> Llama:
+    """Get or create LLM instance (singleton)"""
+    global _llm_instance
+    if not LLAMA_CPP_AVAILABLE:
+        return None
+
+    if _llm_instance is None:
+        if not os.path.exists(settings.llm_model_path):
+            print(f"⚠️ Model not found at {settings.llm_model_path}")
+            print("Falling back to Ollama...")
+            return None
+
+        print(f"Loading Qwen2.5-0.5B model from {settings.llm_model_path}...")
+        _llm_instance = Llama(
+            model_path=settings.llm_model_path,
+            n_ctx=settings.llm_context_size,
+            n_threads=settings.llm_threads,
+            verbose=False
+        )
+        print("✅ Qwen2.5-0.5B loaded successfully!")
+    return _llm_instance
 
 
 class DocumentProcessor:
@@ -72,7 +109,6 @@ class DocumentProcessor:
         )
 
         # Create embeddings and store
-        # ChromaDB will automatically create embeddings using default embedding function
         collection.add(
             documents=chunks,
             ids=[f"chunk_{i}" for i in range(len(chunks))],
@@ -154,12 +190,41 @@ class RAGEngine:
         question: str,
         context_chunks: List[str]
     ) -> str:
-        """Generate response using Ollama LLM with context"""
+        """Generate response using llama-cpp-python or Ollama with context"""
 
         # Build context
         context = "\n\n".join(context_chunks[:5])  # Use top 5 chunks
 
-        # Create prompt
+        # Try llama-cpp-python first
+        llm = get_llm()
+        if llm is not None:
+            # Create prompt (Qwen2.5 ChatML Format)
+            prompt = f"""<|im_start|>system
+Du bist ein hilfreicher KI-Assistent. Beantworte die Frage basierend auf den folgenden Dokumenten-Auszügen.
+Wenn die Antwort nicht in den Dokumenten enthalten ist, sage das ehrlich.<|im_end|>
+<|im_start|>user
+DOKUMENTE:
+{context}
+
+FRAGE: {question}<|im_end|>
+<|im_start|>assistant
+"""
+
+            try:
+                output = llm(
+                    prompt,
+                    max_tokens=settings.llm_max_tokens,
+                    temperature=settings.llm_temperature,
+                    stop=["<|im_end|>", "<|im_start|>"],
+                    echo=False
+                )
+                return output['choices'][0]['text'].strip()
+
+            except Exception as e:
+                print(f"Error calling llama-cpp-python: {e}")
+                print("Falling back to Ollama...")
+
+        # Fallback to Ollama
         prompt = f"""Du bist ein hilfreicher KI-Assistent. Beantworte die Frage basierend auf den folgenden Dokumenten-Auszügen.
 
 Wenn die Antwort nicht in den Dokumenten enthalten ist, sage das ehrlich.
@@ -171,9 +236,8 @@ FRAGE: {question}
 
 ANTWORT:"""
 
-        # Call Ollama (longer timeout for CPU-only inference)
         try:
-            async with httpx.AsyncClient(timeout=600.0) as client:  # 10 minutes for CPU
+            async with httpx.AsyncClient(timeout=600.0) as client:
                 response = await client.post(
                     f"{settings.ollama_base_url}/api/generate",
                     json={
@@ -195,10 +259,35 @@ ANTWORT:"""
             return f"Fehler bei der LLM-Anfrage: {str(e)}\n\nIst Ollama gestartet? (ollama serve)"
 
     async def _generate_response_without_context(self, question: str) -> str:
-        """Generate response using Ollama LLM without document context"""
+        """Generate response using llama-cpp-python or Ollama without document context"""
 
+        # Try llama-cpp-python first
+        llm = get_llm()
+        if llm is not None:
+            prompt = f"""<|im_start|>system
+Du bist ein hilfreicher KI-Assistent.<|im_end|>
+<|im_start|>user
+{question}<|im_end|>
+<|im_start|>assistant
+"""
+
+            try:
+                output = llm(
+                    prompt,
+                    max_tokens=settings.llm_max_tokens,
+                    temperature=settings.llm_temperature,
+                    stop=["<|im_end|>", "<|im_start|>"],
+                    echo=False
+                )
+                return output['choices'][0]['text'].strip()
+
+            except Exception as e:
+                print(f"Error calling llama-cpp-python: {e}")
+                print("Falling back to Ollama...")
+
+        # Fallback to Ollama
         try:
-            async with httpx.AsyncClient(timeout=600.0) as client:  # 10 minutes for CPU
+            async with httpx.AsyncClient(timeout=600.0) as client:
                 response = await client.post(
                     f"{settings.ollama_base_url}/api/generate",
                     json={
