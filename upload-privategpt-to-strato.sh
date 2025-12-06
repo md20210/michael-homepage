@@ -19,8 +19,8 @@ fi
 
 echo "📦 Uploading $BUILD_DIR to $STRATO_USER@$STRATO_HOST:$STRATO_PATH"
 
-# Upload via SCP
-scp -r "$BUILD_DIR"/* "$STRATO_USER@$STRATO_HOST:$STRATO_PATH/"
+# Upload via SCP (with auto host key acceptance)
+scp -o StrictHostKeyChecking=accept-new -r "$BUILD_DIR"/* "$STRATO_USER@$STRATO_HOST:$STRATO_PATH/"
 
 echo "✅ Upload complete!"
 echo "🌐 Visit: https://www.dabrock.eu/privategpt"
