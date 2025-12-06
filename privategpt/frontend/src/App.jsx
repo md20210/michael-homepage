@@ -42,7 +42,7 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/privategpt">
       <Routes>
         <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
         <Route path="/auth/verify" element={<VerifyMagicLink setIsAuthenticated={setIsAuthenticated} />} />
