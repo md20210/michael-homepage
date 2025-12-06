@@ -135,6 +135,7 @@ class RAGEngine:
 
         if not document_ids:
             # No documents, return general response
+            print(f"⚠️ No documents provided for question: {question}")
             response = await self._generate_response_without_context(question)
             return {
                 "answer": response,
@@ -146,10 +147,13 @@ class RAGEngine:
         all_chunks = []
         sources = []
 
+        print(f"🔍 Searching in {len(document_ids)} document(s) for: {question}")
+
         for doc_id in document_ids:
             collection_name = f"doc_{doc_id}"
             try:
                 collection = chroma_client.get_collection(collection_name)
+                print(f"✅ Found collection: {collection_name} ({collection.count()} chunks)")
 
                 # Query collection
                 results = collection.query(
@@ -166,9 +170,12 @@ class RAGEngine:
                             "chunk_index": i,
                             "distance": results['distances'][0][i] if results['distances'] else None
                         })
+                    print(f"📄 Retrieved {len(results['documents'][0])} chunks from {collection_name}")
+                else:
+                    print(f"⚠️ No results from {collection_name}")
 
             except Exception as e:
-                print(f"Error querying collection {collection_name}: {e}")
+                print(f"❌ Error querying collection {collection_name}: {e}")
                 continue
 
         # Generate answer using LLM
@@ -200,8 +207,11 @@ class RAGEngine:
         if llm is not None:
             # Create prompt (Qwen2.5 ChatML Format)
             prompt = f"""<|im_start|>system
-Du bist ein hilfreicher KI-Assistent. Beantworte die Frage basierend auf den folgenden Dokumenten-Auszügen.
-Wenn die Antwort nicht in den Dokumenten enthalten ist, sage das ehrlich.<|im_end|>
+Du bist ein hilfreicher deutschsprachiger KI-Assistent.
+Beantworte IMMER auf Deutsch.
+Nutze NUR die folgenden Dokumenten-Auszüge zur Beantwortung.
+Wenn die Antwort nicht in den Dokumenten steht, sage: "Diese Information ist nicht im Dokument enthalten."
+Antworte präzise und konkret.<|im_end|>
 <|im_start|>user
 DOKUMENTE:
 {context}
@@ -216,9 +226,12 @@ FRAGE: {question}<|im_end|>
                     max_tokens=settings.llm_max_tokens,
                     temperature=settings.llm_temperature,
                     stop=["<|im_end|>", "<|im_start|>"],
-                    echo=False
+                    echo=False,
+                    repeat_penalty=1.1  # Prevent repetition
                 )
-                return output['choices'][0]['text'].strip()
+                response_text = output['choices'][0]['text'].strip()
+                print(f"🤖 [WITH CONTEXT] Generated response ({len(response_text)} chars): {response_text[:100]}...")
+                return response_text
 
             except Exception as e:
                 print(f"Error calling llama-cpp-python: {e}")
@@ -265,7 +278,8 @@ ANTWORT:"""
         llm = get_llm()
         if llm is not None:
             prompt = f"""<|im_start|>system
-Du bist ein hilfreicher KI-Assistent.<|im_end|>
+Du bist ein hilfreicher deutschsprachiger KI-Assistent.
+Beantworte IMMER auf Deutsch.<|im_end|>
 <|im_start|>user
 {question}<|im_end|>
 <|im_start|>assistant
@@ -277,9 +291,12 @@ Du bist ein hilfreicher KI-Assistent.<|im_end|>
                     max_tokens=settings.llm_max_tokens,
                     temperature=settings.llm_temperature,
                     stop=["<|im_end|>", "<|im_start|>"],
-                    echo=False
+                    echo=False,
+                    repeat_penalty=1.1
                 )
-                return output['choices'][0]['text'].strip()
+                response_text = output['choices'][0]['text'].strip()
+                print(f"🤖 [NO CONTEXT] Generated response ({len(response_text)} chars)")
+                return response_text
 
             except Exception as e:
                 print(f"Error calling llama-cpp-python: {e}")
