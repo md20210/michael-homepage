@@ -19,7 +19,7 @@ settings = get_settings()
 
 # Create FastAPI app
 app = FastAPI(
-    title="Dabrock PrivateGPT API",
+    title="Dabrock PrivateGxT API",
     description="DSGVO-konforme KI-Assistenten mit eigenen Dokumenten",
     version="0.1.0 (PoC)"
 )
@@ -91,7 +91,7 @@ async def root():
     """Health check endpoint"""
     return {
         "status": "ok",
-        "service": "Dabrock PrivateGPT API",
+        "service": "Dabrock PrivateGxT API",
         "version": "0.1.0"
     }
 

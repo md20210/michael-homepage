@@ -92,16 +92,17 @@ async def create_magic_link(email: str, db: AsyncSession) -> str:
     await db.commit()
 
     # Create magic link URL
-    magic_link_url = f"{settings.frontend_url}/auth/verify?token={token}"
+    # Construct magic link URL with /privategpt/ base path
+    magic_link_url = f"{settings.frontend_url}/privategpt/auth/verify?token={token}"
 
     # Send email
     try:
         resend.Emails.send({
             "from": settings.from_email,
             "to": email,
-            "subject": "🔐 Dein Login-Link für Dabrock PrivateGPT",
+            "subject": "🔐 Dein Login-Link für Dabrock PrivateGxT",
             "html": f"""
-            <h2>Willkommen bei Dabrock PrivateGPT!</h2>
+            <h2>Willkommen bei Dabrock PrivateGxT!</h2>
             <p>Klicke auf den folgenden Link, um dich anzumelden:</p>
             <p><a href="{magic_link_url}" style="background-color: #4F46E5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
                 🔐 Jetzt anmelden
@@ -110,7 +111,7 @@ async def create_magic_link(email: str, db: AsyncSession) -> str:
             <p>Falls du diese E-Mail nicht angefordert hast, ignoriere sie einfach.</p>
             <hr>
             <p style="color: #666; font-size: 12px;">
-                Dabrock PrivateGPT - DSGVO-konform & sicher<br>
+                Dabrock PrivateGxT - DSGVO-konform & sicher<br>
                 Deine Daten bleiben bei dir.
             </p>
             """

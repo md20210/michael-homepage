@@ -113,7 +113,7 @@ export default function Dashboard() {
   };
 
   if (!assistant) {
-    return <div className="loading-screen"><div className="spinner"></div><p>Lade PrivateGPT...</p></div>;
+    return <div className="loading-screen"><div className="spinner"></div><p>Lade PrivateGxT...</p></div>;
   }
 
   return (
@@ -122,7 +122,7 @@ export default function Dashboard() {
       <header className="header">
         <div className="logo-small">
           <Sparkles size={28} />
-          <h1>PrivateGPT</h1>
+          <h1>PrivateGxT</h1>
         </div>
         <button onClick={handleLogout} className="btn-icon" title="Abmelden">
           <LogOut size={22} />
@@ -176,7 +176,7 @@ export default function Dashboard() {
             {messages.length === 0 ? (
               <div className="empty-chat">
                 <Sparkles size={56} />
-                <h2>Willkommen bei PrivateGPT!</h2>
+                <h2>Willkommen bei PrivateGxT!</h2>
                 <p>Lade PDFs hoch und stelle mir Fragen dazu – 100% privat & DSGVO-konform</p>
               </div>
             ) : (
@@ -207,7 +207,7 @@ export default function Dashboard() {
             <form onSubmit={handleSendMessage} className="chat-input">
               <input
                 type="text"
-                placeholder="Nachricht an PrivateGPT..."
+                placeholder="Nachricht an PrivateGxT..."
                 value={inputMessage}
                 onChange={e => setInputMessage(e.target.value)}
                 disabled={sending}

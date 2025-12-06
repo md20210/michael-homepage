@@ -28,7 +28,7 @@ function Login({ setIsAuthenticated }) {
       <div className="login-container">
         <div className="logo">
           <Sparkles size={48} />
-          <h1>Dabrock PrivateGPT</h1>
+          <h1>Dabrock PrivateGxT</h1>
           <p>DSGVO-konforme KI mit deinen Dokumenten</p>
         </div>
 
