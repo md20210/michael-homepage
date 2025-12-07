@@ -378,6 +378,12 @@ async def chat(
     documents = result.scalars().all()
     document_ids = [doc.id for doc in documents]
 
+    print(f"📊 Found {len(documents)} processed documents for assistant {assistant_id}")
+    print(f"📋 Document IDs: {document_ids}")
+    if documents:
+        for doc in documents:
+            print(f"   - Doc {doc.id}: {doc.filename} (processed: {doc.processed})")
+
     # Query using RAG
     try:
         rag_result = await rag_engine.query(
