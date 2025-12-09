@@ -6,11 +6,17 @@ os.environ['SENTENCE_TRANSFORMERS_HOME'] = '/tmp/.cache'
 os.environ['HF_HOME'] = '/tmp/.cache'
 os.environ['TRANSFORMERS_CACHE'] = '/tmp/.cache'
 
+# Debug: Print environment variables to verify they're set
+print(f"DEBUG: SENTENCE_TRANSFORMERS_HOME = {os.environ.get('SENTENCE_TRANSFORMERS_HOME')}")
+print(f"DEBUG: HF_HOME = {os.environ.get('HF_HOME')}")
+print(f"DEBUG: TRANSFORMERS_CACHE = {os.environ.get('TRANSFORMERS_CACHE')}")
+
 from typing import List, Dict
 import PyPDF2
 import chromadb
 from chromadb.config import Settings as ChromaSettings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+import traceback
 
 # NEU: llama-cpp-python statt httpx/Ollama
 try:
@@ -115,11 +121,21 @@ class DocumentProcessor:
         )
 
         # Create embeddings and store
-        collection.add(
-            documents=chunks,
-            ids=[f"chunk_{i}" for i in range(len(chunks))],
-            metadatas=[{"chunk_index": i, "document_id": document_id} for i in range(len(chunks))]
-        )
+        try:
+            print(f"DEBUG: About to call collection.add() for {len(chunks)} chunks...")
+            print(f"DEBUG: Cache env vars at this point:")
+            print(f"  SENTENCE_TRANSFORMERS_HOME={os.environ.get('SENTENCE_TRANSFORMERS_HOME')}")
+            print(f"  HF_HOME={os.environ.get('HF_HOME')}")
+            collection.add(
+                documents=chunks,
+                ids=[f"chunk_{i}" for i in range(len(chunks))],
+                metadatas=[{"chunk_index": i, "document_id": document_id} for i in range(len(chunks))]
+            )
+            print(f"DEBUG: collection.add() succeeded!")
+        except Exception as e:
+            print(f"ERROR in collection.add(): {e}")
+            print(f"Traceback:\n{traceback.format_exc()}")
+            raise
 
         return len(chunks)
 
