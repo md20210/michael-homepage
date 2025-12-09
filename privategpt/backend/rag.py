@@ -1,5 +1,11 @@
 """RAG (Retrieval Augmented Generation) Logic - Railway Version mit llama-cpp-python"""
 import os
+
+# CRITICAL: Set cache directories BEFORE any imports that use them
+os.environ['SENTENCE_TRANSFORMERS_HOME'] = '/tmp/.cache'
+os.environ['HF_HOME'] = '/tmp/.cache'
+os.environ['TRANSFORMERS_CACHE'] = '/tmp/.cache'
+
 from typing import List, Dict
 import PyPDF2
 import chromadb
