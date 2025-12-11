@@ -1,0 +1,173 @@
+/* src/components/AILogo.css */
+.ai-logo {
+  position: relative;
+  display: inline-block;
+}
+
+.ai-logo.small {
+  width: 40px;
+  height: 40px;
+}
+
+.ai-logo.large {
+  width: 120px;
+  height: 120px;
+  margin: 40px auto;
+}
+
+.orb {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #FFD700, #4F46E5);
+  position: relative;
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+  animation: float 6s ease-in-out infinite;
+}
+
+.orb::before {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #1E293B, #0F172A);
+  z-index: 1;
+}
+
+.ai-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.7em;
+  font-weight: bold;
+  color: white;
+  text-shadow: 0 0 10px #FFD700;
+  z-index: 2;
+  font-family: 'Arial Black', sans-serif;
+}
+
+.ai-logo.large .ai-text {
+  font-size: 28px;
+}
+
+.pulse {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(100% - 4px);
+  height: calc(100% - 4px);
+  border-radius: 50%;
+  border: 2px solid #FFD700;
+  animation: pulseRing 4s infinite;
+  opacity: 0;
+}
+
+.pulse:nth-child(2) { animation-delay: 1s; }
+.pulse:nth-child(3) { animation-delay: 2s; }
+
+@keyframes pulseRing {
+  0% {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-5px); }
+}
+
+.ai-logo.large .orb {
+  animation: float 6s ease-in-out infinite;
+}
+
+.ai-logo.large @keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+.floating-nodes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.floating-nodes span {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: #FFD700;
+  border-radius: 50%;
+  box-shadow: 0 0 6px #FFD700;
+  animation: floatNode 10s infinite linear;
+  opacity: 0.8;
+}
+
+.ai-logo.large .floating-nodes span {
+  width: 8px;
+  height: 8px;
+  box-shadow: 0 0 15px #FFD700;
+}
+
+.floating-nodes span:nth-child(1) {
+  top: 10%;
+  left: 10%;
+  animation-delay: 0s;
+}
+.floating-nodes span:nth-child(2) {
+  top: 20%;
+  right: 15%;
+  animation-delay: 2s;
+}
+.floating-nodes span:nth-child(3) {
+  bottom: 15%;
+  left: 20%;
+  animation-delay: 4s;
+}
+.floating-nodes span:nth-child(4) {
+  bottom: 25%;
+  right: 10%;
+  animation-delay: 6s;
+}
+.floating-nodes span:nth-child(5) {
+  top: 50%;
+  left: 5%;
+  animation-delay: 8s;
+}
+
+@keyframes floatNode {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    transform: translate(30px, -30px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.ai-logo.large @keyframes floatNode {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    transform: translate(300px, -300px) rotate(360deg);
+    opacity: 0;
+  }
+}

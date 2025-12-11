@@ -1,8 +1,10 @@
 // src/pages/Dashboard.jsx
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Upload, Send, Trash2, FileText, LogOut, Sparkles } from 'lucide-react';
-import { assistantAPI, documentAPI, chatAPI, userAPI } from '../api';
+import { Upload, Send, Trash2, FileText, LogOut, Sparkles, X, Settings } from 'lucide-react';
+import { assistantAPI, documentAPI, chatAPI, userAPI, adminAPI } from '../api';
+import AILogo from '../components/AILogo';
+import AdminPanel from '../components/AdminPanel';
 import './Dashboard.css';
 
 export default function Dashboard() {
@@ -13,12 +15,19 @@ export default function Dashboard() {
   const [inputMessage, setInputMessage] = useState('');
   const [uploading, setUploading] = useState(false);
   const [sending, setSending] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [showAdminPanel, setShowAdminPanel] = useState(false);
   const messagesEndRef = useRef(null);
 
   // Auto-Scroll
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  // Check if user is admin
+  useEffect(() => {
+    checkAdminStatus();
+  }, []);
 
   // Load Assistant → Docs → Messages
   useEffect(() => {
@@ -31,6 +40,16 @@ export default function Dashboard() {
       loadMessages();
     }
   }, [assistant]);
+
+  const checkAdminStatus = async () => {
+    try {
+      const res = await adminAPI.isAdmin();
+      setIsAdmin(res.data.is_admin);
+    } catch (err) {
+      console.error('Admin check failed:', err);
+      setIsAdmin(false);
+    }
+  };
 
   const loadAssistant = async () => {
     try {
@@ -71,6 +90,16 @@ export default function Dashboard() {
     }
   };
 
+  const handleDeleteDocument = async (documentId, filename) => {
+    if (!confirm(`Dokument "${filename}" wirklich löschen?`)) return;
+    try {
+      await documentAPI.delete(assistant.id, documentId);
+      await loadDocuments();
+    } catch (err) {
+      alert(err.response?.data?.detail || 'Löschen fehlgeschlagen');
+    }
+  };
+
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!inputMessage.trim() || sending || !assistant) return;
@@ -104,12 +133,13 @@ export default function Dashboard() {
     if (!confirm('Wirklich ALLE Daten löschen? (inkl. Dokumente & Chats)')) return;
     await userAPI.deleteMyData();
     localStorage.removeItem('token');
-    navigate('/login');
+    window.location.href = 'https://www.dabrock.eu/#kapitel-7-7';
   };
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    navigate('/login');
+    // Redirect zu Homepage Kapitel 7-7
+    window.location.href = 'https://www.dabrock.eu/#kapitel-7-7';
   };
 
   if (!assistant) {
@@ -121,12 +151,23 @@ export default function Dashboard() {
       {/* Header fixiert oben */}
       <header className="header">
         <div className="logo-small">
-          <Sparkles size={28} />
+          <AILogo size="small" />
           <h1>PrivateGxT</h1>
         </div>
-        <button onClick={handleLogout} className="btn-icon" title="Abmelden">
-          <LogOut size={22} />
-        </button>
+        <div className="header-actions">
+          {isAdmin && (
+            <button
+              onClick={() => setShowAdminPanel(true)}
+              className="btn-icon"
+              title="Admin Panel"
+            >
+              <Settings size={22} />
+            </button>
+          )}
+          <button onClick={handleLogout} className="btn-icon" title="Abmelden">
+            <LogOut size={22} />
+          </button>
+        </div>
       </header>
 
       {/* Hauptbereich horizontal geteilt */}
@@ -150,12 +191,19 @@ export default function Dashboard() {
                 documents.map(doc => (
                   <div key={doc.id} className="document-item">
                     <FileText size={16} />
-                    <div>
+                    <div className="document-info">
                       <div className="document-name">{doc.filename}</div>
                       <div className="document-meta">
-                        {Math.round(doc.file_size / 1024)} KB {doc.processed ? '✅' : '⏳'}
+                        {Math.round(doc.file_size / 1024)} KB
                       </div>
                     </div>
+                    <button
+                      onClick={() => handleDeleteDocument(doc.id, doc.filename)}
+                      className="btn-delete-doc"
+                      title="Dokument löschen"
+                    >
+                      <X size={16} />
+                    </button>
                   </div>
                 ))
               )}
@@ -175,7 +223,7 @@ export default function Dashboard() {
           <div className="chat-messages">
             {messages.length === 0 ? (
               <div className="empty-chat">
-                <Sparkles size={56} />
+                <AILogo size="large" />
                 <h2>Willkommen bei PrivateGxT!</h2>
                 <p>Lade PDFs hoch und stelle mir Fragen dazu – 100% privat & DSGVO-konform</p>
               </div>
@@ -217,8 +265,12 @@ export default function Dashboard() {
               </button>
             </form>
           </div>
+
         </div>
       </div>
+
+      {/* Admin Panel Modal */}
+      {showAdminPanel && <AdminPanel onClose={() => setShowAdminPanel(false)} />}
     </div>
   );
 }

@@ -32,8 +32,12 @@ import httpx
 
 from config import get_settings
 from web_search import searxng_client, AnswerQualityDetector
+from llm_models import get_model_path, DEFAULT_MODEL
 
 settings = get_settings()
+
+# Global variable to track current model
+_current_model_id = DEFAULT_MODEL
 
 # Initialize ChromaDB - NEU: Persistent Path für Railway Volume
 chroma_db_path = os.getenv("CHROMA_DB_PATH", "./chroma_db")
@@ -54,25 +58,47 @@ _llm_instance = None
 
 def get_llm() -> Llama:
     """Get or create LLM instance (singleton)"""
-    global _llm_instance
+    global _llm_instance, _current_model_id
     if not LLAMA_CPP_AVAILABLE:
         return None
 
     if _llm_instance is None:
-        if not os.path.exists(settings.llm_model_path):
-            print(f"⚠️ Model not found at {settings.llm_model_path}")
+        model_path = get_model_path(_current_model_id)
+
+        if not os.path.exists(model_path):
+            print(f"⚠️ Model not found at {model_path}")
             print("Falling back to Ollama...")
             return None
 
-        print(f"Loading Qwen2.5-0.5B model from {settings.llm_model_path}...")
+        print(f"🔄 Loading LLM model: {_current_model_id} from {model_path}...")
         _llm_instance = Llama(
-            model_path=settings.llm_model_path,
+            model_path=model_path,
             n_ctx=settings.llm_context_size,
             n_threads=settings.llm_threads,
             verbose=False
         )
-        print("✅ Qwen2.5-0.5B loaded successfully!")
+        print(f"✅ LLM model {_current_model_id} loaded successfully!")
     return _llm_instance
+
+
+def reload_llm(model_id: str):
+    """Reload LLM with different model"""
+    global _llm_instance, _current_model_id
+
+    print(f"🔄 [RELOAD] Switching LLM from {_current_model_id} to {model_id}...")
+
+    # Unload current model
+    _llm_instance = None
+    _current_model_id = model_id
+
+    # Load new model (will be loaded on next get_llm() call)
+    print(f"✅ [RELOAD] LLM model switched to {model_id} (will load on next request)")
+
+
+def get_current_model_id() -> str:
+    """Get current model ID"""
+    global _current_model_id
+    return _current_model_id
 
 
 class DocumentProcessor:

@@ -100,6 +100,17 @@ class MagicLink(Base):
     used = Column(Boolean, default=False)
 
 
+class SystemSettings(Base):
+    """System-wide settings (LLM selection, etc.)"""
+    __tablename__ = "system_settings"
+
+    id = Column(Integer, primary_key=True, index=True)
+    key = Column(String, unique=True, nullable=False, index=True)
+    value = Column(String, nullable=False)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    updated_by = Column(String, nullable=True)  # Email of admin who changed it
+
+
 async def init_db():
     """Initialize database"""
     async with engine.begin() as conn:

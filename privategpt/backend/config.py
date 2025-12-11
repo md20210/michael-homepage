@@ -32,6 +32,9 @@ class Settings(BaseSettings):
     llm_temperature: float = 0.7
     llm_threads: int = 4  # CPU Threads (Railway: 8 vCPUs)
 
+    # Admin Config
+    superadmin_email: str = "michael.dabrock@gmx.es"  # Superadmin für Admin-Panel
+
     # Railway Environment Detection
     railway_environment: str | None = None  # Wird automatisch gesetzt
 

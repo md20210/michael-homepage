@@ -11,9 +11,10 @@ import os
 import shutil
 
 from config import get_settings
-from database import get_db, init_db, User, Assistant, Document, Message
+from database import get_db, init_db, User, Assistant, Document, Message, SystemSettings
 from auth import create_magic_link, verify_magic_link, get_current_user
-from rag import rag_engine, chroma_client
+from rag import rag_engine, chroma_client, reload_llm
+from llm_models import get_all_models, get_model, DEFAULT_MODEL
 
 settings = get_settings()
 
@@ -74,6 +75,58 @@ class MessageResponse(BaseModel):
     role: str
     content: str
     created_at: datetime
+
+
+# Admin Models
+class LLMModelResponse(BaseModel):
+    id: str
+    name: str
+    filename: str
+    size_gb: float
+    params: str
+    quality: str
+    description: str
+
+
+class SetLLMRequest(BaseModel):
+    model_id: str
+
+
+# Helper functions
+def is_superadmin(user: User) -> bool:
+    """Check if user is superadmin"""
+    return user.email == settings.superadmin_email
+
+
+async def get_current_llm_model(db: AsyncSession) -> str:
+    """Get current LLM model from database"""
+    result = await db.execute(
+        select(SystemSettings).where(SystemSettings.key == "llm_model")
+    )
+    setting = result.scalar_one_or_none()
+    return setting.value if setting else DEFAULT_MODEL
+
+
+async def set_current_llm_model(db: AsyncSession, model_id: str, user_email: str):
+    """Set current LLM model in database"""
+    result = await db.execute(
+        select(SystemSettings).where(SystemSettings.key == "llm_model")
+    )
+    setting = result.scalar_one_or_none()
+
+    if setting:
+        setting.value = model_id
+        setting.updated_by = user_email
+        setting.updated_at = datetime.utcnow()
+    else:
+        setting = SystemSettings(
+            key="llm_model",
+            value=model_id,
+            updated_by=user_email
+        )
+        db.add(setting)
+
+    await db.commit()
 
 
 # Startup event
@@ -519,6 +572,88 @@ async def delete_my_data(
     await db.commit()
 
     return {"message": "All your data has been deleted"}
+
+
+# Admin endpoints (nur für Superadmin)
+@app.get("/admin/is-admin")
+async def check_admin(current_user: User = Depends(get_current_user)):
+    """Check if current user is superadmin"""
+    return {"is_admin": is_superadmin(current_user)}
+
+
+@app.get("/admin/llm/models", response_model=List[LLMModelResponse])
+async def get_available_models(current_user: User = Depends(get_current_user)):
+    """Get all available LLM models (Superadmin only)"""
+    if not is_superadmin(current_user):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Nur Superadmin hat Zugriff auf diesen Endpoint"
+        )
+
+    return get_all_models()
+
+
+@app.get("/admin/llm/current")
+async def get_current_model(
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Get currently selected LLM model (Superadmin only)"""
+    if not is_superadmin(current_user):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Nur Superadmin hat Zugriff auf diesen Endpoint"
+        )
+
+    model_id = await get_current_llm_model(db)
+    model = get_model(model_id)
+
+    return {
+        "model_id": model_id,
+        "model_name": model.name,
+        "model_info": {
+            "filename": model.filename,
+            "size_gb": model.size_gb,
+            "params": model.params,
+            "quality": model.quality
+        }
+    }
+
+
+@app.post("/admin/llm/set")
+async def set_llm_model(
+    request: SetLLMRequest,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Set LLM model (Superadmin only)"""
+    if not is_superadmin(current_user):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Nur Superadmin hat Zugriff auf diesen Endpoint"
+        )
+
+    # Validate model exists
+    model = get_model(request.model_id)
+    if request.model_id not in ["qwen2.5-0.5b", "qwen2.5-3b"]:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Invalid model_id: {request.model_id}"
+        )
+
+    # Save to database
+    await set_current_llm_model(db, request.model_id, current_user.email)
+
+    # Reload LLM in memory
+    reload_llm(request.model_id)
+
+    print(f"🔄 [ADMIN] LLM Model switched to: {model.name} by {current_user.email}")
+
+    return {
+        "message": f"LLM Model erfolgreich gewechselt zu: {model.name}",
+        "model_id": request.model_id,
+        "model_name": model.name
+    }
 
 
 if __name__ == "__main__":

@@ -46,6 +46,7 @@ export const documentAPI = {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
   },
+  delete: (assistantId, documentId) => api.delete(`/assistants/${assistantId}/documents/${documentId}`),
 };
 
 // Chat API
@@ -58,6 +59,14 @@ export const chatAPI = {
 // User API
 export const userAPI = {
   deleteMyData: () => api.delete('/users/me'),
+};
+
+// Admin API (nur für Superadmin)
+export const adminAPI = {
+  isAdmin: () => api.get('/admin/is-admin'),
+  getModels: () => api.get('/admin/llm/models'),
+  getCurrentModel: () => api.get('/admin/llm/current'),
+  setModel: (modelId) => api.post('/admin/llm/set', { model_id: modelId }),
 };
 
 export default api;
