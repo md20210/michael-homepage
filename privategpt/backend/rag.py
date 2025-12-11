@@ -238,29 +238,37 @@ class RAGEngine:
         # Try llama-cpp-python first
         llm = get_llm()
         if llm is not None:
-            # Create prompt (Qwen2.5 ChatML Format)
+            # Create prompt (Qwen2.5 ChatML Format) - Optimized for better German
             prompt = f"""<|im_start|>system
-Du bist ein hilfreicher deutschsprachiger KI-Assistent.
-Beantworte IMMER auf Deutsch.
-Nutze NUR die folgenden Dokumenten-Auszüge zur Beantwortung.
-Wenn die Antwort nicht in den Dokumenten steht, sage: "Diese Information ist nicht im Dokument enthalten."
-Antworte präzise und konkret.<|im_end|>
+Du bist ein professioneller deutschsprachiger Assistent.
+
+WICHTIGE REGELN:
+1. Beantworte AUSSCHLIESSLICH auf Deutsch
+2. Nutze NUR Informationen aus den bereitgestellten Dokumenten
+3. Zitiere direkt aus den Dokumenten wenn möglich
+4. Wenn die Information nicht im Dokument steht, sage: "Diese Information ist nicht im Dokument enthalten."
+5. Schreibe in vollständigen, korrekten deutschen Sätzen
+6. Sei präzise, sachlich und professionell<|im_end|>
 <|im_start|>user
-DOKUMENTE:
+DOKUMENTEN-AUSZÜGE:
 {context}
 
-FRAGE: {question}<|im_end|>
+FRAGE: {question}
+
+ANTWORT (auf Deutsch, basierend auf den Dokumenten):<|im_end|>
 <|im_start|>assistant
 """
 
             try:
                 output = llm(
                     prompt,
-                    max_tokens=settings.llm_max_tokens,
-                    temperature=settings.llm_temperature,
+                    max_tokens=1024,  # Increased from 512 for longer answers
+                    temperature=0.3,  # Lowered from 0.7 for more precise answers
+                    top_p=0.9,  # Nucleus sampling for better quality
+                    top_k=40,  # Limit vocabulary for more coherent responses
                     stop=["<|im_end|>", "<|im_start|>"],
                     echo=False,
-                    repeat_penalty=1.1  # Prevent repetition
+                    repeat_penalty=1.15  # Increased to prevent repetition
                 )
                 response_text = output['choices'][0]['text'].strip()
                 print(f"🤖 [WITH CONTEXT] Generated response ({len(response_text)} chars): {response_text[:100]}...")
@@ -311,8 +319,9 @@ ANTWORT:"""
         llm = get_llm()
         if llm is not None:
             prompt = f"""<|im_start|>system
-Du bist ein hilfreicher deutschsprachiger KI-Assistent.
-Beantworte IMMER auf Deutsch.<|im_end|>
+Du bist ein professioneller deutschsprachiger Assistent.
+Beantworte AUSSCHLIESSLICH auf Deutsch in vollständigen, korrekten Sätzen.
+Sei präzise, sachlich und professionell.<|im_end|>
 <|im_start|>user
 {question}<|im_end|>
 <|im_start|>assistant
@@ -321,11 +330,13 @@ Beantworte IMMER auf Deutsch.<|im_end|>
             try:
                 output = llm(
                     prompt,
-                    max_tokens=settings.llm_max_tokens,
-                    temperature=settings.llm_temperature,
+                    max_tokens=1024,  # Increased from 512
+                    temperature=0.3,  # Lowered from 0.7
+                    top_p=0.9,
+                    top_k=40,
                     stop=["<|im_end|>", "<|im_start|>"],
                     echo=False,
-                    repeat_penalty=1.1
+                    repeat_penalty=1.15
                 )
                 response_text = output['choices'][0]['text'].strip()
                 print(f"🤖 [NO CONTEXT] Generated response ({len(response_text)} chars)")
