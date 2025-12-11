@@ -1,8 +1,9 @@
-"""Web Search Integration mit SearxNG für Hybrid RAG"""
+"""Web Search Integration mit SearxNG und DuckDuckGo Fallback für Hybrid RAG"""
 import httpx
 from typing import List, Dict, Optional
 from bs4 import BeautifulSoup
 import re
+import json
 from config import get_settings
 
 settings = get_settings()
@@ -96,9 +97,84 @@ class SearxNGSearch:
                 print(f"   ❌ Error at {instance_url}: {e}, trying next...")
                 continue
 
-        # Alle Instanzen fehlgeschlagen
-        print(f"❌ [WEB SEARCH] All SearxNG instances failed")
-        return []
+        # Alle SearxNG-Instanzen fehlgeschlagen - Fallback zu DuckDuckGo
+        print(f"❌ [WEB SEARCH] All SearxNG instances failed, trying DuckDuckGo fallback...")
+        return await self._duckduckgo_fallback(query, max_results)
+
+    async def _duckduckgo_fallback(self, query: str, max_results: int) -> List[Dict[str, str]]:
+        """
+        Fallback zu DuckDuckGo HTML-Suche wenn SearxNG nicht verfügbar
+
+        Args:
+            query: Suchanfrage
+            max_results: Max. Anzahl Ergebnisse
+
+        Returns:
+            Liste von Suchergebnissen
+        """
+        try:
+            print(f"   🦆 Trying DuckDuckGo HTML search...")
+
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                "Accept-Language": "de-DE,de;q=0.9,en;q=0.8"
+            }
+
+            async with httpx.AsyncClient(timeout=30.0, follow_redirects=True) as client:
+                response = await client.get(
+                    "https://html.duckduckgo.com/html/",
+                    params={"q": query, "kl": "de-de"},
+                    headers=headers
+                )
+                response.raise_for_status()
+
+                # Parse HTML results
+                soup = BeautifulSoup(response.text, 'html.parser')
+                results = []
+
+                # Find search result divs
+                result_divs = soup.find_all('div', class_='result')[:max_results]
+
+                for div in result_divs:
+                    try:
+                        # Extract title
+                        title_tag = div.find('a', class_='result__a')
+                        title = title_tag.get_text(strip=True) if title_tag else ""
+
+                        # Extract URL
+                        url = title_tag.get('href', '') if title_tag else ""
+                        if url.startswith('//'):
+                            url = 'https:' + url
+
+                        # Extract snippet
+                        snippet_tag = div.find('a', class_='result__snippet')
+                        content = snippet_tag.get_text(strip=True) if snippet_tag else ""
+
+                        if title and url:
+                            result = {
+                                "title": title,
+                                "url": url,
+                                "content": content,
+                                "engine": "duckduckgo"
+                            }
+                            results.append(result)
+                            print(f"   📄 {title[:60]}... (duckduckgo)")
+
+                    except Exception as e:
+                        print(f"   ⚠️ Error parsing result: {e}")
+                        continue
+
+                if results:
+                    print(f"✅ [WEB SEARCH] Found {len(results)} results from DuckDuckGo")
+                    return results
+                else:
+                    print(f"❌ [WEB SEARCH] No results from DuckDuckGo")
+                    return []
+
+        except Exception as e:
+            print(f"❌ [WEB SEARCH] DuckDuckGo fallback failed: {e}")
+            return []
 
     def format_search_results(self, results: List[Dict[str, str]]) -> str:
         """
