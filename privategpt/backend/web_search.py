@@ -36,45 +36,69 @@ class SearxNGSearch:
 
         print(f"🌐 [WEB SEARCH] Searching SearxNG for: {query}")
 
-        try:
-            async with httpx.AsyncClient(timeout=30.0) as client:
-                # SearxNG API Anfrage
-                response = await client.get(
-                    f"{self.searxng_url}/search",
-                    params={
-                        "q": query,
-                        "format": "json",
-                        "language": "de",  # Deutsche Ergebnisse bevorzugen
-                        "time_range": "year",  # Aktuelle Ergebnisse
-                        "safesearch": "1"
-                    }
-                )
-                response.raise_for_status()
-                data = response.json()
+        # Liste von öffentlichen SearxNG-Instanzen (Fallback)
+        searxng_instances = [
+            self.searxng_url,  # Primäre Instanz aus Config
+            "https://searx.tiekoetter.com",  # Fallback 1
+            "https://search.bus-hit.me",  # Fallback 2
+            "https://searx.work",  # Fallback 3
+        ]
 
-                results = []
-                for item in data.get("results", [])[:max_results]:
-                    result = {
-                        "title": item.get("title", ""),
-                        "url": item.get("url", ""),
-                        "content": item.get("content", ""),
-                        "engine": item.get("engine", "unknown")
-                    }
-                    results.append(result)
-                    print(f"   📄 {result['title'][:60]}... ({result['engine']})")
+        # Browser User-Agent um Bot-Detection zu vermeiden
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            "Accept": "application/json",
+            "Accept-Language": "de-DE,de;q=0.9,en;q=0.8"
+        }
 
-                print(f"✅ [WEB SEARCH] Found {len(results)} results")
-                return results
+        # Versuche verschiedene Instanzen
+        for instance_url in searxng_instances:
+            try:
+                async with httpx.AsyncClient(timeout=30.0, follow_redirects=True) as client:
+                    print(f"   🔄 Trying: {instance_url}")
 
-        except httpx.TimeoutException:
-            print(f"⏱️ [WEB SEARCH] Timeout - SearxNG nicht erreichbar")
-            return []
-        except httpx.HTTPStatusError as e:
-            print(f"❌ [WEB SEARCH] HTTP Error {e.response.status_code}")
-            return []
-        except Exception as e:
-            print(f"❌ [WEB SEARCH] Error: {e}")
-            return []
+                    # SearxNG API Anfrage
+                    response = await client.get(
+                        f"{instance_url}/search",
+                        params={
+                            "q": query,
+                            "format": "json",
+                            "language": "de",  # Deutsche Ergebnisse bevorzugen
+                            "time_range": "year",  # Aktuelle Ergebnisse
+                            "safesearch": "1"
+                        },
+                        headers=headers
+                    )
+                    response.raise_for_status()
+                    data = response.json()
+
+                    results = []
+                    for item in data.get("results", [])[:max_results]:
+                        result = {
+                            "title": item.get("title", ""),
+                            "url": item.get("url", ""),
+                            "content": item.get("content", ""),
+                            "engine": item.get("engine", "unknown")
+                        }
+                        results.append(result)
+                        print(f"   📄 {result['title'][:60]}... ({result['engine']})")
+
+                    print(f"✅ [WEB SEARCH] Found {len(results)} results from {instance_url}")
+                    return results
+
+            except httpx.TimeoutException:
+                print(f"   ⏱️ Timeout at {instance_url}, trying next...")
+                continue
+            except httpx.HTTPStatusError as e:
+                print(f"   ❌ HTTP {e.response.status_code} at {instance_url}, trying next...")
+                continue
+            except Exception as e:
+                print(f"   ❌ Error at {instance_url}: {e}, trying next...")
+                continue
+
+        # Alle Instanzen fehlgeschlagen
+        print(f"❌ [WEB SEARCH] All SearxNG instances failed")
+        return []
 
     def format_search_results(self, results: List[Dict[str, str]]) -> str:
         """
