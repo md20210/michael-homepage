@@ -13,7 +13,7 @@ import shutil
 from config import get_settings
 from database import get_db, init_db, User, Assistant, Document, Message
 from auth import create_magic_link, verify_magic_link, get_current_user
-from rag import rag_engine
+from rag import rag_engine, chroma_client
 
 settings = get_settings()
 
@@ -235,6 +235,12 @@ async def upload_document(
     db: AsyncSession = Depends(get_db)
 ):
     """Upload a document (PDF only for PoC)"""
+    print(f"\n📤 === UPLOAD REQUEST RECEIVED ===")
+    print(f"Assistant ID: {assistant_id}")
+    print(f"User: {current_user.email}")
+    print(f"Filename: {file.filename}")
+    print(f"Content Type: {file.content_type}")
+
     # Verify ownership
     result = await db.execute(
         select(Assistant).where(
@@ -245,13 +251,17 @@ async def upload_document(
     assistant = result.scalar_one_or_none()
 
     if not assistant:
+        print(f"❌ Assistant {assistant_id} not found for user {current_user.email}")
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Assistant not found"
         )
 
+    print(f"✅ Assistant verified: {assistant.name}")
+
     # Check file type
     if not file.filename.lower().endswith('.pdf'):
+        print(f"❌ Invalid file type: {file.filename}")
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Only PDF files are supported in PoC"
@@ -262,8 +272,11 @@ async def upload_document(
     file_size = file.file.tell()
     file.file.seek(0)
 
+    print(f"📏 File size: {file_size} bytes ({file_size / 1024:.2f} KB)")
+
     max_size = settings.max_file_size_mb * 1024 * 1024
     if file_size > max_size:
+        print(f"❌ File too large: {file_size} > {max_size}")
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"File too large. Max size: {settings.max_file_size_mb}MB"
@@ -274,8 +287,12 @@ async def upload_document(
     os.makedirs(upload_dir, exist_ok=True)
 
     file_path = f"{upload_dir}/{file.filename}"
+    print(f"💾 Saving to: {file_path}")
+
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
+
+    print(f"✅ File saved successfully")
 
     # Create document record
     document = Document(
@@ -290,17 +307,80 @@ async def upload_document(
     await db.commit()
     await db.refresh(document)
 
+    print(f"✅ Document record created: ID={document.id}")
+
     # Process document in background (extract text, create embeddings)
     try:
+        print(f"🔄 Starting document processing...")
         chunk_count = await rag_engine.processor.process_document(file_path, document.id)
         document.processed = True
         await db.commit()
-        print(f"Document {document.id} processed successfully: {chunk_count} chunks")
+        print(f"✅ Document {document.id} processed successfully: {chunk_count} chunks")
     except Exception as e:
-        print(f"Error processing document {document.id}: {e}")
+        print(f"❌ Error processing document {document.id}: {e}")
+        import traceback
+        print(f"Traceback: {traceback.format_exc()}")
         # Document remains marked as unprocessed
 
+    print(f"=== UPLOAD COMPLETE ===\n")
     return document
+
+
+@app.delete("/assistants/{assistant_id}/documents/{document_id}")
+async def delete_document(
+    assistant_id: int,
+    document_id: int,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Delete a single document"""
+    # Verify assistant ownership
+    result = await db.execute(
+        select(Assistant).where(
+            Assistant.id == assistant_id,
+            Assistant.user_id == current_user.id
+        )
+    )
+    assistant = result.scalar_one_or_none()
+
+    if not assistant:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Assistant not found"
+        )
+
+    # Get document
+    result = await db.execute(
+        select(Document).where(
+            Document.id == document_id,
+            Document.assistant_id == assistant_id
+        )
+    )
+    document = result.scalar_one_or_none()
+
+    if not document:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Document not found"
+        )
+
+    # Delete file from filesystem
+    if os.path.exists(document.file_path):
+        os.remove(document.file_path)
+
+    # Delete ChromaDB collection
+    try:
+        collection_name = f"doc_{document.id}"
+        chroma_client.delete_collection(collection_name)
+        print(f"Deleted ChromaDB collection: {collection_name}")
+    except Exception as e:
+        print(f"Error deleting ChromaDB collection: {e}")
+
+    # Delete from database
+    await db.delete(document)
+    await db.commit()
+
+    return {"message": "Document deleted successfully"}
 
 
 # Chat endpoints
@@ -394,8 +474,16 @@ async def chat(
         ai_response = rag_result["answer"]
 
         # Add source info if context was used
+        sources_info = []
         if rag_result["context_used"] and rag_result["sources"]:
-            ai_response += f"\n\n📚 Quellen: {len(rag_result['sources'])} Dokument-Abschnitte"
+            sources_info.append(f"{len(rag_result['sources'])} Dokument-Abschnitte")
+
+        # Add web search info if used
+        if rag_result.get("web_search_used", False):
+            sources_info.append("Web-Suche (SearxNG)")
+
+        if sources_info:
+            ai_response += f"\n\n📚 Quellen: {', '.join(sources_info)}"
 
     except Exception as e:
         print(f"RAG error: {e}")

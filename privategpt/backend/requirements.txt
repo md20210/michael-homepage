@@ -23,6 +23,11 @@ langchain==0.1.6
 langchain-community>=0.0.18
 llama-cpp-python==0.2.90  # NEU: Qwen3 Integration (CPU-only)
 
+# Hybrid RAG with Web Search
+llama-index-core>=0.10.0  # LlamaIndex Framework
+beautifulsoup4>=4.12.0  # HTML parsing für Web-Ergebnisse
+lxml>=4.9.0  # XML/HTML Parser
+
 # Auth & Security
 python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4

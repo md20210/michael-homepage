@@ -42,6 +42,12 @@ class Settings(BaseSettings):
     max_file_size_mb: int = 10
     max_files_per_user: int = 50
 
+    # Hybrid RAG - Web Search mit SearxNG
+    searxng_url: str = "https://searx.be"  # Öffentliche SearxNG-Instanz (kann geändert werden)
+    searxng_max_results: int = 5  # Max Web-Suchergebnisse
+    enable_web_search: bool = True  # Web-Suche aktivieren/deaktivieren
+    web_search_threshold: float = 0.3  # Confidence-Schwelle für Web-Suche (0-1)
+
     class Config:
         env_file = ".env"
         case_sensitive = False

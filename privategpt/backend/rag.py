@@ -31,6 +31,7 @@ except ImportError:
 import httpx
 
 from config import get_settings
+from web_search import searxng_client, AnswerQualityDetector
 
 settings = get_settings()
 
@@ -219,18 +220,69 @@ class RAGEngine:
             response = await self._generate_response_without_context(question)
             context_used = False
 
+        # HYBRID RAG: Check if web search is needed
+        web_search_used = False
+        web_sources = []
+
+        if settings.enable_web_search:
+            needs_web = AnswerQualityDetector.needs_web_search(
+                question=question,
+                answer=response,
+                has_documents=bool(all_chunks)
+            )
+
+            if needs_web:
+                print(f"🌐 [HYBRID RAG] Web search triggered for better answer")
+
+                # Generate search query
+                search_query = AnswerQualityDetector.get_search_query(question, response)
+
+                # Perform web search
+                web_context = await searxng_client.search_and_format(search_query)
+
+                if web_context:
+                    # Regenerate answer with web context
+                    combined_context = []
+
+                    # Add local document chunks if available
+                    if all_chunks:
+                        combined_context.extend(all_chunks[:3])  # Top 3 local chunks
+
+                    # Add web search context
+                    combined_context.append(web_context)
+
+                    # Generate improved answer
+                    response = await self._generate_response_with_context(
+                        question,
+                        combined_context,
+                        is_hybrid=True
+                    )
+                    web_search_used = True
+                    web_sources = ["SearxNG Web Search"]
+
+                    print(f"✅ [HYBRID RAG] Answer enhanced with web search results")
+
         return {
             "answer": response,
             "sources": sources,
-            "context_used": context_used
+            "context_used": context_used,
+            "web_search_used": web_search_used,
+            "web_sources": web_sources
         }
 
     async def _generate_response_with_context(
         self,
         question: str,
-        context_chunks: List[str]
+        context_chunks: List[str],
+        is_hybrid: bool = False
     ) -> str:
-        """Generate response using llama-cpp-python or Ollama with context"""
+        """Generate response using llama-cpp-python or Ollama with context
+
+        Args:
+            question: User question
+            context_chunks: Context from documents and/or web search
+            is_hybrid: Whether this uses hybrid RAG (local + web)
+        """
 
         # Build context
         context = "\n\n".join(context_chunks[:5])  # Use top 5 chunks
@@ -239,23 +291,26 @@ class RAGEngine:
         llm = get_llm()
         if llm is not None:
             # Create prompt (Qwen2.5 ChatML Format) - Optimized for better German
+            source_type = "Dokumenten und Web-Suchergebnissen" if is_hybrid else "bereitgestellten Dokumenten"
+
             prompt = f"""<|im_start|>system
 Du bist ein professioneller deutschsprachiger Assistent.
 
 WICHTIGE REGELN:
 1. Beantworte AUSSCHLIESSLICH auf Deutsch
-2. Nutze NUR Informationen aus den bereitgestellten Dokumenten
-3. Zitiere direkt aus den Dokumenten wenn möglich
-4. Wenn die Information nicht im Dokument steht, sage: "Diese Information ist nicht im Dokument enthalten."
+2. Nutze NUR Informationen aus den {source_type}
+3. Zitiere direkt aus den Quellen wenn möglich
+4. Wenn die Information nicht vorhanden ist, sage das ehrlich
 5. Schreibe in vollständigen, korrekten deutschen Sätzen
-6. Sei präzise, sachlich und professionell<|im_end|>
+6. Sei präzise, sachlich und professionell
+{'7. Kennzeichne Web-Informationen mit "Laut Web-Suche:" wenn relevant' if is_hybrid else ''}<|im_end|>
 <|im_start|>user
-DOKUMENTEN-AUSZÜGE:
+{'INFORMATIONSQUELLEN (Dokumente + Web):' if is_hybrid else 'DOKUMENTEN-AUSZÜGE:'}
 {context}
 
 FRAGE: {question}
 
-ANTWORT (auf Deutsch, basierend auf den Dokumenten):<|im_end|>
+ANTWORT (auf Deutsch, basierend auf den Quellen):<|im_end|>
 <|im_start|>assistant
 """
 
