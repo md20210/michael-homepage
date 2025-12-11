@@ -15,6 +15,7 @@ from typing import List, Dict
 import PyPDF2
 import chromadb
 from chromadb.config import Settings as ChromaSettings
+from chromadb.utils import embedding_functions
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 import traceback
 
@@ -38,6 +39,12 @@ chroma_db_path = os.getenv("CHROMA_DB_PATH", "./chroma_db")
 chroma_client = chromadb.PersistentClient(
     path=chroma_db_path,
     settings=ChromaSettings(anonymized_telemetry=False)
+)
+
+# Initialize Embedding Function for ChromaDB
+# Using multilingual model for German/English support
+embedding_function = embedding_functions.SentenceTransformerEmbeddingFunction(
+    model_name="paraphrase-multilingual-MiniLM-L12-v2"
 )
 
 # NEU: Global LLM Instance (lazy loading)
@@ -117,7 +124,8 @@ class DocumentProcessor:
 
         collection = chroma_client.create_collection(
             name=collection_name,
-            metadata={"document_id": document_id}
+            metadata={"document_id": document_id},
+            embedding_function=embedding_function
         )
 
         # Create embeddings and store
@@ -174,7 +182,10 @@ class RAGEngine:
         for doc_id in document_ids:
             collection_name = f"doc_{doc_id}"
             try:
-                collection = chroma_client.get_collection(collection_name)
+                collection = chroma_client.get_collection(
+                    name=collection_name,
+                    embedding_function=embedding_function
+                )
                 print(f"✅ Found collection: {collection_name} ({collection.count()} chunks)")
 
                 # Query collection
