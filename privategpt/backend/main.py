@@ -598,7 +598,7 @@ async def get_current_model(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    """Get currently selected LLM model (Superadmin only)"""
+    """Get currently selected LLM model with memory status (Superadmin only)"""
     if not is_superadmin(current_user):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -608,6 +608,11 @@ async def get_current_model(
     model_id = await get_current_llm_model(db)
     model = get_model(model_id)
 
+    # Check if model is loaded in RAM
+    from rag import _llm_instance, get_current_model_id
+    is_loaded_in_ram = _llm_instance is not None
+    ram_model_id = get_current_model_id() if is_loaded_in_ram else None
+
     return {
         "model_id": model_id,
         "model_name": model.name,
@@ -616,6 +621,11 @@ async def get_current_model(
             "size_gb": model.size_gb,
             "params": model.params,
             "quality": model.quality
+        },
+        "memory_status": {
+            "loaded_in_ram": is_loaded_in_ram,
+            "ram_model_id": ram_model_id,
+            "message": f"✅ {model.name} loaded in RAM" if is_loaded_in_ram else f"⏳ {model.name} will load on first request"
         }
     }
 

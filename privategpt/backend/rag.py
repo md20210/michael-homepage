@@ -87,8 +87,18 @@ def reload_llm(model_id: str):
 
     print(f"🔄 [RELOAD] Switching LLM from {_current_model_id} to {model_id}...")
 
-    # Unload current model
-    _llm_instance = None
+    # Explicitly unload current model from memory
+    if _llm_instance is not None:
+        print(f"🗑️  [RELOAD] Unloading {_current_model_id} from memory...")
+        old_instance = _llm_instance
+        _llm_instance = None
+
+        # Force garbage collection to free RAM immediately
+        del old_instance
+        import gc
+        gc.collect()
+        print(f"✅ [RELOAD] {_current_model_id} unloaded from RAM")
+
     _current_model_id = model_id
 
     # Load new model (will be loaded on next get_llm() call)
