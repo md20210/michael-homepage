@@ -1,11 +1,11 @@
 #!/bin/bash
 set -e
 
-echo "🚂 Railway Startup - PrivateGPT Backend v2.1 (railway.toml fixed)"
+echo "🚂 Railway Startup - PrivateGPT Backend v2.2 (Multi-Model Support)"
 
-# 1. Download Qwen2.5-0.5B Model (if not exists)
-echo "📦 Checking Qwen2.5-0.5B model..."
-python3 download_model.py
+# 1. Download Railway-safe models (0.5B, 1.5B, 3B - excludes RAM-intensive 7B)
+echo "📦 Downloading Railway-safe LLM models..."
+python3 download_model.py --railway
 
 # 2. Run Database Migrations
 echo "🗄️  Running database migrations..."

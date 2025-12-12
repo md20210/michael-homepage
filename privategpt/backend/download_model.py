@@ -94,9 +94,51 @@ def download_default_model():
     return success
 
 
+def download_railway_safe_models():
+    """Download Railway-safe models (excludes RAM-intensive 7B)"""
+    print("=" * 70)
+    print("LLM Model Download Script - Railway Safe Models")
+    print("=" * 70)
+    print()
+
+    # Create model directory
+    print(f"📁 Creating model directory: {MODEL_DIR}")
+    MODEL_DIR.mkdir(parents=True, exist_ok=True)
+    print()
+
+    # Railway-safe models (exclude deepseek-r1-7b - too RAM-intensive)
+    safe_models = ["qwen2.5-0.5b", "deepseek-r1-1.5b", "qwen2.5-3b"]
+
+    print(f"📦 Downloading {len(safe_models)} Railway-safe models:")
+    for model_id in safe_models:
+        model = AVAILABLE_MODELS[model_id]
+        print(f"   - {model.name} ({model.size_gb:.2f} GB)")
+    print()
+    print("⚠️  Skipping deepseek-r1-7b (4.68 GB) - too RAM-intensive for Railway")
+    print()
+
+    success_count = 0
+    for model_id in safe_models:
+        if download_model(model_id):
+            success_count += 1
+        print()
+
+    print("=" * 70)
+    print(f"✅ Downloaded {success_count}/{len(safe_models)} models successfully")
+    print("=" * 70)
+
+    return success_count == len(safe_models)
+
+
 if __name__ == "__main__":
     import sys
-    if len(sys.argv) > 1 and sys.argv[1] == "--all":
-        download_all_models()
+    if len(sys.argv) > 1:
+        if sys.argv[1] == "--all":
+            download_all_models()
+        elif sys.argv[1] == "--railway":
+            download_railway_safe_models()
+        else:
+            print(f"Unknown option: {sys.argv[1]}")
+            print("Usage: python download_model.py [--all|--railway]")
     else:
         download_default_model()
