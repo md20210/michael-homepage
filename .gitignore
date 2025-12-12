@@ -45,4 +45,12 @@ coverage/
 # Large media files (hosted on Strato)
 public/Michael_Dabrock_Audiobook.mp3
 public/*.mp3
+*.mp3
 .env.sftp
+
+# Upload logs
+upload-*.txt
+upload-*.log
+
+# Temporary project folders
+Grokfkt/

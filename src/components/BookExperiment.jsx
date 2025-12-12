@@ -33,7 +33,7 @@ const BookExperiment = ({ t, currentLang }) => {
         <section id="book" className="section">
             <div style={{ width: '100%' }}>
                 <div className="step-indicator">
-                    <div className="step-number">06</div>
+                    <div className="step-number">05</div>
                     <div className="step-line"></div>
                     <div className="step-number" style={{ color: '#ffd700' }}>07</div>
                 </div>

@@ -80,7 +80,7 @@ export const translations = {
     // Book Experiment
     "book-title": "AI AUDIOBOOK PROJECT",
     "book-header": "📖 Creating an Audiobook in One Day",
-    "book-description": "An experimental project demonstrating the power of AI collaboration: I created a complete audiobook (more than 6 hours) within a single day using multiple AI platforms working together.",
+    "book-description": "An experimental project demonstrating the power of AI collaboration: I created a complete audiobook (more than 6 hours) within a single day using multiple AI platforms working together. <strong>Available in German and English.</strong>",
     "book-process-title": "The Creative Process",
     "book-process-desc": "This audiobook was created entirely with AI assistance, showcasing how different AI platforms can complement each other:",
     "book-grok": "<strong>Grok (xAI)</strong>: Story concept, creative direction, and narrative structure",
@@ -96,7 +96,29 @@ export const translations = {
     "newproject-title": "NEW AI PROJECT",
     "newproject-header": "🚀 Coming Soon",
     "newproject-description": "Stay tuned for an exciting new AI project showcase!",
-    "newproject-placeholder": "This space is reserved for future AI innovations and experiments."
+    "newproject-placeholder": "This space is reserved for future AI innovations and experiments.",
+
+    // PrivateGxT
+    "nav-privategpt": "PRIVATEGXT",
+    "privategpt-title": "PRIVATEGXT - YOUR PRIVATE AI ASSISTANT",
+    "privategpt-header": "PrivateGxT: 100% Private & GDPR-Compliant AI",
+    "privategpt-description": "Chat with your own documents using a local AI that never sends your data to external servers. Upload PDFs and ask questions - everything stays on your device, fully GDPR-compliant and secure.",
+    "privategpt-tech-title": "Technical Architecture",
+    "privategpt-tech-llm": "Local LLM (Qwen2.5-0.5B) - Runs entirely on your infrastructure",
+    "privategpt-tech-vector": "Vector Database (ChromaDB) - Intelligent document search via embeddings",
+    "privategpt-tech-privacy": "100% GDPR-Compliant - No data leaves your environment",
+    "privategpt-tech-pdf": "PDF Processing - Automatic text extraction and chunking",
+    "privategpt-tech-rag": "RAG (Retrieval Augmented Generation) - AI answers based on your documents",
+    "privategpt-cta": "Test PrivateGxT Now!",
+    "privategpt-rate-title": "Rate PrivateGxT",
+    "privategpt-rate-question": "How do you like PrivateGxT?",
+    "privategpt-rate-placeholder": "What should be improved or what features should be added?",
+    "privategpt-rate-submit": "Submit Rating",
+    "privategpt-rate-toggle": "Show Reviews",
+    "privategpt-rate-average": "Average",
+    "privategpt-rate-stars": "stars",
+    "privategpt-rate-alert-missing": "Please select stars and provide feedback!",
+    "privategpt-rate-alert-success": "Rating saved and downloaded as text file!"
   },
 
   de: {
@@ -176,7 +198,7 @@ export const translations = {
     // Hörbuch-Projekt
     "book-title": "KI HÖRBUCH-PROJEKT",
     "book-header": "📖 Ein Hörbuch an einem Tag erstellen",
-    "book-description": "Ein experimentelles Projekt, das die Macht der KI-Zusammenarbeit demonstriert: Ich habe ein komplettes Hörbuch (mehr als 6 Stunden) innerhalb eines einzigen Tages mit mehreren KI-Plattformen erstellt, die zusammenarbeiten.",
+    "book-description": "Ein experimentelles Projekt, das die Macht der KI-Zusammenarbeit demonstriert: Ich habe ein komplettes Hörbuch (mehr als 6 Stunden) innerhalb eines einzigen Tages mit mehreren KI-Plattformen erstellt, die zusammenarbeiten. <strong>Verfügbar auf Deutsch und Englisch.</strong>",
     "book-process-title": "Der kreative Prozess",
     "book-process-desc": "Dieses Hörbuch wurde vollständig mit KI-Unterstützung erstellt und zeigt, wie verschiedene KI-Plattformen sich ergänzen können:",
     "book-grok": "<strong>Grok (xAI)</strong>: Story-Konzept, kreative Leitung und narrative Struktur",
@@ -192,7 +214,29 @@ export const translations = {
     "newproject-title": "NEUES KI-PROJEKT",
     "newproject-header": "🚀 Demnächst",
     "newproject-description": "Bleiben Sie dran für ein spannendes neues KI-Projekt!",
-    "newproject-placeholder": "Dieser Platz ist für zukünftige KI-Innovationen und Experimente reserviert."
+    "newproject-placeholder": "Dieser Platz ist für zukünftige KI-Innovationen und Experimente reserviert.",
+
+    // PrivateGxT
+    "nav-privategpt": "PRIVATEGXT",
+    "privategpt-title": "PRIVATEGXT - IHR PRIVATER KI-ASSISTENT",
+    "privategpt-header": "PrivateGxT: 100% Privat & DSGVO-konform",
+    "privategpt-description": "Chatten Sie mit Ihren eigenen Dokumenten mit einer lokalen KI, die niemals Ihre Daten an externe Server sendet. Laden Sie PDFs hoch und stellen Sie Fragen - alles bleibt auf Ihrem Gerät, vollständig DSGVO-konform und sicher.",
+    "privategpt-tech-title": "Technische Architektur",
+    "privategpt-tech-llm": "Lokales LLM (Qwen2.5-0.5B) - Läuft vollständig auf Ihrer Infrastruktur",
+    "privategpt-tech-vector": "Vektor-Datenbank (ChromaDB) - Intelligente Dokumentensuche via Embeddings",
+    "privategpt-tech-privacy": "100% DSGVO-konform - Keine Daten verlassen Ihre Umgebung",
+    "privategpt-tech-pdf": "PDF-Verarbeitung - Automatische Textextraktion und Chunking",
+    "privategpt-tech-rag": "RAG (Retrieval Augmented Generation) - KI-Antworten basierend auf Ihren Dokumenten",
+    "privategpt-cta": "Teste PrivateGxT hier!!",
+    "privategpt-rate-title": "Bewerte PrivateGxT",
+    "privategpt-rate-question": "Wie findest du PrivateGxT?",
+    "privategpt-rate-placeholder": "Was sollte besser sein oder welche Funktion sollte es zusätzlich geben?",
+    "privategpt-rate-submit": "Bewertung absenden",
+    "privategpt-rate-toggle": "Bewertungen anzeigen",
+    "privategpt-rate-average": "Durchschnitt",
+    "privategpt-rate-stars": "Sterne",
+    "privategpt-rate-alert-missing": "Bitte wähle Sterne und gib ein Feedback ein!",
+    "privategpt-rate-alert-success": "Bewertung gespeichert und als Textdatei heruntergeladen!"
   },
 
   es: {
@@ -272,7 +316,7 @@ export const translations = {
     // Proyecto Audiolibro
     "book-title": "PROYECTO AUDIOLIBRO IA",
     "book-header": "📖 Crear un Audiolibro en Un Día",
-    "book-description": "Un proyecto experimental que demuestra el poder de la colaboración de IA: Creé un audiolibro completo (más de 6 horas) en un solo día usando múltiples plataformas de IA trabajando juntas.",
+    "book-description": "Un proyecto experimental que demuestra el poder de la colaboración de IA: Creé un audiolibro completo (más de 6 horas) en un solo día usando múltiples plataformas de IA trabajando juntas. <strong>Disponible en alemán e inglés.</strong>",
     "book-process-title": "El Proceso Creativo",
     "book-process-desc": "Este audiolibro fue creado completamente con asistencia de IA, demostrando cómo diferentes plataformas de IA pueden complementarse entre sí:",
     "book-grok": "<strong>Grok (xAI)</strong>: Concepto de historia, dirección creativa y estructura narrativa",
@@ -288,6 +332,28 @@ export const translations = {
     "newproject-title": "NUEVO PROYECTO IA",
     "newproject-header": "🚀 Próximamente",
     "newproject-description": "¡Mantente atento a un nuevo y emocionante proyecto de IA!",
-    "newproject-placeholder": "Este espacio está reservado para futuras innovaciones y experimentos de IA."
+    "newproject-placeholder": "Este espacio está reservado para futuras innovaciones y experimentos de IA.",
+
+    // PrivateGxT
+    "nav-privategpt": "PRIVATEGXT",
+    "privategpt-title": "PRIVATEGXT - TU ASISTENTE IA PRIVADO",
+    "privategpt-header": "PrivateGxT: 100% Privado y Cumple con RGPD",
+    "privategpt-description": "Chatea con tus propios documentos usando una IA local que nunca envía tus datos a servidores externos. Sube PDFs y haz preguntas - todo permanece en tu dispositivo, completamente conforme con RGPD y seguro.",
+    "privategpt-tech-title": "Arquitectura Técnica",
+    "privategpt-tech-llm": "LLM Local (Qwen2.5-0.5B) - Se ejecuta completamente en tu infraestructura",
+    "privategpt-tech-vector": "Base de Datos Vectorial (ChromaDB) - Búsqueda inteligente de documentos mediante embeddings",
+    "privategpt-tech-privacy": "100% Cumple con RGPD - Ningún dato sale de tu entorno",
+    "privategpt-tech-pdf": "Procesamiento de PDF - Extracción automática de texto y fragmentación",
+    "privategpt-tech-rag": "RAG (Retrieval Augmented Generation) - Respuestas IA basadas en tus documentos",
+    "privategpt-cta": "¡Prueba PrivateGxT Ahora!",
+    "privategpt-rate-title": "Califica PrivateGxT",
+    "privategpt-rate-question": "¿Qué te parece PrivateGxT?",
+    "privategpt-rate-placeholder": "¿Qué debería mejorarse o qué funciones deberían añadirse?",
+    "privategpt-rate-submit": "Enviar Calificación",
+    "privategpt-rate-toggle": "Mostrar Reseñas",
+    "privategpt-rate-average": "Promedio",
+    "privategpt-rate-stars": "estrellas",
+    "privategpt-rate-alert-missing": "¡Por favor selecciona estrellas y proporciona comentarios!",
+    "privategpt-rate-alert-success": "¡Calificación guardada y descargada como archivo de texto!"
   }
 };

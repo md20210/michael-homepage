@@ -253,7 +253,7 @@ const Chatbot = ({ t, currentLang }) => {
         <section id="grok" className="section">
             <div style={{ width: '100%' }}>
                 <div className="step-indicator">
-                    <div className="step-number">04</div>
+                    <div className="step-number">07</div>
                     <div className="step-line"></div>
                     <div className="step-number" style={{ color: '#ffd700' }}>07</div>
                 </div>
@@ -273,14 +273,6 @@ const Chatbot = ({ t, currentLang }) => {
                                     "💾 Hybrid fallback mode - using intelligent responses with detailed knowledge about Michael."
                                 }
                             </p>
-                            <a
-                                href={getResumeLink()}
-                                className="cta-button"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                {t('grok-resume')}
-                            </a>
                         </div>
 
                         <div className="chat-box">
