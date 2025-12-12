@@ -100,7 +100,8 @@ verify_strato_upload() {
     local url="$1"
     info "Verifying: $url"
 
-    if curl -s --head "$url" | grep -q "200 OK\|301 Moved\|302 Found"; then
+    # Check for successful HTTP status codes (200, 301, 302)
+    if curl -s --head "$url" | head -1 | grep -qE "HTTP/[0-9.]+ (200|301|302)"; then
         success "URL accessible: $url"
         return 0
     else
@@ -130,7 +131,8 @@ verify_railway() {
     info "Verifying Railway deployment: $url"
     info "Note: Railway auto-deploys from GitHub (may take 2-5 minutes)"
 
-    if curl -s --head "$url" | grep -q "200 OK"; then
+    # Check for HTTP 200 status
+    if curl -s --head "$url" | head -1 | grep -qE "HTTP/[0-9.]+ 200"; then
         success "Railway deployment accessible"
         return 0
     else
