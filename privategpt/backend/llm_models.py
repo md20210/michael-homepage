@@ -28,21 +28,41 @@ AVAILABLE_MODELS: Dict[str, LLMModel] = {
         description="Kleinstes Modell, schnell aber schlechte deutsche Grammatik",
         download_url="https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct-GGUF/resolve/main/qwen2.5-0.5b-instruct-q4_k_m.gguf"
     ),
+    "deepseek-r1-1.5b": LLMModel(
+        id="deepseek-r1-1.5b",
+        name="DeepSeek-R1-1.5B (Empfohlen, Railway-sicher)",
+        filename="DeepSeek-R1-Distill-Qwen-1.5B-Q4_K_M.gguf",
+        size_gb=1.12,
+        params="1.5B",
+        quality="High",
+        description="DeepSeek-R1 Reasoning Model, optimiert für Railway",
+        download_url="https://huggingface.co/unsloth/DeepSeek-R1-Distill-Qwen-1.5B-GGUF/resolve/main/DeepSeek-R1-Distill-Qwen-1.5B-Q4_K_M.gguf"
+    ),
     "qwen2.5-3b": LLMModel(
         id="qwen2.5-3b",
-        name="Qwen2.5-3B (Empfohlen, gute Qualität)",
+        name="Qwen2.5-3B (Gute Qualität)",
         filename="qwen2.5-3b-instruct-q4_k_m.gguf",
         size_gb=2.0,
         params="3B",
         quality="High",
-        description="6x größer, deutlich besseres Deutsch, empfohlen für Produktion",
+        description="6x größer als 0.5B, deutlich besseres Deutsch",
         download_url="https://huggingface.co/Qwen/Qwen2.5-3B-Instruct-GGUF/resolve/main/qwen2.5-3b-instruct-q4_k_m.gguf"
+    ),
+    "deepseek-r1-7b": LLMModel(
+        id="deepseek-r1-7b",
+        name="DeepSeek-R1-7B (Beste Qualität, RAM-intensiv)",
+        filename="DeepSeek-R1-Distill-Qwen-7B-Q4_K_M.gguf",
+        size_gb=4.68,
+        params="7B",
+        quality="Excellent",
+        description="Beste Qualität, aber kann Railway RAM überlasten (Vorsicht!)",
+        download_url="https://huggingface.co/bartowski/DeepSeek-R1-Distill-Qwen-7B-GGUF/resolve/main/DeepSeek-R1-Distill-Qwen-7B-Q4_K_M.gguf"
     ),
 }
 
 
-# Default model
-DEFAULT_MODEL = "qwen2.5-0.5b"
+# Default model - DeepSeek-R1-1.5B für Railway
+DEFAULT_MODEL = "deepseek-r1-1.5b"
 
 
 def get_model(model_id: str) -> LLMModel:

@@ -66,7 +66,7 @@ def download_all_models():
 
 
 def download_default_model():
-    """Download only the default model (Qwen2.5-0.5B) for quick startup"""
+    """Download only the default model (DeepSeek-R1-1.5B) for quick startup"""
     print("=" * 70)
     print("LLM Model Download Script - Default Model Only")
     print("=" * 70)
@@ -77,10 +77,10 @@ def download_default_model():
     MODEL_DIR.mkdir(parents=True, exist_ok=True)
     print()
 
-    # Download default model (0.5B)
-    default_model_id = "qwen2.5-0.5b"
-    print(f"📦 Downloading default model: {default_model_id}")
-    success = download_model(default_model_id)
+    # Download default model (DeepSeek-R1-1.5B)
+    from llm_models import DEFAULT_MODEL
+    print(f"📦 Downloading default model: {DEFAULT_MODEL}")
+    success = download_model(DEFAULT_MODEL)
 
     print()
     print("=" * 70)
