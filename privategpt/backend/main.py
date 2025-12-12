@@ -641,6 +641,28 @@ async def set_llm_model(
             detail=f"Invalid model_id: {request.model_id}"
         )
 
+    # Check if model file exists, download if not
+    from pathlib import Path
+    model_path = Path("./models") / model.filename
+
+    if not model_path.exists():
+        print(f"📥 [ADMIN] Model {model.name} not found, downloading...")
+        from download_model import download_model
+        try:
+            success = download_model(request.model_id)
+            if not success:
+                raise HTTPException(
+                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    detail=f"Fehler beim Herunterladen des Modells {model.name}"
+                )
+            print(f"✅ [ADMIN] Model {model.name} downloaded successfully")
+        except Exception as e:
+            print(f"❌ [ADMIN] Error downloading model: {e}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Fehler beim Herunterladen: {str(e)}"
+            )
+
     # Save to database
     await set_current_llm_model(db, request.model_id, current_user.email)
 

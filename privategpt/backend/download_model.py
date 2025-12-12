@@ -65,5 +65,38 @@ def download_all_models():
     print("=" * 70)
 
 
+def download_default_model():
+    """Download only the default model (Qwen2.5-0.5B) for quick startup"""
+    print("=" * 70)
+    print("LLM Model Download Script - Default Model Only")
+    print("=" * 70)
+    print()
+
+    # Create model directory
+    print(f"📁 Creating model directory: {MODEL_DIR}")
+    MODEL_DIR.mkdir(parents=True, exist_ok=True)
+    print()
+
+    # Download default model (0.5B)
+    default_model_id = "qwen2.5-0.5b"
+    print(f"📦 Downloading default model: {default_model_id}")
+    success = download_model(default_model_id)
+
+    print()
+    print("=" * 70)
+    if success:
+        print("✅ Default model ready!")
+        print("ℹ️  Other models can be downloaded via Admin Panel when needed")
+    else:
+        print("❌ Failed to download default model")
+    print("=" * 70)
+
+    return success
+
+
 if __name__ == "__main__":
-    download_all_models()
+    import sys
+    if len(sys.argv) > 1 and sys.argv[1] == "--all":
+        download_all_models()
+    else:
+        download_default_model()
