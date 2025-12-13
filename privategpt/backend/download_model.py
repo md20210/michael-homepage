@@ -95,9 +95,9 @@ def download_default_model():
 
 
 def download_railway_safe_models():
-    """Download all models for Railway (includes 7B as default)"""
+    """Download Railway-safe models (excludes RAM-intensive 7B)"""
     print("=" * 70)
-    print("LLM Model Download Script - All Models for Railway")
+    print("LLM Model Download Script - Railway Safe Models")
     print("=" * 70)
     print()
 
@@ -106,30 +106,31 @@ def download_railway_safe_models():
     MODEL_DIR.mkdir(parents=True, exist_ok=True)
     print()
 
-    # All models including DeepSeek-R1-7B (now default)
-    all_models = ["qwen2.5-0.5b", "deepseek-r1-1.5b", "qwen2.5-3b", "deepseek-r1-7b"]
+    # Railway-safe models (exclude deepseek-r1-7b - too RAM-intensive)
+    safe_models = ["qwen2.5-0.5b", "deepseek-r1-1.5b", "qwen2.5-3b"]
 
-    total_size = sum(AVAILABLE_MODELS[mid].size_gb for mid in all_models)
-    print(f"📦 Downloading {len(all_models)} models (Total: ~{total_size:.2f} GB):")
-    for model_id in all_models:
+    total_size = sum(AVAILABLE_MODELS[mid].size_gb for mid in safe_models)
+    print(f"📦 Downloading {len(safe_models)} Railway-safe models (Total: ~{total_size:.2f} GB):")
+    for model_id in safe_models:
         model = AVAILABLE_MODELS[model_id]
-        print(f"   - {model.name} ({model.size_gb:.2f} GB)")
+        default_marker = " ⭐ DEFAULT" if model_id == "deepseek-r1-1.5b" else ""
+        print(f"   - {model.name} ({model.size_gb:.2f} GB){default_marker}")
     print()
-    print("⚠️  DeepSeek-R1-7B (4.68 GB) is RAM-intensive but set as default")
-    print("   Memory management ensures only ONE model in RAM at a time")
+    print("⚠️  Skipping deepseek-r1-7b (4.68 GB) - too RAM-intensive for Railway")
+    print("   7B is available on-demand (auto-downloads when user selects it)")
     print()
 
     success_count = 0
-    for model_id in all_models:
+    for model_id in safe_models:
         if download_model(model_id):
             success_count += 1
         print()
 
     print("=" * 70)
-    print(f"✅ Downloaded {success_count}/{len(all_models)} models successfully")
+    print(f"✅ Downloaded {success_count}/{len(safe_models)} models successfully")
     print("=" * 70)
 
-    return success_count == len(all_models)
+    return success_count == len(safe_models)
 
 
 if __name__ == "__main__":
