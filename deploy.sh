@@ -355,12 +355,14 @@ Automated deployment via deploy.sh
 
 Co-Authored-By: Claude <noreply@anthropic.com>"
 
-    info "Creating commit..."
     if git commit -m "$commit_msg" >> "$LOG_FILE" 2>&1; then
         success "Commit created"
-    else
-        error "Failed to create commit"
+    elif git status --porcelain | grep -q '^'; then
+        error "Failed to create commit (unexpected error)"
         return 1
+    else
+        info "No changes to commit after staging"
+        return 0
     fi
 
     # Push to GitHub
