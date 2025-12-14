@@ -114,8 +114,8 @@ def download_railway_safe_models():
     MODEL_DIR.mkdir(parents=True, exist_ok=True)
     print()
 
-    # Railway-safe models (exclude deepseek-r1-7b - too RAM-intensive)
-    safe_models = ["qwen2.5-0.5b", "deepseek-r1-1.5b", "qwen2.5-3b"]
+    # Railway-safe models (alle Modelle sind nun Railway-sicher)
+    safe_models = ["qwen2.5-0.5b", "deepseek-r1-1.5b", "qwen2.5-3b", "qwen3-4b"]
 
     total_size = sum(AVAILABLE_MODELS[mid].size_gb for mid in safe_models)
     print(f"📦 Downloading {len(safe_models)} Railway-safe models (Total: ~{total_size:.2f} GB):")
@@ -123,9 +123,6 @@ def download_railway_safe_models():
         model = AVAILABLE_MODELS[model_id]
         default_marker = " ⭐ DEFAULT" if model_id == "deepseek-r1-1.5b" else ""
         print(f"   - {model.name} ({model.size_gb:.2f} GB){default_marker}")
-    print()
-    print("⚠️  Skipping deepseek-r1-7b (4.68 GB) - too RAM-intensive for Railway")
-    print("   7B is available on-demand (auto-downloads when user selects it)")
     print()
 
     success_count = 0

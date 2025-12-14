@@ -49,15 +49,15 @@ AVAILABLE_MODELS: Dict[str, LLMModel] = {
         description="6x größer als 0.5B, deutlich besseres Deutsch",
         download_url="https://huggingface.co/Qwen/Qwen2.5-3B-Instruct-GGUF/resolve/main/qwen2.5-3b-instruct-q4_k_m.gguf"
     ),
-    "deepseek-r1-7b": LLMModel(
-        id="deepseek-r1-7b",
-        name="DeepSeek-R1-7B (Beste Qualität, RAM-intensiv)",
-        filename="DeepSeek-R1-Distill-Qwen-7B-Q4_K_M.gguf",
-        size_gb=4.68,
-        params="7B",
+    "qwen3-4b": LLMModel(
+        id="qwen3-4b",
+        name="Qwen3-4B (Sehr gute Qualität, Railway-sicher)",
+        filename="qwen3-4b-q4_k_m.gguf",
+        size_gb=2.5,
+        params="4B",
         quality="Excellent",
-        description="Beste Qualität, aber kann Railway RAM überlasten (Vorsicht!)",
-        download_url="https://huggingface.co/bartowski/DeepSeek-R1-Distill-Qwen-7B-GGUF/resolve/main/DeepSeek-R1-Distill-Qwen-7B-Q4_K_M.gguf"
+        description="Qwen3 mit verbessertem Reasoning & Deutsch-Support, Railway-sicher",
+        download_url="https://huggingface.co/Aldaris/Qwen3-4B-Q4_K_M-GGUF/resolve/main/qwen3-4b-q4_k_m.gguf"
     ),
 }
 
