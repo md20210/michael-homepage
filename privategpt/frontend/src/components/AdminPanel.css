@@ -297,7 +297,7 @@
 }
 
 .btn-close {
-  background: #666;
+  background: #22c55e;
   color: white;
   border: none;
   padding: 10px 24px;
@@ -309,7 +309,7 @@
 }
 
 .btn-close:hover {
-  background: #555;
+  background: #16a34a;
 }
 
 /* Responsive */

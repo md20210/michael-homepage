@@ -275,9 +275,11 @@ async def get_documents(
             detail="Assistant not found"
         )
 
-    # Get documents
+    # Get documents (newest first)
     result = await db.execute(
-        select(Document).where(Document.assistant_id == assistant_id)
+        select(Document)
+        .where(Document.assistant_id == assistant_id)
+        .order_by(Document.uploaded_at.desc())
     )
     documents = result.scalars().all()
     return documents

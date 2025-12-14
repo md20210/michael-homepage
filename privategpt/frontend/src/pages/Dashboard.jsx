@@ -18,6 +18,7 @@ export default function Dashboard() {
   const [deleting, setDeleting] = useState(null); // Track which document is being deleted
   const [isAdmin, setIsAdmin] = useState(false);
   const [showAdminPanel, setShowAdminPanel] = useState(false);
+  const [toasts, setToasts] = useState([]); // Toast notifications
   const messagesEndRef = useRef(null);
 
   // Auto-Scroll
@@ -41,6 +42,15 @@ export default function Dashboard() {
       loadMessages();
     }
   }, [assistant]);
+
+  // Toast helper
+  const addToast = (message, type = 'info') => {
+    const id = Date.now();
+    setToasts(prev => [...prev, { id, message, type }]);
+    setTimeout(() => {
+      setToasts(prev => prev.filter(t => t.id !== id));
+    }, 4000);
+  };
 
   const checkAdminStatus = async () => {
     try {
@@ -82,9 +92,9 @@ export default function Dashboard() {
     try {
       await documentAPI.upload(assistant.id, file);
       await loadDocuments();
-      alert('PDF erfolgreich hochgeladen & verarbeitet!');
+      addToast('PDF erfolgreich hochgeladen & verarbeitet!', 'success');
     } catch (err) {
-      alert(err.response?.data?.detail || 'Upload fehlgeschlagen');
+      addToast(err.response?.data?.detail || 'Upload fehlgeschlagen', 'error');
     } finally {
       setUploading(false);
       e.target.value = '';
@@ -98,8 +108,9 @@ export default function Dashboard() {
     try {
       await documentAPI.delete(assistant.id, documentId);
       await loadDocuments();
+      addToast('Dokument erfolgreich gelöscht', 'success');
     } catch (err) {
-      alert(err.response?.data?.detail || 'Löschen fehlgeschlagen');
+      addToast(err.response?.data?.detail || 'Löschen fehlgeschlagen', 'error');
     } finally {
       setDeleting(null); // Clear loading state
     }
@@ -126,7 +137,7 @@ export default function Dashboard() {
       await chatAPI.sendMessage(assistant.id, text);
       await loadMessages(); // Lädt alle Nachrichten inkl. AI-Antwort
     } catch (err) {
-      alert(err.response?.data?.detail || 'Nachricht konnte nicht gesendet werden');
+      addToast(err.response?.data?.detail || 'Nachricht konnte nicht gesendet werden', 'error');
       // Bei Fehler die optimistische Nachricht wieder entfernen
       setMessages(prev => prev.filter(m => m.id !== tempUserMessage.id));
     } finally {
@@ -300,6 +311,15 @@ export default function Dashboard() {
 
       {/* Admin Panel Modal */}
       {showAdminPanel && <AdminPanel onClose={() => setShowAdminPanel(false)} />}
+
+      {/* Toast Notifications */}
+      <div className="toast-container">
+        {toasts.map(toast => (
+          <div key={toast.id} className={`toast toast-${toast.type}`}>
+            {toast.message}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
