@@ -116,6 +116,23 @@ export default function Dashboard() {
     }
   };
 
+  const handleDeleteChat = async () => {
+    if (messages.length === 0) {
+      addToast('Keine Nachrichten zum Löschen', 'info');
+      return;
+    }
+
+    if (!confirm('Chat-Verlauf wirklich löschen? (Dokumente bleiben erhalten)')) return;
+
+    try {
+      await chatAPI.deleteMessages(assistant.id);
+      setMessages([]);
+      addToast('Chat-Verlauf gelöscht', 'success');
+    } catch (err) {
+      addToast(err.response?.data?.detail || 'Löschen fehlgeschlagen', 'error');
+    }
+  };
+
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!inputMessage.trim() || sending || !assistant) return;
@@ -292,6 +309,15 @@ export default function Dashboard() {
           </div>
 
           <div className="chat-footer">
+            {messages.length > 0 && (
+              <button
+                onClick={handleDeleteChat}
+                className="btn-delete-chat"
+                title="Chat-Verlauf löschen"
+              >
+                <Trash2 size={18} />
+              </button>
+            )}
             <form onSubmit={handleSendMessage} className="chat-input">
               <input
                 type="text"

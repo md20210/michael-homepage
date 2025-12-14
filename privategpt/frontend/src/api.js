@@ -54,6 +54,7 @@ export const chatAPI = {
   getMessages: (assistantId) => api.get(`/assistants/${assistantId}/messages`),
   sendMessage: (assistantId, content) =>
     api.post(`/assistants/${assistantId}/chat`, { content }),
+  deleteMessages: (assistantId) => api.delete(`/assistants/${assistantId}/messages`),
 };
 
 // User API

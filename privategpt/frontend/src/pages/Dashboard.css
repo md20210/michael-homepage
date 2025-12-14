@@ -361,11 +361,34 @@
   background: var(--bg-light);
   border-top: 1px solid var(--border);
   padding: 1.25rem 1.5rem;
+  display: flex;
+  gap: 0.75rem;
+}
+
+.btn-delete-chat {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.btn-delete-chat:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: #ef4444;
+  color: #ef4444;
 }
 
 .chat-input {
   display: flex;
   gap: 0.75rem;
+  flex: 1;
 }
 .chat-input input {
   flex: 1;

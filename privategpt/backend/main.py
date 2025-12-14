@@ -627,6 +627,48 @@ async def chat(
     return MessageResponse(**response_dict)
 
 
+@app.delete("/assistants/{assistant_id}/messages")
+async def delete_chat_history(
+    assistant_id: int,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Delete all messages for an assistant (keep documents)"""
+    print(f"\n🗑️  [DELETE CHAT] User {current_user.email} deleting chat for assistant {assistant_id}")
+
+    # Verify ownership
+    result = await db.execute(
+        select(Assistant).where(
+            Assistant.id == assistant_id,
+            Assistant.user_id == current_user.id
+        )
+    )
+    assistant = result.scalar_one_or_none()
+
+    if not assistant:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Assistant not found"
+        )
+
+    # Delete all messages for this assistant
+    result = await db.execute(
+        select(Message).where(Message.assistant_id == assistant_id)
+    )
+    messages = result.scalars().all()
+    message_count = len(messages)
+
+    print(f"   📊 [DELETE CHAT] Found {message_count} messages to delete")
+
+    for message in messages:
+        await db.delete(message)
+
+    await db.commit()
+
+    print(f"✅ [DELETE CHAT] Deleted {message_count} messages\n")
+    return {"message": f"{message_count} messages deleted", "count": message_count}
+
+
 # Data deletion endpoint
 @app.delete("/users/me")
 async def delete_my_data(
