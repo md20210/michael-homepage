@@ -253,8 +253,17 @@ export default function Dashboard() {
                   <div className="message-avatar">{msg.role === 'user' ? 'Du' : 'AI'}</div>
                   <div className="message-content">
                     <div className="message-text">{msg.content}</div>
-                    <div className="message-time">
-                      {new Date(msg.created_at).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })}
+                    <div className="message-footer">
+                      {msg.role === 'assistant' && msg.source_type && (
+                        <div className={`source-badge source-${msg.source_type}`}>
+                          {msg.source_type === 'llm_only' && '🤖 Direkt vom LLM'}
+                          {msg.source_type === 'rag' && `📄 ${msg.source_details || 'Aus Dokumenten'}`}
+                          {msg.source_type === 'hybrid' && `🌐 ${msg.source_details || 'Web-Suche + Dokumente'}`}
+                        </div>
+                      )}
+                      <div className="message-time">
+                        {new Date(msg.created_at).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })}
+                      </div>
                     </div>
                   </div>
                 </div>

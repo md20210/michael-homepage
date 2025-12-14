@@ -76,6 +76,8 @@ class MessageResponse(BaseModel):
     role: str
     content: str
     created_at: datetime
+    source_type: str | None = None  # "llm_only", "rag", "hybrid"
+    source_details: str | None = None  # e.g., "2 documents", "Web + Documents"
 
 
 # Admin Models
@@ -477,7 +479,47 @@ async def get_messages(
         .order_by(Message.created_at)
     )
     messages = result.scalars().all()
-    return messages
+
+    # Convert to MessageResponse with source_type (for old messages without metadata)
+    responses = []
+    for msg in messages:
+        # User messages don't have source_type
+        if msg.role == "user":
+            responses.append(MessageResponse(
+                id=msg.id,
+                role=msg.role,
+                content=msg.content,
+                created_at=msg.created_at,
+                source_type=None,
+                source_details=None
+            ))
+        else:
+            # Parse old "📚 Quellen:" format if present
+            source_type = None
+            source_details = None
+
+            if "📚 Quellen:" in msg.content:
+                # Old format - parse it
+                if "Web-Suche" in msg.content and "Dokument" in msg.content:
+                    source_type = "hybrid"
+                elif "Web-Suche" in msg.content:
+                    source_type = "hybrid"
+                elif "Dokument" in msg.content:
+                    source_type = "rag"
+            else:
+                # No source info = likely llm_only
+                source_type = "llm_only"
+
+            responses.append(MessageResponse(
+                id=msg.id,
+                role=msg.role,
+                content=msg.content,
+                created_at=msg.created_at,
+                source_type=source_type,
+                source_details=source_details
+            ))
+
+    return responses
 
 
 @app.post("/assistants/{assistant_id}/chat", response_model=MessageResponse)
@@ -537,21 +579,28 @@ async def chat(
         )
         ai_response = rag_result["answer"]
 
-        # Add source info if context was used
-        sources_info = []
-        if rag_result["context_used"] and rag_result["sources"]:
-            sources_info.append(f"{len(rag_result['sources'])} Dokument-Abschnitte")
+        # Determine source type for response metadata
+        source_type = None
+        source_details = None
 
-        # Add web search info if used
         if rag_result.get("web_search_used", False):
-            sources_info.append("Web-Suche (SearxNG)")
-
-        if sources_info:
-            ai_response += f"\n\n📚 Quellen: {', '.join(sources_info)}"
+            source_type = "hybrid"
+            if rag_result["context_used"]:
+                source_details = f"Web-Suche + {len(rag_result['sources'])} Dokument(e)"
+            else:
+                source_details = "Web-Suche"
+        elif rag_result["context_used"]:
+            source_type = "rag"
+            source_details = f"{len(rag_result['sources'])} Dokument(e)"
+        else:
+            source_type = "llm_only"
+            source_details = "Direkt vom LLM"
 
     except Exception as e:
         print(f"RAG error: {e}")
         ai_response = f"Entschuldigung, es gab einen Fehler bei der Verarbeitung deiner Anfrage: {str(e)}"
+        source_type = "error"
+        source_details = None
 
     # Save AI message
     ai_message = Message(
@@ -563,7 +612,17 @@ async def chat(
     await db.commit()
     await db.refresh(ai_message)
 
-    return ai_message
+    # Add source metadata to response (not stored in DB)
+    response_dict = {
+        "id": ai_message.id,
+        "role": ai_message.role,
+        "content": ai_message.content,
+        "created_at": ai_message.created_at,
+        "source_type": source_type,
+        "source_details": source_details
+    }
+
+    return MessageResponse(**response_dict)
 
 
 # Data deletion endpoint
