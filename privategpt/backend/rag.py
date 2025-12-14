@@ -32,7 +32,7 @@ import httpx
 
 from config import get_settings
 from web_search import searxng_client, AnswerQualityDetector
-from llm_models import get_model_path, DEFAULT_MODEL
+from llm_models import get_model_path, DEFAULT_MODEL, get_model
 
 settings = get_settings()
 
@@ -109,6 +109,36 @@ def get_current_model_id() -> str:
     """Get current model ID"""
     global _current_model_id
     return _current_model_id
+
+
+def get_model_info_for_prompt() -> str:
+    """Generate dynamic model information for system prompt"""
+    global _current_model_id
+
+    try:
+        model = get_model(_current_model_id)
+
+        # Build model description
+        model_info = f"""Du bist ein KI-Assistent basierend auf dem Modell **{model.name}** ({model.params} Parameter).
+
+Deine Fähigkeiten:
+- Deutschsprachige Konversation und Textverarbeitung
+- Dokumenten-Analyse und Informationsextraktion
+- Web-Suche für aktuelle Informationen
+- Logisches Denken und Reasoning
+- Faktenbasierte Antworten
+
+Technische Details:
+- Modell: {model.name}
+- Parameter: {model.params}
+- Qualitätsstufe: {model.quality}
+- Optimiert für: {model.description}"""
+
+        return model_info
+    except Exception as e:
+        print(f"⚠️ [PROMPT] Error getting model info: {e}")
+        # Fallback wenn Model-Info nicht verfügbar
+        return "Du bist ein deutschsprachiger KI-Assistent."
 
 
 class DocumentProcessor:
@@ -328,9 +358,10 @@ class RAGEngine:
         if llm is not None:
             # Create prompt (Qwen2.5 ChatML Format) - Optimized for better German
             source_type = "Dokumenten und Web-Suchergebnissen" if is_hybrid else "bereitgestellten Dokumenten"
+            model_info = get_model_info_for_prompt()
 
             prompt = f"""<|im_start|>system
-Du bist ein professioneller deutschsprachiger Assistent.
+{model_info}
 
 WICHTIGE REGELN:
 1. Beantworte AUSSCHLIESSLICH auf Deutsch
@@ -409,8 +440,11 @@ ANTWORT:"""
         # Try llama-cpp-python first
         llm = get_llm()
         if llm is not None:
+            model_info = get_model_info_for_prompt()
+
             prompt = f"""<|im_start|>system
-Du bist ein professioneller deutschsprachiger Assistent.
+{model_info}
+
 Beantworte AUSSCHLIESSLICH auf Deutsch in vollständigen, korrekten Sätzen.
 Sei präzise, sachlich und professionell.<|im_end|>
 <|im_start|>user
