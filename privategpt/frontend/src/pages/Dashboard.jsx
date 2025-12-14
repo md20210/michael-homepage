@@ -234,8 +234,18 @@ export default function Dashboard() {
             {messages.length === 0 ? (
               <div className="empty-chat">
                 <AILogo size="large" />
-                <h2>Willkommen bei PrivateGxT!</h2>
-                <p>Lade PDFs hoch und stelle mir Fragen dazu – 100% privat & DSGVO-konform</p>
+                <h2>Hallo! Ich bin Dein persönlicher DSGVO-konformer ChatBot.</h2>
+                <div className="welcome-features">
+                  <p className="welcome-intro">Ich kann:</p>
+                  <ul className="features-list">
+                    <li>📄 Deine Dokumente analysieren</li>
+                    <li>🔍 Im Internet recherchieren (ohne Deine Daten preiszugeben)</li>
+                    <li>💬 Fragen basierend auf hochgeladenen PDFs beantworten</li>
+                  </ul>
+                  <p className="privacy-note">
+                    🔒 Deine Daten bleiben privat und werden nicht an Dritte weitergegeben.
+                  </p>
+                </div>
               </div>
             ) : (
               messages.map(msg => (
