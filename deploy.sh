@@ -328,9 +328,9 @@ deploy_to_github() {
         return 0
     fi
 
-    # Check for changes
-    if git diff-index --quiet HEAD --; then
-        info "No changes to commit"
+    # Check for changes (unstaged OR staged)
+    if git diff-index --quiet HEAD -- && git diff --staged --quiet; then
+        info "No changes to commit (nothing staged or unstaged)"
         return 0
     fi
 
