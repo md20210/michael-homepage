@@ -248,6 +248,17 @@ class AnswerQualityDetector:
         "gegenwärtig",
         "neueste",
         "latest",
+        "gestern",
+        "vorgestern",
+        "letzte woche",
+        "letzten monat",
+        "letztes jahr",
+        "letzte",
+        "letzten",
+        "last week",
+        "last month",
+        "yesterday",
+        "recent",
         "2024",
         "2025"
     ]
@@ -288,17 +299,18 @@ class AnswerQualityDetector:
 
         # Entscheidungslogik
         if uncertainty_detected:
-            print(f"🔍 [QUALITY] Uncertainty detected in answer")
+            print(f"🔍 [QUALITY] Uncertainty detected in answer → Web-Search triggered")
             return True
 
-        if temporal_query and (no_context or too_short):
-            print(f"🔍 [QUALITY] Temporal query without sufficient local context")
+        if temporal_query:
+            print(f"🔍 [QUALITY] Temporal query detected → Web-Search triggered")
             return True
 
         if no_context and too_short:
-            print(f"🔍 [QUALITY] No documents and short answer")
+            print(f"🔍 [QUALITY] No documents and short answer → Web-Search triggered")
             return True
 
+        print(f"🔍 [QUALITY] No Web-Search needed (has_docs={has_documents}, len={len(answer)})")
         return False
 
     @staticmethod
