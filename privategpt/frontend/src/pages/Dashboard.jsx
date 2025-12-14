@@ -1,7 +1,7 @@
 // src/pages/Dashboard.jsx
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Upload, Send, Trash2, FileText, LogOut, Sparkles, X, Settings } from 'lucide-react';
+import { Upload, Send, Trash2, FileText, LogOut, Sparkles, X, Settings, Loader2 } from 'lucide-react';
 import { assistantAPI, documentAPI, chatAPI, userAPI, adminAPI } from '../api';
 import AILogo from '../components/AILogo';
 import AdminPanel from '../components/AdminPanel';
@@ -15,6 +15,7 @@ export default function Dashboard() {
   const [inputMessage, setInputMessage] = useState('');
   const [uploading, setUploading] = useState(false);
   const [sending, setSending] = useState(false);
+  const [deleting, setDeleting] = useState(null); // Track which document is being deleted
   const [isAdmin, setIsAdmin] = useState(false);
   const [showAdminPanel, setShowAdminPanel] = useState(false);
   const messagesEndRef = useRef(null);
@@ -92,11 +93,15 @@ export default function Dashboard() {
 
   const handleDeleteDocument = async (documentId, filename) => {
     if (!confirm(`Dokument "${filename}" wirklich löschen?`)) return;
+
+    setDeleting(documentId); // Show loading state for this document
     try {
       await documentAPI.delete(assistant.id, documentId);
       await loadDocuments();
     } catch (err) {
       alert(err.response?.data?.detail || 'Löschen fehlgeschlagen');
+    } finally {
+      setDeleting(null); // Clear loading state
     }
   };
 
@@ -201,8 +206,13 @@ export default function Dashboard() {
                       onClick={() => handleDeleteDocument(doc.id, doc.filename)}
                       className="btn-delete-doc"
                       title="Dokument löschen"
+                      disabled={deleting === doc.id}
                     >
-                      <X size={16} />
+                      {deleting === doc.id ? (
+                        <Loader2 size={16} className="spinner" />
+                      ) : (
+                        <X size={16} />
+                      )}
                     </button>
                   </div>
                 ))

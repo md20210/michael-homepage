@@ -388,6 +388,8 @@ async def delete_document(
     db: AsyncSession = Depends(get_db)
 ):
     """Delete a single document"""
+    print(f"\n🗑️  [DELETE] Starting document deletion: doc_id={document_id}, user={current_user.email}")
+
     # Verify assistant ownership
     result = await db.execute(
         select(Assistant).where(
@@ -419,21 +421,29 @@ async def delete_document(
         )
 
     # Delete file from filesystem
+    print(f"   📁 [DELETE] Deleting file: {document.file_path}")
     if os.path.exists(document.file_path):
         os.remove(document.file_path)
+        print(f"   ✅ [DELETE] File deleted from filesystem")
+    else:
+        print(f"   ⚠️  [DELETE] File not found on filesystem (already deleted?)")
 
     # Delete ChromaDB collection
+    print(f"   🗄️  [DELETE] Deleting ChromaDB collection: doc_{document.id}")
     try:
         collection_name = f"doc_{document.id}"
         chroma_client.delete_collection(collection_name)
-        print(f"Deleted ChromaDB collection: {collection_name}")
+        print(f"   ✅ [DELETE] ChromaDB collection deleted: {collection_name}")
     except Exception as e:
-        print(f"Error deleting ChromaDB collection: {e}")
+        print(f"   ⚠️  [DELETE] Error deleting ChromaDB collection: {e}")
 
     # Delete from database
+    print(f"   🗃️  [DELETE] Deleting from PostgreSQL database...")
     await db.delete(document)
     await db.commit()
+    print(f"   ✅ [DELETE] Database record deleted")
 
+    print(f"✅ [DELETE] Document '{document.filename}' deleted successfully\n")
     return {"message": "Document deleted successfully"}
 
 
