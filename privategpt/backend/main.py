@@ -9,6 +9,7 @@ from typing import List, Optional
 from datetime import datetime
 import os
 import shutil
+import traceback
 
 from config import get_settings
 from database import get_db, init_db, User, Assistant, Document, Message, SystemSettings
@@ -676,12 +677,26 @@ async def set_llm_model(
             )
 
     # Save to database
-    await set_current_llm_model(db, request.model_id, current_user.email)
+    try:
+        await set_current_llm_model(db, request.model_id, current_user.email)
+    except Exception as e:
+        print(f"❌ [ADMIN] Error saving model to database: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Fehler beim Speichern in Datenbank: {str(e)}"
+        )
 
     # Reload LLM in memory
-    reload_llm(request.model_id)
-
-    print(f"🔄 [ADMIN] LLM Model switched to: {model.name} by {current_user.email}")
+    try:
+        reload_llm(request.model_id)
+        print(f"🔄 [ADMIN] LLM Model switched to: {model.name} by {current_user.email}")
+    except Exception as e:
+        print(f"❌ [ADMIN] Error reloading LLM: {e}")
+        print(f"Traceback: {traceback.format_exc()}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Fehler beim Laden des Modells: {str(e)}"
+        )
 
     return {
         "message": f"LLM Model erfolgreich gewechselt zu: {model.name}",

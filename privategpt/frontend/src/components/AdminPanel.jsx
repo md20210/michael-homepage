@@ -53,7 +53,8 @@ function AdminPanel({ onClose }) {
       setTimeout(() => setSuccess(''), 3000);
     } catch (err) {
       console.error('Error switching model:', err);
-      setError('Fehler beim Wechseln des Modells');
+      const errorMessage = err.response?.data?.detail || err.message || 'Fehler beim Wechseln des Modells';
+      setError(`Fehler: ${errorMessage}`);
     } finally {
       setSwitching(false);
     }
