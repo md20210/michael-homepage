@@ -644,12 +644,14 @@ async def set_llm_model(
         )
 
     # Validate model exists
-    model = get_model(request.model_id)
-    if request.model_id not in ["qwen2.5-0.5b", "qwen2.5-3b"]:
+    from llm_models import AVAILABLE_MODELS
+    if request.model_id not in AVAILABLE_MODELS:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Invalid model_id: {request.model_id}"
+            detail=f"Invalid model_id: {request.model_id}. Available models: {list(AVAILABLE_MODELS.keys())}"
         )
+
+    model = get_model(request.model_id)
 
     # Check if model file exists, download if not
     from pathlib import Path
