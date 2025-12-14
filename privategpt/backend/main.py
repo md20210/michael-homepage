@@ -656,7 +656,8 @@ async def set_llm_model(
 
     # Check if model file exists, download if not
     from pathlib import Path
-    model_path = Path("./models") / model.filename
+    from llm_models import get_model_path
+    model_path = Path(get_model_path(request.model_id))
 
     if not model_path.exists():
         print(f"📥 [ADMIN] Model {model.name} not found, downloading...")

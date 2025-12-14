@@ -1,6 +1,7 @@
 """LLM Model Registry - Verfügbare Modelle für Admin-Panel"""
 from typing import Dict, List
 from dataclasses import dataclass
+from pathlib import Path
 
 
 @dataclass
@@ -89,4 +90,9 @@ def get_all_models() -> List[Dict]:
 def get_model_path(model_id: str) -> str:
     """Get full path to model file"""
     model = get_model(model_id)
-    return f"./models/{model.filename}"
+
+    # Use Railway Volume path if available, otherwise local path
+    if Path("/app/models").exists():
+        return f"/app/models/{model.filename}"
+    else:
+        return f"./models/{model.filename}"

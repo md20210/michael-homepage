@@ -5,12 +5,20 @@ from pathlib import Path
 from llm_models import AVAILABLE_MODELS
 
 
-MODEL_DIR = Path("./models")
+# Use Railway Volume path if available, otherwise local path
+if Path("/app/models").exists():
+    MODEL_DIR = Path("/app/models")
+else:
+    MODEL_DIR = Path("./models")
 
 
 def download_model(model_id: str):
     """Download a specific model if not exists"""
     model = AVAILABLE_MODELS[model_id]
+
+    # Ensure model directory exists
+    MODEL_DIR.mkdir(parents=True, exist_ok=True)
+
     model_path = MODEL_DIR / model.filename
 
     if model_path.exists():
