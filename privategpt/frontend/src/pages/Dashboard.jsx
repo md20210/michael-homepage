@@ -1,14 +1,19 @@
 // src/pages/Dashboard.jsx
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Upload, Send, Trash2, FileText, LogOut, Sparkles, X, Settings, Loader2 } from 'lucide-react';
 import { assistantAPI, documentAPI, chatAPI, userAPI, adminAPI } from '../api';
 import AILogo from '../components/AILogo';
 import AdminPanel from '../components/AdminPanel';
+import LanguageSwitcher from '../components/LanguageSwitcher';
+import DarkModeToggle from '../components/DarkModeToggle';
+import ChatExport from '../components/ChatExport';
 import './Dashboard.css';
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [assistant, setAssistant] = useState(null);
   const [documents, setDocuments] = useState([]);
   const [messages, setMessages] = useState([]);
@@ -92,9 +97,9 @@ export default function Dashboard() {
     try {
       await documentAPI.upload(assistant.id, file);
       await loadDocuments();
-      addToast('PDF erfolgreich hochgeladen & verarbeitet!', 'success');
+      addToast(t('toast.uploadSuccess'), 'success');
     } catch (err) {
-      addToast(err.response?.data?.detail || 'Upload fehlgeschlagen', 'error');
+      addToast(err.response?.data?.detail || t('toast.uploadError'), 'error');
     } finally {
       setUploading(false);
       e.target.value = '';
@@ -102,15 +107,15 @@ export default function Dashboard() {
   };
 
   const handleDeleteDocument = async (documentId, filename) => {
-    if (!confirm(`Dokument "${filename}" wirklich löschen?`)) return;
+    if (!confirm(t('documents.confirmDelete', { filename }))) return;
 
     setDeleting(documentId); // Show loading state for this document
     try {
       await documentAPI.delete(assistant.id, documentId);
       await loadDocuments();
-      addToast('Dokument erfolgreich gelöscht', 'success');
+      addToast(t('toast.deleteSuccess'), 'success');
     } catch (err) {
-      addToast(err.response?.data?.detail || 'Löschen fehlgeschlagen', 'error');
+      addToast(err.response?.data?.detail || t('toast.deleteError'), 'error');
     } finally {
       setDeleting(null); // Clear loading state
     }
@@ -118,18 +123,18 @@ export default function Dashboard() {
 
   const handleDeleteChat = async () => {
     if (messages.length === 0) {
-      addToast('Keine Nachrichten zum Löschen', 'info');
+      addToast(t('toast.noMessages'), 'info');
       return;
     }
 
-    if (!confirm('Chat-Verlauf wirklich löschen? (Dokumente bleiben erhalten)')) return;
+    if (!confirm(t('chat.confirmDeleteChat'))) return;
 
     try {
       await chatAPI.deleteMessages(assistant.id);
       setMessages([]);
-      addToast('Chat-Verlauf gelöscht', 'success');
+      addToast(t('toast.chatDeleted'), 'success');
     } catch (err) {
-      addToast(err.response?.data?.detail || 'Löschen fehlgeschlagen', 'error');
+      addToast(err.response?.data?.detail || t('toast.deleteError'), 'error');
     }
   };
 
@@ -154,7 +159,7 @@ export default function Dashboard() {
       await chatAPI.sendMessage(assistant.id, text);
       await loadMessages(); // Lädt alle Nachrichten inkl. AI-Antwort
     } catch (err) {
-      addToast(err.response?.data?.detail || 'Nachricht konnte nicht gesendet werden', 'error');
+      addToast(err.response?.data?.detail || t('toast.sendError'), 'error');
       // Bei Fehler die optimistische Nachricht wieder entfernen
       setMessages(prev => prev.filter(m => m.id !== tempUserMessage.id));
     } finally {
@@ -163,7 +168,7 @@ export default function Dashboard() {
   };
 
   const handleDeleteAll = async () => {
-    if (!confirm('Wirklich ALLE Daten löschen? (inkl. Dokumente & Chats)')) return;
+    if (!confirm(t('documents.confirmDeleteAll'))) return;
     await userAPI.deleteMyData();
     localStorage.removeItem('token');
     window.location.href = 'https://www.dabrock.eu/#kapitel-7-7';
@@ -176,7 +181,7 @@ export default function Dashboard() {
   };
 
   if (!assistant) {
-    return <div className="loading-screen"><div className="spinner"></div><p>Lade PrivateGxT...</p></div>;
+    return <div className="loading-screen"><div className="spinner"></div><p>{t('common.loading')}</p></div>;
   }
 
   return (
@@ -188,16 +193,18 @@ export default function Dashboard() {
           <h1>PrivateGxT</h1>
         </div>
         <div className="header-actions">
+          <LanguageSwitcher />
+          <DarkModeToggle />
           {isAdmin && (
             <button
               onClick={() => setShowAdminPanel(true)}
               className="btn-icon"
-              title="Admin Panel"
+              title={t('header.admin')}
             >
               <Settings size={22} />
             </button>
           )}
-          <button onClick={handleLogout} className="btn-icon" title="Abmelden">
+          <button onClick={handleLogout} className="btn-icon" title={t('header.logout')}>
             <LogOut size={22} />
           </button>
         </div>
@@ -208,10 +215,10 @@ export default function Dashboard() {
         {/* LINKE SEITE: Dokumente */}
         <div className="documents-panel">
           <section className="documents-section">
-            <h3>Dokumente ({documents.length})</h3>
+            <h3>{t('documents.title')} ({documents.length})</h3>
             <label className="upload-btn">
               <Upload size={18} />
-              {uploading ? 'Lädt hoch...' : 'PDF hochladen'}
+              {uploading ? t('documents.uploading') : t('documents.upload')}
               <input type="file" accept=".pdf" onChange={handleFileUpload} hidden disabled={uploading} />
             </label>
           </section>
@@ -219,7 +226,7 @@ export default function Dashboard() {
           <div className="documents-container">
             <div className="documents-list">
               {documents.length === 0 ? (
-                <div className="empty-state">Noch keine PDFs hochgeladen</div>
+                <div className="empty-state">{t('documents.empty')}</div>
               ) : (
                 documents.map(doc => (
                   <div key={doc.id} className="document-item">
@@ -233,7 +240,7 @@ export default function Dashboard() {
                     <button
                       onClick={() => handleDeleteDocument(doc.id, doc.filename)}
                       className="btn-delete-doc"
-                      title="Dokument löschen"
+                      title={t('common.delete')}
                       disabled={deleting === doc.id}
                     >
                       {deleting === doc.id ? (
@@ -251,7 +258,7 @@ export default function Dashboard() {
           <div className="documents-footer">
             <button onClick={handleDeleteAll} className="btn-danger">
               <Trash2 size={18} />
-              Alle Daten löschen
+              {t('documents.deleteAll')}
             </button>
           </div>
         </div>
@@ -262,31 +269,31 @@ export default function Dashboard() {
             {messages.length === 0 ? (
               <div className="empty-chat">
                 <AILogo size="large" />
-                <h2>Hallo! Ich bin Dein persönlicher DSGVO-konformer ChatBot.</h2>
+                <h2>{t('chat.welcome.title')}</h2>
                 <div className="welcome-features">
-                  <p className="welcome-intro">Ich kann:</p>
+                  <p className="welcome-intro">{t('chat.welcome.intro')}</p>
                   <ul className="features-list">
-                    <li>📄 Deine Dokumente analysieren</li>
-                    <li>🔍 Im Internet recherchieren (ohne Deine Daten preiszugeben)</li>
-                    <li>💬 Fragen basierend auf hochgeladenen PDFs beantworten</li>
+                    <li>📄 {t('chat.welcome.feature1')}</li>
+                    <li>🔍 {t('chat.welcome.feature2')}</li>
+                    <li>💬 {t('chat.welcome.feature3')}</li>
                   </ul>
                   <p className="privacy-note">
-                    🔒 Deine Daten bleiben privat und werden nicht an Dritte weitergegeben.
+                    🔒 {t('chat.welcome.privacy')}
                   </p>
                 </div>
               </div>
             ) : (
               messages.map(msg => (
                 <div key={msg.id} className={`message ${msg.role}`}>
-                  <div className="message-avatar">{msg.role === 'user' ? 'Du' : 'AI'}</div>
+                  <div className="message-avatar">{msg.role === 'user' ? t('chat.you', 'Du') : 'AI'}</div>
                   <div className="message-content">
                     <div className="message-text">{msg.content}</div>
                     <div className="message-footer">
                       {msg.role === 'assistant' && msg.source_type && (
                         <div className={`source-badge source-${msg.source_type}`}>
-                          {msg.source_type === 'llm_only' && '🤖 Direkt vom LLM'}
-                          {msg.source_type === 'rag' && `📄 ${msg.source_details || 'Aus Dokumenten'}`}
-                          {msg.source_type === 'hybrid' && `🌐 ${msg.source_details || 'Web-Suche + Dokumente'}`}
+                          {msg.source_type === 'llm_only' && `🤖 ${t('chat.sources.llmOnly')}`}
+                          {msg.source_type === 'rag' && `📄 ${msg.source_details || t('chat.sources.rag', { count: 1 })}`}
+                          {msg.source_type === 'hybrid' && `🌐 ${msg.source_details || t('chat.sources.hybrid', { count: 1 })}`}
                         </div>
                       )}
                       <div className="message-time">
@@ -310,18 +317,21 @@ export default function Dashboard() {
 
           <div className="chat-footer">
             {messages.length > 0 && (
-              <button
-                onClick={handleDeleteChat}
-                className="btn-delete-chat"
-                title="Chat-Verlauf löschen"
-              >
-                <Trash2 size={18} />
-              </button>
+              <>
+                <ChatExport messages={messages} />
+                <button
+                  onClick={handleDeleteChat}
+                  className="btn-delete-chat"
+                  title={t('chat.deleteChat')}
+                >
+                  <Trash2 size={18} />
+                </button>
+              </>
             )}
             <form onSubmit={handleSendMessage} className="chat-input">
               <input
                 type="text"
-                placeholder="Nachricht an PrivateGxT..."
+                placeholder={t('chat.placeholder')}
                 value={inputMessage}
                 onChange={e => setInputMessage(e.target.value)}
                 disabled={sending}

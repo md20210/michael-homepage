@@ -1,8 +1,12 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Mail, Sparkles } from 'lucide-react';
 import { authAPI } from '../api';
+import LanguageSwitcher from '../components/LanguageSwitcher';
+import DarkModeToggle from '../components/DarkModeToggle';
 
 function Login({ setIsAuthenticated }) {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
@@ -17,7 +21,7 @@ function Login({ setIsAuthenticated }) {
       await authAPI.requestMagicLink(email);
       setSent(true);
     } catch (err) {
-      setError(err.response?.data?.detail || 'Fehler beim Senden des Links');
+      setError(err.response?.data?.detail || t('login.error', 'Fehler beim Senden des Links'));
     } finally {
       setLoading(false);
     }
@@ -26,10 +30,15 @@ function Login({ setIsAuthenticated }) {
   return (
     <div className="login-page">
       <div className="login-container">
+        <div style={{ position: 'absolute', top: '1rem', right: '1rem', display: 'flex', gap: '0.5rem' }}>
+          <LanguageSwitcher />
+          <DarkModeToggle />
+        </div>
+
         <div className="logo">
           <Sparkles size={48} />
-          <h1>Dabrock PrivateGxT</h1>
-          <p>DSGVO-konforme KI mit deinen Dokumenten</p>
+          <h1>{t('login.title')}</h1>
+          <p>{t('login.subtitle')}</p>
         </div>
 
         {!sent ? (
@@ -38,7 +47,7 @@ function Login({ setIsAuthenticated }) {
               <Mail size={20} />
               <input
                 type="email"
-                placeholder="deine@email.de"
+                placeholder={t('login.emailPlaceholder')}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -48,26 +57,24 @@ function Login({ setIsAuthenticated }) {
             {error && <div className="error">{error}</div>}
 
             <button type="submit" disabled={loading} className="btn-primary">
-              {loading ? 'Wird gesendet...' : '🔐 Login-Link senden'}
+              {loading ? t('login.sending', 'Wird gesendet...') : `🔐 ${t('login.sendLink')}`}
             </button>
 
             <p className="info">
               <small>
-                Du erhältst einen einmaligen Login-Link per E-Mail.
-                <br />
-                Kein Passwort erforderlich!
+                {t('login.info')}
               </small>
             </p>
           </form>
         ) : (
           <div className="success-message">
-            <h2>📧 E-Mail versendet!</h2>
-            <p>Prüfe dein Postfach: <strong>{email}</strong></p>
-            <p>Klicke auf den Link in der E-Mail, um dich anzumelden.</p>
-            <p className="small">Der Link ist 15 Minuten gültig.</p>
+            <h2>📧 {t('login.checkEmail')}</h2>
+            <p>{t('login.linkSent', { email })}</p>
+            <p>{t('login.clickLink', 'Klicke auf den Link in der E-Mail, um dich anzumelden.')}</p>
+            <p className="small">{t('login.linkValid', 'Der Link ist 15 Minuten gültig.')}</p>
 
             <button onClick={() => setSent(false)} className="btn-secondary">
-              Neue E-Mail senden
+              {t('login.backToLogin')}
             </button>
           </div>
         )}

@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { adminAPI } from '../api';
 import './AdminPanel.css';
 
 function AdminPanel({ onClose }) {
+  const { t } = useTranslation();
   const [models, setModels] = useState([]);
   const [currentModel, setCurrentModel] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -29,7 +31,7 @@ function AdminPanel({ onClose }) {
       setCurrentModel(currentRes.data);
     } catch (err) {
       console.error('Error loading admin data:', err);
-      setError('Fehler beim Laden der Admin-Daten');
+      setError(t('admin.errors.loadFailed', 'Fehler beim Laden der Admin-Daten'));
     } finally {
       setLoading(false);
     }
@@ -53,8 +55,8 @@ function AdminPanel({ onClose }) {
       setTimeout(() => setSuccess(''), 3000);
     } catch (err) {
       console.error('Error switching model:', err);
-      const errorMessage = err.response?.data?.detail || err.message || 'Fehler beim Wechseln des Modells';
-      setError(`Fehler: ${errorMessage}`);
+      const errorMessage = err.response?.data?.detail || err.message || t('admin.errors.switchFailed', 'Fehler beim Wechseln des Modells');
+      setError(`${t('common.error')}: ${errorMessage}`);
     } finally {
       setSwitching(false);
     }
@@ -70,18 +72,18 @@ function AdminPanel({ onClose }) {
     <div className="admin-modal-overlay" onClick={handleClose}>
       <div className="admin-modal">
         <div className="admin-modal-header">
-          <h2>⚙️ Admin Panel</h2>
-          <button className="admin-close-btn" onClick={onClose}>✕</button>
+          <h2>⚙️ {t('admin.title')}</h2>
+          <button className="admin-close-btn" onClick={onClose} aria-label={t('admin.close')}>✕</button>
         </div>
 
         <div className="admin-modal-body">
           {loading ? (
-            <div className="admin-loading">Laden...</div>
+            <div className="admin-loading">{t('common.loading')}</div>
           ) : (
             <>
               {/* Current Model Info */}
               <div className="admin-current-model">
-                <h3>Aktuelles Modell</h3>
+                <h3>{t('admin.currentModel')}</h3>
                 {currentModel && (
                   <div className="current-model-info">
                     <div className="model-name">{currentModel.model_name}</div>
@@ -90,7 +92,7 @@ function AdminPanel({ onClose }) {
                       <span>💾 {currentModel.model_info.size_gb} GB</span>
                       <span>🔢 {currentModel.model_info.params}</span>
                       <span className={`quality quality-${currentModel.model_info.quality.toLowerCase()}`}>
-                        {currentModel.model_info.quality}
+                        {t(`admin.quality.${currentModel.model_info.quality.toLowerCase()}`, currentModel.model_info.quality)}
                       </span>
                     </div>
                   </div>
@@ -99,7 +101,7 @@ function AdminPanel({ onClose }) {
 
               {/* Model Selection */}
               <div className="admin-model-selection">
-                <h3>Verfügbare Modelle</h3>
+                <h3>{t('admin.models')}</h3>
                 <div className="model-list">
                   {models.map((model) => (
                     <div
@@ -109,7 +111,7 @@ function AdminPanel({ onClose }) {
                       <div className="model-card-header">
                         <h4>{model.name}</h4>
                         <span className={`quality quality-${model.quality.toLowerCase()}`}>
-                          {model.quality}
+                          {t(`admin.quality.${model.quality.toLowerCase()}`, model.quality)}
                         </span>
                       </div>
                       <div className="model-card-body">
@@ -117,13 +119,13 @@ function AdminPanel({ onClose }) {
                         <div className="model-specs">
                           <span>📦 {model.filename}</span>
                           <span>💾 {model.size_gb} GB</span>
-                          <span>🔢 {model.params} Parameter</span>
+                          <span>🔢 {model.params} {t('admin.parameters', 'Parameter')}</span>
                         </div>
                       </div>
                       <div className="model-card-footer">
                         {currentModel?.model_id === model.id ? (
                           <button className="btn-active" disabled>
-                            ✓ Aktiv
+                            ✓ {t('admin.active')}
                           </button>
                         ) : (
                           <button
@@ -131,7 +133,7 @@ function AdminPanel({ onClose }) {
                             onClick={() => handleModelChange(model.id)}
                             disabled={switching}
                           >
-                            {switching ? 'Wechsle...' : 'Auswählen'}
+                            {switching ? t('admin.switching', 'Wechsle...') : t('admin.select')}
                           </button>
                         )}
                       </div>
@@ -149,10 +151,10 @@ function AdminPanel({ onClose }) {
 
         <div className="admin-modal-footer">
           <p className="admin-note">
-            ℹ️ Der Modellwechsel wird beim nächsten Chat-Request aktiv.
+            ℹ️ {t('admin.note')}
           </p>
           <button className="btn-close" onClick={onClose}>
-            Schließen
+            {t('admin.close')}
           </button>
         </div>
       </div>

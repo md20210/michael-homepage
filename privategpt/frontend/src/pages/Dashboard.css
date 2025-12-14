@@ -3,14 +3,29 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background: #0F172A;
-  color: #F1F5F9;
+  background: var(--bg);
+  color: var(--text);
   font-family: system-ui, sans-serif;
   overflow: hidden;
+  transition: background-color 0.3s, color 0.3s;
 }
 
-:root {
+/* Light Mode Variables */
+:root,
+[data-theme="light"] {
   --primary: #4F46E5;
+  --danger: #EF4444;
+  --bg: #F8FAFC;
+  --bg-light: #FFFFFF;
+  --bg-lighter: #E2E8F0;
+  --text: #0F172A;
+  --text-muted: #64748B;
+  --border: #E2E8F0;
+}
+
+/* Dark Mode Variables */
+[data-theme="dark"] {
+  --primary: #6366F1;
   --danger: #EF4444;
   --bg: #0F172A;
   --bg-light: #1E293B;
