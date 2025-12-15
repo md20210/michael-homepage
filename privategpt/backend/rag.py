@@ -67,8 +67,19 @@ def get_llm() -> Llama:
 
         if not os.path.exists(model_path):
             print(f"⚠️ Model not found at {model_path}")
-            print("Falling back to Ollama...")
-            return None
+
+            # Try fallback to qwen2.5-0.5b (smallest model)
+            fallback_model_id = "qwen2.5-0.5b"
+            fallback_path = get_model_path(fallback_model_id)
+
+            if os.path.exists(fallback_path):
+                print(f"🔄 Falling back to {fallback_model_id}...")
+                _current_model_id = fallback_model_id
+                model_path = fallback_path
+            else:
+                print(f"❌ No models available (tried {_current_model_id} and {fallback_model_id})")
+                print("Falling back to Ollama...")
+                return None
 
         print(f"🔄 Loading LLM model: {_current_model_id} from {model_path}...")
         _llm_instance = Llama(

@@ -62,8 +62,8 @@ AVAILABLE_MODELS: Dict[str, LLMModel] = {
 }
 
 
-# Default model - DeepSeek-R1-1.5B (Railway-sicher, beste Balance)
-DEFAULT_MODEL = "deepseek-r1-1.5b"
+# Default model - Qwen2.5-0.5B (kleinste Größe, sollte bereits auf Railway vorhanden sein)
+DEFAULT_MODEL = "qwen2.5-0.5b"
 
 
 def get_model(model_id: str) -> LLMModel:
