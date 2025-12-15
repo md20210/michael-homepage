@@ -35,8 +35,8 @@ lxml>=4.9.0  # XML/HTML Parser
 # Auth & Security
 python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
-pydantic[email]==2.5.3
-pydantic-settings==2.1.0
+pydantic[email]>=2.10.0  # FIXED: Upgraded for LlamaIndex compatibility (requires Secret import)
+pydantic-settings>=2.6.0  # FIXED: Upgraded alongside pydantic
 
 # Email (Magic-Link)
 resend==0.7.0
