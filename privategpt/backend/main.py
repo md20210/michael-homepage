@@ -14,7 +14,8 @@ import traceback
 from config import get_settings
 from database import get_db, init_db, User, Assistant, Document, Message, SystemSettings
 from auth import create_magic_link, verify_magic_link, get_current_user
-from rag import rag_engine, chroma_client, reload_llm
+# from rag import rag_engine, chroma_client, reload_llm  # OLD
+from rag_llamaindex import rag_engine, chroma_client, reload_llm  # NEW: LlamaIndex
 from llm_models import get_all_models, get_model, DEFAULT_MODEL
 from i18n import get_translation, parse_accept_language
 
