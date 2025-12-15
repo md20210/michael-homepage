@@ -753,6 +753,7 @@ async def get_current_model(
 @app.post("/admin/llm/set")
 async def set_llm_model(
     request: SetLLMRequest,
+    request_obj: Request,
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
@@ -781,19 +782,48 @@ async def set_llm_model(
     if not model_path.exists():
         print(f"📥 [ADMIN] Model {model.name} not found, downloading...")
         from download_model import download_model
+        import re
+
+        # Get user language from request
+        accept_language = request_obj.headers.get("accept-language")
+        lang = parse_accept_language(accept_language)
+
         try:
             success = download_model(request.model_id)
             if not success:
+                error_msg = get_translation("error.model_load", lang)
                 raise HTTPException(
                     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    detail=f"Fehler beim Herunterladen des Modells {model.name}"
+                    detail=error_msg
                 )
             print(f"✅ [ADMIN] Model {model.name} downloaded successfully")
+        except HTTPException:
+            raise  # Re-raise HTTPException directly
+        except RuntimeError as e:
+            # Disk space error - parse and translate
+            error_str = str(e)
+
+            # Try to extract GB values from error message
+            match = re.search(r'Benötigt: ([\d.]+) GB, Verfügbar: ([\d.]+) GB', error_str)
+            if match:
+                required = match.group(1)
+                available = match.group(2)
+                error_msg = get_translation("error.insufficient_disk_space", lang, required=required, available=available)
+            else:
+                # Fallback to original error message
+                error_msg = error_str
+
+            print(f"❌ [ADMIN] Disk space error: {error_msg}")
+            raise HTTPException(
+                status_code=status.HTTP_507_INSUFFICIENT_STORAGE,
+                detail=error_msg
+            )
         except Exception as e:
             print(f"❌ [ADMIN] Error downloading model: {e}")
+            error_msg = get_translation("error.processing", lang, error=str(e))
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"Fehler beim Herunterladen: {str(e)}"
+                detail=error_msg
             )
 
     # Save to database

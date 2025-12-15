@@ -1,6 +1,7 @@
 """Download LLM models for Railway deployment"""
 import os
 import urllib.request
+import shutil
 from pathlib import Path
 from llm_models import AVAILABLE_MODELS
 
@@ -25,9 +26,33 @@ def download_model(model_id: str):
         print(f"✅ [OK] {model.name} already exists at {model_path}")
         return True
 
-    print(f"📥 [DOWNLOAD] {model.name} from HuggingFace...")
-    print(f"   Size: ~{model.size_gb:.2f} GB")
-    print(f"   This may take a few minutes...")
+    # Check available disk space
+    try:
+        stat = shutil.disk_usage(MODEL_DIR)
+        available_gb = stat.free / (1024**3)
+        required_gb = model.size_gb + 0.5  # Add 500MB buffer
+
+        print(f"📥 [DOWNLOAD] {model.name} from HuggingFace...")
+        print(f"   Model Size: ~{model.size_gb:.2f} GB")
+        print(f"   Available Space: {available_gb:.2f} GB")
+
+        if available_gb < required_gb:
+            error_msg = (
+                f"Nicht genügend Speicherplatz! "
+                f"Benötigt: {required_gb:.2f} GB, Verfügbar: {available_gb:.2f} GB. "
+                f"Railway Volume ist zu klein. Bitte nutze ein kleineres Modell (z.B. Qwen2.5-3B oder DeepSeek-R1-1.5B) "
+                f"oder erhöhe das Railway Volume auf mindestens {int(required_gb + 1)} GB."
+            )
+            print(f"\n❌ [ERROR] {error_msg}")
+            raise RuntimeError(error_msg)
+
+        print(f"   This may take a few minutes...")
+
+    except RuntimeError:
+        raise  # Re-raise disk space error
+    except Exception as e:
+        print(f"   ⚠️  Could not check disk space: {e}")
+        print(f"   Attempting download anyway...")
 
     def progress(block_num, block_size, total_size):
         downloaded = block_num * block_size

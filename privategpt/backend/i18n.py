@@ -14,6 +14,11 @@ TRANSLATIONS: Dict[str, Dict[str, str]] = {
         "en": "Failed to load model",
         "es": "Error al cargar el modelo",
     },
+    "error.insufficient_disk_space": {
+        "de": "Nicht genügend Speicherplatz! Benötigt: {required} GB, Verfügbar: {available} GB. Railway Volume ist zu klein. Bitte nutze ein kleineres Modell (z.B. Qwen2.5-3B mit 2GB oder DeepSeek-R1-1.5B mit 1.12GB) oder erhöhe das Railway Volume.",
+        "en": "Insufficient disk space! Required: {required} GB, Available: {available} GB. Railway Volume is too small. Please use a smaller model (e.g., Qwen2.5-3B with 2GB or DeepSeek-R1-1.5B with 1.12GB) or increase the Railway Volume.",
+        "es": "¡Espacio en disco insuficiente! Requerido: {required} GB, Disponible: {available} GB. El volumen de Railway es demasiado pequeño. Utiliza un modelo más pequeño (p. ej., Qwen2.5-3B con 2GB o DeepSeek-R1-1.5B con 1.12GB) o aumenta el volumen de Railway.",
+    },
 
     # Source details
     "source.llm_only": {
