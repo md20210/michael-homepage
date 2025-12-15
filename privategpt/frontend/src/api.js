@@ -2,6 +2,7 @@
  * API Client for Dabrock PrivateGPT Backend
  */
 import axios from 'axios';
+import i18n from './i18n';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
@@ -13,12 +14,17 @@ const api = axios.create({
   },
 });
 
-// Add auth token to requests
+// Add auth token and language to requests
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+
+  // Add Accept-Language header based on current i18n language
+  const currentLanguage = i18n.language || 'de';
+  config.headers['Accept-Language'] = currentLanguage;
+
   return config;
 });
 

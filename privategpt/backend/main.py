@@ -1,5 +1,5 @@
 """FastAPI Main Application"""
-from fastapi import FastAPI, Depends, HTTPException, UploadFile, File, status
+from fastapi import FastAPI, Depends, HTTPException, UploadFile, File, status, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -16,6 +16,7 @@ from database import get_db, init_db, User, Assistant, Document, Message, System
 from auth import create_magic_link, verify_magic_link, get_current_user
 from rag import rag_engine, chroma_client, reload_llm
 from llm_models import get_all_models, get_model, DEFAULT_MODEL
+from i18n import get_translation, parse_accept_language
 
 settings = get_settings()
 
@@ -528,10 +529,14 @@ async def get_messages(
 async def chat(
     assistant_id: int,
     message_request: MessageRequest,
+    request: Request,
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
     """Send a message and get AI response"""
+    # Parse language from Accept-Language header
+    accept_language = request.headers.get("Accept-Language", "de")
+    language = parse_accept_language(accept_language)
     # Verify ownership
     result = await db.execute(
         select(Assistant).where(
@@ -588,19 +593,19 @@ async def chat(
         if rag_result.get("web_search_used", False):
             source_type = "hybrid"
             if rag_result["context_used"]:
-                source_details = f"Web-Suche + {len(rag_result['sources'])} Dokument(e)"
+                source_details = get_translation("source.web_and_docs", language, count=len(rag_result['sources']))
             else:
-                source_details = "Web-Suche"
+                source_details = get_translation("source.web_search", language)
         elif rag_result["context_used"]:
             source_type = "rag"
-            source_details = f"{len(rag_result['sources'])} Dokument(e)"
+            source_details = get_translation("source.documents", language, count=len(rag_result['sources']))
         else:
             source_type = "llm_only"
-            source_details = "Direkt vom LLM"
+            source_details = get_translation("source.llm_only", language)
 
     except Exception as e:
         print(f"RAG error: {e}")
-        ai_response = f"Entschuldigung, es gab einen Fehler bei der Verarbeitung deiner Anfrage: {str(e)}"
+        ai_response = get_translation("error.processing", language, error=str(e))
         source_type = "error"
         source_details = None
 
