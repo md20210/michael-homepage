@@ -128,9 +128,9 @@ def download_default_model():
 
 
 def download_railway_safe_models():
-    """Download Railway-safe models (excludes RAM-intensive 7B)"""
+    """Download Railway-safe models (medium-sized, production ready)"""
     print("=" * 70)
-    print("LLM Model Download Script - Railway Safe Models")
+    print("LLM Model Download Script - Railway Safe Models (250 GB)")
     print("=" * 70)
     print()
 
@@ -139,14 +139,23 @@ def download_railway_safe_models():
     MODEL_DIR.mkdir(parents=True, exist_ok=True)
     print()
 
-    # Railway-safe models (alle Modelle sind nun Railway-sicher)
-    safe_models = ["qwen2.5-0.5b", "deepseek-r1-1.5b", "qwen2.5-3b", "qwen3-4b"]
+    # Railway-safe models for 250 GB Volume (excludes 70B Llama)
+    safe_models = [
+        "qwen2.5-0.5b",          # 0.35 GB - Fast fallback
+        "deepseek-r1-1.5b",      # 1.12 GB - Reasoning
+        "qwen2.5-3b",            # 2.0 GB - Good quality
+        "qwen3-4b",              # 2.5 GB - Best default ⭐
+        "deepseek-r1-7b",        # 4.92 GB - Reasoning powerhouse
+        "qwen3-8b",              # 5.03 GB - Excellent quality
+        "deepseek-r1-qwen3-8b",  # 5.03 GB - SOTA reasoning
+        "mistral-7b-instruct",   # 4.37 GB - Allrounder
+    ]
 
     total_size = sum(AVAILABLE_MODELS[mid].size_gb for mid in safe_models)
-    print(f"📦 Downloading {len(safe_models)} Railway-safe models (Total: ~{total_size:.2f} GB):")
+    print(f"📦 Downloading {len(safe_models)} Railway-safe models (Total: ~{total_size:.2f} GB / 250 GB):")
     for model_id in safe_models:
         model = AVAILABLE_MODELS[model_id]
-        default_marker = " ⭐ DEFAULT" if model_id == "deepseek-r1-1.5b" else ""
+        default_marker = " ⭐ DEFAULT" if model_id == "qwen3-4b" else ""
         print(f"   - {model.name} ({model.size_gb:.2f} GB){default_marker}")
     print()
 
@@ -158,6 +167,7 @@ def download_railway_safe_models():
 
     print("=" * 70)
     print(f"✅ Downloaded {success_count}/{len(safe_models)} models successfully")
+    print(f"💾 Disk usage: {total_size:.2f} GB / 250 GB ({(total_size/250)*100:.1f}%)")
     print("=" * 70)
 
     return success_count == len(safe_models)
