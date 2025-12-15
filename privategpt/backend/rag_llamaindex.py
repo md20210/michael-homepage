@@ -72,16 +72,38 @@ def get_llm():
 
         print(f"🔄 [LlamaIndex] Loading LLM: {_current_model_id} from {model_path}...")
 
-        _llm_instance = LlamaCPP(
-            model_path=model_path,
-            temperature=settings.llm_temperature,
-            max_new_tokens=settings.llm_max_tokens,
-            context_window=settings.llm_context_size,
-            model_kwargs={"n_threads": settings.llm_threads},
-            verbose=False
-        )
+        try:
+            _llm_instance = LlamaCPP(
+                model_path=model_path,
+                temperature=settings.llm_temperature,
+                max_new_tokens=settings.llm_max_tokens,
+                context_window=settings.llm_context_size,
+                model_kwargs={"n_threads": settings.llm_threads},
+                verbose=False
+            )
+            print(f"✅ [LlamaIndex] LLM loaded successfully!")
+        except (ValueError, FileNotFoundError, Exception) as e:
+            # If loading fails, try qwen2.5-0.5b as last resort
+            if _current_model_id != "qwen2.5-0.5b":
+                print(f"⚠️ Failed to load {_current_model_id}: {e}")
+                print(f"🔄 Trying emergency fallback to qwen2.5-0.5b...")
+                _current_model_id = "qwen2.5-0.5b"
+                model_path = get_model_path("qwen2.5-0.5b")
 
-        print(f"✅ [LlamaIndex] LLM loaded successfully!")
+                if os.path.exists(model_path):
+                    _llm_instance = LlamaCPP(
+                        model_path=model_path,
+                        temperature=settings.llm_temperature,
+                        max_new_tokens=settings.llm_max_tokens,
+                        context_window=settings.llm_context_size,
+                        model_kwargs={"n_threads": settings.llm_threads},
+                        verbose=False
+                    )
+                    print(f"✅ [LlamaIndex] Emergency fallback successful!")
+                else:
+                    raise FileNotFoundError(f"No models available - please wait for downloads to complete")
+            else:
+                raise
 
     return _llm_instance
 
