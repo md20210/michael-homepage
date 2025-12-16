@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Mail, Sparkles } from 'lucide-react';
+import { Mail, Sparkles, Lock } from 'lucide-react';
 import { authAPI } from '../api';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 import DarkModeToggle from '../components/DarkModeToggle';
@@ -8,8 +8,8 @@ import DarkModeToggle from '../components/DarkModeToggle';
 function Login({ setIsAuthenticated }) {
   const { t } = useTranslation();
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [sent, setSent] = useState(false);
   const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
@@ -18,10 +18,11 @@ function Login({ setIsAuthenticated }) {
     setError('');
 
     try {
-      await authAPI.requestMagicLink(email);
-      setSent(true);
+      const response = await authAPI.login(email, password);
+      localStorage.setItem('token', response.data.access_token);
+      setIsAuthenticated(true);
     } catch (err) {
-      setError(err.response?.data?.detail || t('login.error', 'Fehler beim Senden des Links'));
+      setError(err.response?.data?.detail || t('login.error', 'Falsche E-Mail oder Passwort'));
     } finally {
       setLoading(false);
     }
@@ -41,43 +42,41 @@ function Login({ setIsAuthenticated }) {
           <p>{t('login.subtitle')}</p>
         </div>
 
-        {!sent ? (
-          <form onSubmit={handleSubmit} className="login-form">
-            <div className="input-group">
-              <Mail size={20} />
-              <input
-                type="email"
-                placeholder={t('login.emailPlaceholder')}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-
-            {error && <div className="error">{error}</div>}
-
-            <button type="submit" disabled={loading} className="btn-primary">
-              {loading ? t('login.sending', 'Wird gesendet...') : `🔐 ${t('login.sendLink')}`}
-            </button>
-
-            <p className="info">
-              <small>
-                {t('login.info')}
-              </small>
-            </p>
-          </form>
-        ) : (
-          <div className="success-message">
-            <h2>📧 {t('login.checkEmail')}</h2>
-            <p>{t('login.linkSent', { email })}</p>
-            <p>{t('login.clickLink', 'Klicke auf den Link in der E-Mail, um dich anzumelden.')}</p>
-            <p className="small">{t('login.linkValid', 'Der Link ist 15 Minuten gültig.')}</p>
-
-            <button onClick={() => setSent(false)} className="btn-secondary">
-              {t('login.backToLogin')}
-            </button>
+        <form onSubmit={handleSubmit} className="login-form">
+          <div className="input-group">
+            <Mail size={20} />
+            <input
+              type="email"
+              placeholder={t('login.emailPlaceholder')}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
           </div>
-        )}
+
+          <div className="input-group">
+            <Lock size={20} />
+            <input
+              type="password"
+              placeholder="Passwort"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          {error && <div className="error">{error}</div>}
+
+          <button type="submit" disabled={loading} className="btn-primary">
+            {loading ? t('login.sending', 'Anmelden...') : `🔐 ${t('login.login', 'Anmelden')}`}
+          </button>
+
+          <p className="info">
+            <small>
+              {t('login.info')}
+            </small>
+          </p>
+        </form>
       </div>
     </div>
   );

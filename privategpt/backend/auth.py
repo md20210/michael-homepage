@@ -1,4 +1,4 @@
-"""Authentication with Magic Links"""
+"""Authentication with Magic Links and Password"""
 import secrets
 from datetime import datetime, timedelta
 from typing import Optional
@@ -7,6 +7,7 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from passlib.context import CryptContext
 import resend
 
 from config import get_settings
@@ -14,6 +15,7 @@ from database import get_db, User, MagicLink
 
 settings = get_settings()
 security = HTTPBearer()
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # Configure Resend
 resend.api_key = settings.resend_api_key
@@ -168,3 +170,57 @@ async def verify_magic_link(token: str, db: AsyncSession) -> str:
     jwt_token = create_jwt_token(magic_link.email)
 
     return jwt_token
+
+
+def hash_password(password: str) -> str:
+    """Hash password using bcrypt"""
+    return pwd_context.hash(password)
+
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    """Verify password against hash"""
+    return pwd_context.verify(plain_password, hashed_password)
+
+
+async def authenticate_user(email: str, password: str, db: AsyncSession) -> Optional[User]:
+    """Authenticate user with email and password"""
+    result = await db.execute(select(User).where(User.email == email))
+    user = result.scalar_one_or_none()
+
+    if user is None or user.password_hash is None:
+        return None
+
+    if not verify_password(password, user.password_hash):
+        return None
+
+    # Update last login
+    user.last_login = datetime.utcnow()
+    await db.commit()
+
+    return user
+
+
+async def register_user(email: str, password: str, db: AsyncSession) -> User:
+    """Register new user with email and password"""
+    # Check if user already exists
+    result = await db.execute(select(User).where(User.email == email))
+    existing_user = result.scalar_one_or_none()
+
+    if existing_user is not None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="User already exists"
+        )
+
+    # Create new user
+    hashed_pw = hash_password(password)
+    user = User(
+        email=email,
+        password_hash=hashed_pw,
+        last_login=datetime.utcnow()
+    )
+    db.add(user)
+    await db.commit()
+    await db.refresh(user)
+
+    return user

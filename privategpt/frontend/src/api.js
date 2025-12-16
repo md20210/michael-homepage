@@ -32,6 +32,8 @@ api.interceptors.request.use((config) => {
 export const authAPI = {
   requestMagicLink: (email) => api.post('/auth/request-magic-link', { email }),
   verifyMagicLink: (token) => api.get(`/auth/verify?token=${token}`),
+  login: (email, password) => api.post('/auth/login', { email, password }),
+  register: (email, password) => api.post('/auth/register', { email, password }),
   getMe: () => api.get('/auth/me'),
 };
 

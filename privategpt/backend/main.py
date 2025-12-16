@@ -13,7 +13,7 @@ import traceback
 
 from config import get_settings
 from database import get_db, init_db, User, Assistant, Document, Message, SystemSettings
-from auth import create_magic_link, verify_magic_link, get_current_user
+from auth import create_magic_link, verify_magic_link, get_current_user, authenticate_user, register_user, create_jwt_token
 # from rag import rag_engine, chroma_client, reload_llm  # OLD
 from rag_llamaindex import rag_engine, chroma_client, reload_llm  # NEW: LlamaIndex
 from llm_models import get_all_models, get_model, DEFAULT_MODEL
@@ -41,6 +41,16 @@ app.add_middleware(
 # Pydantic Models
 class EmailRequest(BaseModel):
     email: EmailStr
+
+
+class LoginRequest(BaseModel):
+    email: EmailStr
+    password: str
+
+
+class RegisterRequest(BaseModel):
+    email: EmailStr
+    password: str
 
 
 class TokenResponse(BaseModel):
@@ -178,6 +188,35 @@ async def verify_magic_link_endpoint(
 ):
     """Verify magic link token and return JWT"""
     jwt_token = await verify_magic_link(token, db)
+    return TokenResponse(access_token=jwt_token)
+
+
+@app.post("/auth/register", response_model=TokenResponse)
+async def register_endpoint(
+    register_data: RegisterRequest,
+    db: AsyncSession = Depends(get_db)
+):
+    """Register new user with email and password"""
+    user = await register_user(register_data.email, register_data.password, db)
+    jwt_token = create_jwt_token(user.email)
+    return TokenResponse(access_token=jwt_token)
+
+
+@app.post("/auth/login", response_model=TokenResponse)
+async def login_endpoint(
+    login_data: LoginRequest,
+    db: AsyncSession = Depends(get_db)
+):
+    """Login with email and password"""
+    user = await authenticate_user(login_data.email, login_data.password, db)
+
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password"
+        )
+
+    jwt_token = create_jwt_token(user.email)
     return TokenResponse(access_token=jwt_token)
 
 
