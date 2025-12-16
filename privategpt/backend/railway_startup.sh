@@ -13,6 +13,10 @@ echo "   Check progress: tail -f /tmp/model_download.log"
 echo "🗄️  Running database migrations..."
 python3 -c "import asyncio; from database import init_db; asyncio.run(init_db())"
 
+# 2.1. Add password_hash column if missing
+echo "🔐 Checking password_hash column..."
+python3 migrate_add_password.py
+
 # 3. Start FastAPI Server (models will continue downloading in background)
 echo "🚀 Starting FastAPI server..."
 PORT=${PORT:-8000}
