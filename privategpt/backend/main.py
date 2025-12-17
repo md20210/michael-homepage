@@ -1,4 +1,4 @@
-"""FastAPI Main Application"""
+"""FastAPI Main Application - Password Auth Enabled"""
 from fastapi import FastAPI, Depends, HTTPException, UploadFile, File, status, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
