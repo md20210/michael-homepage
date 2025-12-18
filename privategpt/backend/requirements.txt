@@ -34,8 +34,8 @@ lxml>=4.9.0  # XML/HTML Parser
 
 # Auth & Security
 python-jose[cryptography]==3.3.0
-passlib[bcrypt]==1.7.4
-bcrypt==3.2.2  # Compatible bcrypt version for passlib (v4.x has version detection issues)
+passlib==1.7.4
+bcrypt>=4.0.1  # Required by chromadb>=0.5.0 (passlib will use it automatically)
 pydantic[email]>=2.10.0  # FIXED: Upgraded for LlamaIndex compatibility (requires Secret import)
 pydantic-settings>=2.6.0  # FIXED: Upgraded alongside pydantic
 
