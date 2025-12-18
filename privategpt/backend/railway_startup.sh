@@ -17,6 +17,10 @@ python3 -c "import asyncio; from database import init_db; asyncio.run(init_db())
 echo "🔐 Checking password_hash column..."
 python3 migrate_add_password.py
 
+# 2.2. Add email_verified column if missing
+echo "✉️  Checking email_verified column..."
+python3 migrate_add_email_verified.py
+
 # 3. Start FastAPI Server (models will continue downloading in background)
 echo "🚀 Starting FastAPI server..."
 PORT=${PORT:-8000}
