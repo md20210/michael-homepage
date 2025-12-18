@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import Login from './pages/Login';
+import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import VerifyMagicLink from './pages/VerifyMagicLink';
 import { authAPI } from './api';
@@ -47,6 +48,7 @@ function App() {
       <BrowserRouter basename="/privategpt">
         <Routes>
           <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
+          <Route path="/register" element={<Register setIsAuthenticated={setIsAuthenticated} />} />
           <Route path="/auth/verify" element={<VerifyMagicLink setIsAuthenticated={setIsAuthenticated} />} />
           <Route
             path="/dashboard"

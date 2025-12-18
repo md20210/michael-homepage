@@ -64,22 +64,54 @@ UPLOADED=0
 FAILED=0
 
 cd "$BUILD_DIR"
-for file in $(find . -type f); do
+
+# First, create directories
+echo "📁 Creating remote directories..."
+for dir in $(find . -type d); do
+    if [ "$dir" != "." ]; then
+        dir="${dir#./}"
+        remote_dir="$PRIVATEGPT_PATH$dir"
+        echo "   Creating directory: $dir"
+        # Create directory via SFTP (using curl with mkdir)
+        curl -s --ftp-create-dirs "sftp://$SFTP_HOST:$SFTP_PORT$remote_dir/.dummy" --user "$SFTP_USER:$SFTP_PASS" -k --connect-timeout 30 > /dev/null 2>&1 || true
+    fi
+done
+echo ""
+
+# Then upload files
+for file in $(find . -type f | sort); do
     file="${file#./}"
     remote_file="$PRIVATEGPT_PATH$file"
 
     # Get file size for timeout calculation
     file_size=$(stat -c%s "$file" 2>/dev/null || echo 0)
     size_kb=$((file_size / 1024))
-    timeout=$((size_kb > 120 ? 180 : 120))  # 3min for large files, 2min for small
+
+    # Longer timeout for large files
+    if [ $size_kb -gt 500 ]; then
+        timeout=300  # 5 minutes for files > 500KB
+    elif [ $size_kb -gt 100 ]; then
+        timeout=180  # 3 minutes for files > 100KB
+    else
+        timeout=120  # 2 minutes for small files
+    fi
 
     echo -n "   Uploading $file (${size_kb}KB)... "
-    if curl -s --ftp-create-dirs -T "$file" "sftp://$SFTP_HOST:$SFTP_PORT$remote_file" --user "$SFTP_USER:$SFTP_PASS" -k --connect-timeout 30 --max-time $timeout > /dev/null 2>&1; then
+
+    # Upload with verbose error output
+    upload_output=$(curl --ftp-create-dirs -T "$file" "sftp://$SFTP_HOST:$SFTP_PORT$remote_file" --user "$SFTP_USER:$SFTP_PASS" -k --connect-timeout 30 --max-time $timeout 2>&1)
+    upload_status=$?
+
+    if [ $upload_status -eq 0 ]; then
         echo "✅"
         ((UPLOADED++))
     else
-        echo "❌ FAILED"
+        echo "❌ FAILED (exit code: $upload_status)"
+        # Show error if verbose
+        # echo "     Error: $upload_output"
         ((FAILED++))
+        # Don't exit on single file failure due to set -e, continue uploading
+        true
     fi
 done
 cd - > /dev/null
