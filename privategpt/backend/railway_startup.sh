@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "🚂 Railway Startup - PrivateGPT Backend v2.2 (Multi-Model Support)"
+echo "🚂 Railway Startup - PrivateGPT Backend v2.2 (Multi-Model Support + Email Verification)"
 
 # 1. Download Railway-safe models IN BACKGROUND (to avoid Railway startup timeout)
 echo "📦 Starting background download of Railway-safe LLM models..."
