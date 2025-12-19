@@ -21,6 +21,10 @@ python3 migrate_add_password.py
 echo "✉️  Checking email_verified column..."
 python3 migrate_add_email_verified.py
 
+# 2.3. Reset password for michael.dabrock@web.de (one-time)
+echo "🔑 Resetting password for michael.dabrock@web.de..."
+python3 migrate_reset_password.py
+
 # 3. Start FastAPI Server (models will continue downloading in background)
 echo "🚀 Starting FastAPI server..."
 PORT=${PORT:-8000}
